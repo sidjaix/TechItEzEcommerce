@@ -86,7 +86,7 @@ dotnet ef dbcontext scaffold "Server=localhost; Initial Catalog=TechItEzEcommerc
 
 #### User Microservice:
 
-This Microservice is deployed to Azure and can be accessed here https://lsc-ecommerce-userprofile.azurewebsites.net/swagger/index.html
+This Microservice is deployed to Azure and can be accessed here https://techitez-ecommerce-user.azurewebsites.net/swagger/index.html
 
 - AspNetUsers
 - AspNetUserRoles
