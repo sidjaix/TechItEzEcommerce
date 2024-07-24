@@ -30,22 +30,41 @@ This is a simple e-commerce application built using microservices architecture. 
 
 The application uses a shared database with the following tables:
 
-1. AspNetUsers
-2. AspNetUserRoles
-3. AspNetUserLogins
-4. Address
-5. Categories
-6. Products
-7. ProductImages
-8. ProductReviews
-9. Orders
-10. OrderDetails
-11. Payments
-12. ContactUs
-13. Coupons
-14. OrderCoupons
-15. ShoppingCart
-16. Wishlist
+```c#
+1. select * from Users
+2. select * from Roles
+3. select * from UserRoles
+4. select * from Address
+5. select * from Categories
+6. select * from Products
+7. select * from ProductImages
+8. select * from ProductReviews
+9. select * from Orders
+10. select * from OrderDetails
+11. select * from Payments
+12. select * from ContactUs
+13. select * from Coupons
+14. select * from OrderCoupons
+15. select * from ShoppingCart
+16. select * from Wishlist
+```
+
+17. Users
+18. Roles
+19. UserRoles
+20. Address
+21. Categories
+22. Products
+23. ProductImages
+24. ProductReviews
+25. Orders
+26. OrderDetails
+27. Payments
+28. ContactUs
+29. Coupons
+30. OrderCoupons
+31. ShoppingCart
+32. Wishlist
 
 Refer to the database script for detailed schema and constraints.
 
@@ -60,7 +79,7 @@ when using localdb use "(LocalDb)\\MSSQLLocalDB" as server name
 To Scaffold database as model to local project use below command.
 
 ```
-dotnet ef dbcontext scaffold "Data Source=[servername];Initial Catalog=LearnSmartDB;Integrated Security=SSPI; MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer -o Entities -d
+dotnet ef dbcontext scaffold "Server=localhost; Initial Catalog=TechItEzEcommerce; User ID=SA; Password=admin@123; TrustServerCertificate=true; MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer --context-dir ../User-Data --output-dir ./Entities
 ```
 
 ## Here's a suggested grouping of tables into microservices based on their functional relationships:

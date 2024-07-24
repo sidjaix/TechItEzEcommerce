@@ -17,7 +17,7 @@ dotnet tool install --global dotnet-ef
 
 To Scaffold databse as model to local project use below cmd.
 
-dotnet ef dbcontext scaffold "Server=Karthik;Initial Catalog=LearnSmartDB;Integrated Security=SSPI; MultipleActiveResultSets=true;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -o Entities -d
+dotnet ef dbcontext scaffold "Server=Karthik;Initial Catalog=TechItEzEcommerce;Integrated Security=SSPI; MultipleActiveResultSets=true;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -o Entities -d
 
 1. dotnet ef migrations add dbdesignchange -s ../RestaurantTableBookingApp.API/LSC.RestaurantTableBookingApp.API.csproj
 

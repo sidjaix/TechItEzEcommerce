@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+namespace User_Core.Entities;
+
+public partial class Coupon
+{
+    [Key]
+    [Column("CouponID")]
+    public int CouponId { get; set; }
+
+    [StringLength(20)]
+    public string CouponCode { get; set; } = null!;
+
+    [Column(TypeName = "decimal(10, 2)")]
+    public decimal DiscountAmount { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime ExpiryDate { get; set; }
+
+    [Column("ProductID")]
+    public int? ProductId { get; set; }
+
+    [Column("CategoryID")]
+    public int? CategoryId { get; set; }
+
+    [ForeignKey("CategoryId")]
+    [InverseProperty("Coupons")]
+    public virtual Category? Category { get; set; }
+
+    [InverseProperty("Coupon")]
+    public virtual ICollection<OrderCoupon> OrderCoupons { get; set; } = new List<OrderCoupon>();
+
+    [ForeignKey("ProductId")]
+    [InverseProperty("Coupons")]
+    public virtual Product? Product { get; set; }
+}
