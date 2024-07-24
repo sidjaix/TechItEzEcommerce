@@ -60,14 +60,14 @@ when using localdb use "(LocalDb)\\MSSQLLocalDB" as server name
 To Scaffold database as model to local project use below command.
 
 ```
-dotnet ef dbcontext scaffold "Data Source=[servername];Initial Catalog=LearnSmartDB;Integrated Security=SSPI; MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer -o Entities -d
+dotnet ef dbcontext scaffold "Data Source=[servername];Initial Catalog=TechItEzEcommerce;Integrated Security=SSPI; MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer -o Entities -d
 ```
 
 ## Here's a suggested grouping of tables into microservices based on their functional relationships:
 
 #### User Microservice:
 
-This Microservice is deployed to Azure and can be accessed here https://lsc-ecommerce-userprofile.azurewebsites.net/swagger/index.html
+This Microservice is deployed to Azure and can be accessed here https://techitez-ecommerce-user.azurewebsites.net/swagger/index.html
 
 - AspNetUsers
 - AspNetUserRoles
