@@ -17,14 +17,16 @@ dotnet tool install --global dotnet-ef
 
 To Scaffold databse as model to local project use below cmd.
 
-dotnet ef dbcontext scaffold "Server=Karthik;Initial Catalog=TechItEzEcommerce;Integrated Security=SSPI; MultipleActiveResultSets=true;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -o Entities -d
+```
+dotnet ef dbcontext scaffold "Server=localhost; Initial Catalog=TechItEzEcommerce; User ID=[username]; Password=[password]; TrustServerCertificate=true; MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer --context-dir ../User-Data --output-dir ./Entities
+```
 
-1. dotnet ef migrations add dbdesignchange -s ../RestaurantTableBookingApp.API/LSC.RestaurantTableBookingApp.API.csproj
+1. DbContextFolderIsRoot => dotnet ef migrations add AddedBaseEntityProperty -c UserDbContext --output-dir ./Migrations -s ../User-Api/User-Api.csproj
 
-2. dotnet ef migrations script -s ../RestaurantTableBookingApp.API/LSC.RestaurantTableBookingApp.API.csproj
+2. dotnet ef migrations script -s ../User-Api/User-Api.csproj
    (if needed as script)dotnet ef database update
 
-3. dotnet ef database update -s ../RestaurantTableBookingApp.API/LSC.RestaurantTableBookingApp.API.csproj
+3. DbContextFolderIsRoot => dotnet ef database update -s ../User-Api/User-Api.csproj
 
-4. dotnet ef database drop -s ../RestaurantTableBookingApp.API/LSC.RestaurantTableBookingApp.API.csproj
+4. dotnet ef database drop -s ../User-Api/User-Api.csproj
    (to drop database)

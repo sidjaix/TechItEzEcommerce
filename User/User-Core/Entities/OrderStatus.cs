@@ -10,10 +10,9 @@ namespace User_Core.Entities;
 public partial class OrderStatus
 {
     [Key]
-    [Column("StatusID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int StatusId { get; set; }
 
-    [Column("OrderID")]
     public int OrderId { get; set; }
 
     [StringLength(50)]

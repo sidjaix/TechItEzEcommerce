@@ -3,16 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace User_Core.Entities;
 
-public partial class UserRole
+public partial class UserRole : BaseEntity
 {
     [Key]
-    [Column("UserRoleID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int UserRoleId { get; set; }
 
-    [Column("RoleID")]
     public int RoleId { get; set; }
 
-    [Column("UserID")]
     public int UserId { get; set; }
 
     [ForeignKey("RoleId")]

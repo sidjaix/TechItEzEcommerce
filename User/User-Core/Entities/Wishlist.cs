@@ -10,13 +10,11 @@ namespace User_Core.Entities;
 public partial class Wishlist
 {
     [Key]
-    [Column("WishlistID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int WishlistId { get; set; }
 
-    [Column("CustomerID")]
     public int CustomerId { get; set; }
 
-    [Column("ProductID")]
     public int ProductId { get; set; }
 
     [ForeignKey("CustomerId")]

@@ -7,13 +7,12 @@ using Microsoft.EntityFrameworkCore;
 namespace User_Core.Entities;
 
 [Table("Address")]
-public partial class Address
+public partial class Address : BaseEntity
 {
     [Key]
-    [Column("AddressID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int AddressId { get; set; }
 
-    [Column("CustomerID")]
     public int CustomerId { get; set; }
 
     [StringLength(255)]

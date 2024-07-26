@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace User_Core.Entities;
 
-public partial class Coupon
+public partial class Coupon : BaseEntity
 {
     [Key]
-    [Column("CouponID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int CouponId { get; set; }
 
     [StringLength(20)]
@@ -21,10 +21,8 @@ public partial class Coupon
     [Column(TypeName = "datetime")]
     public DateTime ExpiryDate { get; set; }
 
-    [Column("ProductID")]
     public int? ProductId { get; set; }
 
-    [Column("CategoryID")]
     public int? CategoryId { get; set; }
 
     [ForeignKey("CategoryId")]

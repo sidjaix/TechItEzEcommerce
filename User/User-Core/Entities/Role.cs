@@ -9,7 +9,7 @@ namespace User_Core.Entities;
 public partial class Role
 {
     [Key]
-    [Column("RoleID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int RoleId { get; set; }
 
     [StringLength(50)]

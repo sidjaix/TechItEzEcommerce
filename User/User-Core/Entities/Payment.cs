@@ -9,10 +9,9 @@ namespace User_Core.Entities;
 public partial class Payment
 {
     [Key]
-    [Column("PaymentID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int PaymentId { get; set; }
 
-    [Column("OrderID")]
     public int OrderId { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]

@@ -9,13 +9,11 @@ namespace User_Core.Entities;
 public partial class OrderDetail
 {
     [Key]
-    [Column("OrderDetailID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int OrderDetailId { get; set; }
 
-    [Column("OrderID")]
     public int OrderId { get; set; }
 
-    [Column("ProductID")]
     public int ProductId { get; set; }
 
     public int Quantity { get; set; }

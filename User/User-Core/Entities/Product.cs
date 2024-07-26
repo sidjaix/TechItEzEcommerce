@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace User_Core.Entities;
 
-public partial class Product
+public partial class Product : BaseEntity
 {
     [Key]
-    [Column("ProductID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ProductId { get; set; }
 
     [StringLength(255)]

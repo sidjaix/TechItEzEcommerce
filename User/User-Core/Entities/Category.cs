@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace User_Core.Entities;
 
-public partial class Category
+public partial class Category : BaseEntity
 {
     [Key]
-    [Column("CategoryID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int CategoryId { get; set; }
 
     [StringLength(100)]

@@ -6,13 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace User_Core.Entities;
 
-public partial class ProductImage
+public partial class ProductImage : BaseEntity
 {
     [Key]
-    [Column("ImageID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ImageId { get; set; }
 
-    [Column("ProductID")]
     public int ProductId { get; set; }
 
     [StringLength(255)]

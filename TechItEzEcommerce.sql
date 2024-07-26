@@ -19,8 +19,7 @@ CREATE TABLE Users (
     Username NVARCHAR(100) NOT NULL,
     Password NVARCHAR(100) NOT NULL,
     Email NVARCHAR(100) NOT NULL,
-    Address NVARCHAR(255),
-    UserType NVARCHAR(50) NOT NULL, -- Assuming UserType can be 'Customer', 'Admin' or 'Support'
+    Address NVARCHAR(255), -- Assuming UserType can be 'Customer', 'Admin' or 'Support'
     CONSTRAINT PK_Users_UserID PRIMARY KEY (UserID),
 );
 
@@ -88,7 +87,6 @@ CREATE TABLE Orders (
     OrderID INT IDENTITY(1,1),
     CustomerID INT NOT NULL,
     OrderDate DATETIME NOT NULL,
-    Status NVARCHAR(50) NOT NULL, -- 'Pending', 'Shipped', 'Delivered', 'Cancelled'
     CONSTRAINT PK_Orders_OrderID PRIMARY KEY (OrderID),
     CONSTRAINT FK_Orders_Users FOREIGN KEY (CustomerID) REFERENCES Users(UserID)
 );
@@ -109,7 +107,7 @@ CREATE TABLE OrderDetails (
 CREATE TABLE OrderStatus (
     StatusID INT IDENTITY(1,1),
     OrderID INT NOT NULL,
-    StatusName NVARCHAR(50) NOT NULL,
+    StatusName NVARCHAR(50) NOT NULL, -- 'Pending', 'Shipped', 'Delivered', 'Cancelled'
     -- Add other status-related fields as needed
     CONSTRAINT PK_OrderStatus_StatusID PRIMARY KEY (StatusID),
     CONSTRAINT FK_OrderStatus_Orders FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
@@ -244,62 +242,62 @@ ShoppingCart
 Wishlist
 */
 -- Roles Table
+INSERT INTO Users (Username, Password, Email, FirstName, LastName, Address, CreatedBy, LastModifiedBy)
+VALUES
+('jane_smith', 'securePass456', 'jane.smith@tie.com', 'Jane', 'Smith', '456 Elm St, Othertown, USA',1,1),
+('sidjaix', 'admin@123', 'sidjaix@tie.com', 'Siddharth', 'Jaiswal', '123 Main St, Anytown, USA',1,1),
+('sam_brown', 'myPassword789', 'sam.brown@tie.com', 'Sam', 'Brown', '789 Oak St, Anycity, USA',1,1);
+
 INSERT INTO Roles (RoleName)
 VALUES
 ('Admin'),
-('ReadOnly'),
 ('Support'),
 ('User'),
+('ReadOnly'),
 ('Guest');
 
-INSERT INTO Users (Username, Password, Email, Address, UserType)
+INSERT INTO UserRoles (RoleID, UserID, CreatedBy, LastModifiedBy)
 VALUES
-('john_doe', 'password123', 'john.doe@example.com', '123 Main St, Anytown, USA', 'Customer'),
-('jane_smith', 'securePass456', 'jane.smith@example.com', '456 Elm St, Othertown, USA', 'Admin'),
-('sam_brown', 'myPassword789', 'sam.brown@example.com', '789 Oak St, Anycity, USA', 'Support');
-
-INSERT INTO UserRoles (RoleID, UserID)
-VALUES
-(1, 1), -- Assigning 'Customer' role to 'john_doe'
-(2, 2), -- Assigning 'Admin' role to 'jane_smith'
-(3, 3), -- Assigning 'Support' role to 'sam_brown'
-(1, 2), -- Assigning 'Customer' role to 'jane_smith'
-(3, 1); -- Assigning 'Support' role to 'john_doe'
+(3, 1, 1, 1), -- Assigning 'User' role to 'jane_smith'
+(1, 2, 1, 1), -- Assigning 'Admin' role to 'sidjaix'
+(4, 3, 1, 1), -- Assigning 'Readonly' role to 'sam_brown'
+(2, 2, 1, 1), -- Assigning 'Support' role to 'sidjaix'
+(2, 1, 1, 1); -- Assigning 'Support' role to 'jane_smith'
 
 -- Inserting sample categories
-INSERT INTO Categories (CategoryName)
+INSERT INTO Categories (CategoryName, CreatedBy, LastModifiedBy)
 VALUES
-    ('Electronics'),
-    ('Clothing'),
-    ('Books'),
-    ('Home & Kitchen');
+    ('Electronics', 1, 1),
+    ('Clothing', 1, 1),
+    ('Books', 1, 1),
+    ('Home & Kitchen', 1, 1);
 
 -- Inserting sample products
-INSERT INTO Products (ProductName, Description, Price, CategoryID)
+INSERT INTO Products (ProductName, Description, Price, CategoryId, CreatedBy, LastModifiedBy)
 VALUES
-    ('Smartphone', 'Latest model with advanced features.', 799.99, 1),
-    ('Laptop', 'Powerful laptop for work and gaming.', 1299.99, 1),
-    ('T-shirt', 'Comfortable cotton t-shirt.', 19.99, 2),
-    ('Jeans', 'Classic denim jeans.', 39.99, 2),
-    ('Python Programming', 'Comprehensive guide to Python programming.', 49.99, 3);
+    ('Smartphone', 'Latest model with advanced features.', 799.99, 1, 1, 1),
+    ('Laptop', 'Powerful laptop for work and gaming.', 1299.99, 1, 1, 1),
+    ('T-shirt', 'Comfortable cotton t-shirt.', 19.99, 2, 1, 1),
+    ('Jeans', 'Classic denim jeans.', 39.99, 2, 1, 1),
+    ('Python Programming', 'Comprehensive guide to Python programming.', 49.99, 3, 1, 1);
 
-INSERT INTO Address (CustomerID, Street, City, State, ZipCode, IsShippingAddress)
+INSERT INTO Address (CustomerId, Street, City, State, ZipCode, IsShippingAddress, CreatedBy, LastModifiedBy)
 VALUES
-(1, '123 Main St', 'Anytown', 'CA', '12345', 1), -- Shipping address for john_doe
-(1, '124 Main St', 'Anytown', 'CA', '12345', 0), -- Billing address for john_doe
-(2, '456 Elm St', 'Othertown', 'TX', '67890', 1), -- Shipping address for jane_smith
-(3, '789 Oak St', 'Anycity', 'NY', '10112', 1); -- Shipping address for sam_brown
+(1, '123 Main St', 'Anytown', 'CA', '12345', 1,1,1), -- Shipping address for john_doe
+(1, '124 Main St', 'Anytown', 'CA', '12345', 0,1,1), -- Billing address for john_doe
+(2, '456 Elm St', 'Othertown', 'TX', '67890', 1,1,1), -- Shipping address for jane_smith
+(3, '789 Oak St', 'Anycity', 'NY', '10112', 1,1,1); -- Shipping address for sam_brown
 
 
 -- Inserting sample orders
-INSERT INTO Orders (CustomerID, OrderDate, Status)
+INSERT INTO Orders (CustomerId, OrderDate)
 VALUES
-    (1, '2024-07-23', 'Pending'),
-    (1, '2024-07-22', 'Shipped'),
-    (2, '2024-07-21', 'Delivered');  
+    (1, '2024-07-23'),
+    (1, '2024-07-22'),
+    (2, '2024-07-21');  
 
 -- Inserting sample order details
-INSERT INTO OrderDetails (OrderID, ProductID, Quantity, UnitPrice)
+INSERT INTO OrderDetails (OrderId, ProductId, Quantity, UnitPrice)
 VALUES
     (1, 1, 2, 799.99),
     (1, 3, 3, 19.99),
@@ -316,14 +314,14 @@ VALUES
 (2, 'In Transit');    -- Status change for OrderId 2    
 
 -- Inserting sample payments
-INSERT INTO Payments (OrderID, Amount, PaymentDate, PaymentMethod)
+INSERT INTO Payments (OrderId, Amount, PaymentDate, PaymentMethod)
 VALUES
     (1, 1839.95, '2024-07-23', 'Credit Card'),
     (2, 1299.99, '2024-07-22', 'PayPal'),
     (3, 49.99, '2024-07-21', 'Debit Card');
 
 -- Inserting sample product reviews
-INSERT INTO ProductReviews (ProductID, CustomerID, ReviewText, Rating)
+INSERT INTO ProductReviews (ProductId, CustomerId, ReviewText, Rating)
 VALUES
     (1, 1, 'Great smartphone, fast delivery.', 5),
     (2, 1, 'Excellent laptop, exceeded expectations.', 4),
@@ -331,7 +329,7 @@ VALUES
     (5, 1, 'Very useful book, clear explanations.', 4);
 
 -- Inserting sample shopping cart items (optional)
-INSERT INTO ShoppingCart (CustomerID, ProductID, Quantity)
+INSERT INTO ShoppingCart (CustomerId, ProductId, Quantity)
 VALUES
     (1, 1, 1),
     (1, 3, 2);  

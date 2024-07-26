@@ -10,13 +10,11 @@ namespace User_Core.Entities;
 public partial class ShoppingCart
 {
     [Key]
-    [Column("CartID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int CartId { get; set; }
 
-    [Column("CustomerID")]
     public int CustomerId { get; set; }
 
-    [Column("ProductID")]
     public int ProductId { get; set; }
 
     public int Quantity { get; set; }

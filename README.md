@@ -30,7 +30,7 @@ This is a simple e-commerce application built using microservices architecture. 
 
 The application uses a shared database with the following tables:
 
-```c#
+```sql
 1. select * from Users
 2. select * from Roles
 3. select * from UserRoles
@@ -49,22 +49,22 @@ The application uses a shared database with the following tables:
 16. select * from Wishlist
 ```
 
-17. Users
-18. Roles
-19. UserRoles
-20. Address
-21. Categories
-22. Products
-23. ProductImages
-24. ProductReviews
-25. Orders
-26. OrderDetails
-27. Payments
-28. ContactUs
-29. Coupons
-30. OrderCoupons
-31. ShoppingCart
-32. Wishlist
+Users
+Roles
+UserRoles
+Address
+Categories
+Products
+ProductImages
+ProductReviews
+Orders
+OrderDetails
+Payments
+ContactUs
+Coupons
+OrderCoupons
+ShoppingCart
+Wishlist
 
 Refer to the database script for detailed schema and constraints.
 
@@ -79,7 +79,7 @@ when using localdb use "(LocalDb)\\MSSQLLocalDB" as server name
 To Scaffold database as model to local project use below command.
 
 ```
-dotnet ef dbcontext scaffold "Server=localhost; Initial Catalog=TechItEzEcommerce; User ID=SA; Password=admin@123; TrustServerCertificate=true; MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer --context-dir ../User-Data --output-dir ./Entities
+dotnet ef dbcontext scaffold "Server=localhost; Initial Catalog=TechItEzEcommerce; User ID=[username]; Password=[password]; TrustServerCertificate=true; MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer --context-dir ../User-Data --output-dir ./Entities
 ```
 
 ## Here's a suggested grouping of tables into microservices based on their functional relationships:
@@ -88,9 +88,9 @@ dotnet ef dbcontext scaffold "Server=localhost; Initial Catalog=TechItEzEcommerc
 
 This Microservice is deployed to Azure and can be accessed here https://techitez-ecommerce-user.azurewebsites.net/swagger/index.html
 
-- AspNetUsers
-- AspNetUserRoles
-- AspNetUserLogins
+- Users
+- Roles
+- UserRoles
 - Address (User addresses, including shipping and billing addresses)
 
 #### Product Microservice:

@@ -9,13 +9,11 @@ namespace User_Core.Entities;
 public partial class OrderCoupon
 {
     [Key]
-    [Column("OrderCouponID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int OrderCouponId { get; set; }
 
-    [Column("OrderID")]
     public int OrderId { get; set; }
 
-    [Column("CouponID")]
     public int CouponId { get; set; }
 
     [ForeignKey("CouponId")]

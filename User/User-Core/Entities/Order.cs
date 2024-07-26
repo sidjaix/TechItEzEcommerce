@@ -9,17 +9,17 @@ namespace User_Core.Entities;
 public partial class Order
 {
     [Key]
-    [Column("OrderID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int OrderId { get; set; }
 
-    [Column("CustomerID")]
     public int CustomerId { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime OrderDate { get; set; }
 
-    [StringLength(50)]
-    public string Status { get; set; } = null!;
+    [Column(TypeName = "datetime")]
+    public DateTime CreatedOn { get; set; }
+
 
     [ForeignKey("CustomerId")]
     [InverseProperty("Orders")]

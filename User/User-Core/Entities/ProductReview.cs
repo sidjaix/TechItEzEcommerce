@@ -9,18 +9,19 @@ namespace User_Core.Entities;
 public partial class ProductReview
 {
     [Key]
-    [Column("ReviewID")]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ReviewId { get; set; }
 
-    [Column("ProductID")]
     public int ProductId { get; set; }
 
-    [Column("CustomerID")]
     public int CustomerId { get; set; }
 
     public string ReviewText { get; set; } = null!;
 
     public int Rating { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime CreatedOn { get; set; }
 
     [ForeignKey("CustomerId")]
     [InverseProperty("ProductReviews")]
