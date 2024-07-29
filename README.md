@@ -120,3 +120,66 @@ This Microservice is deployed to Azure and can be accessed here https://techitez
 ## Database Scripts
 
 Database script can be found at root level of this repository E.g. TechItEzEcommerce.sql
+
+# Dockerfile Setup
+
+- In copy command mention project's relative path from soltion folder. As you can see in this project Dockerfile.
+
+# Docker Commands
+
+## Build new image on tp of the earlier
+
+- docker build -t < ImageName : < TagName > .
+
+## Remove image
+
+- docker rmi <First 3 Letter of ImageID>
+
+## Show all Images
+
+- docker images
+
+## Run the docker image on the container
+
+- docker run -d --name < ContainerName > -p 8080:80 < Imagename > : < TagName >
+
+## Show all the container
+
+- docker ps -s
+
+## Stop the container
+
+- docker stop <First 3 Letter of ContainerID>
+
+## Start Container
+
+- docker start <First 3 Letter of ContainerID>
+
+## Remove Container
+
+- docker rm <First 3 Letter of ContainerID>
+
+## Run SQL Server individually without docker network
+
+- docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -e 'MSSQL_PID=Express' -p 1433:1433 -d mcr.microsoft.com/azure-sql-edge
+
+## You can use environment variables to configure SQL Server on Linux Containers.
+
+- ACCEPT_EULA confirms your acceptance of the End-User Licensing Agreement.
+
+- SA_PASSWORD is the database system administrator (userid = 'sa') password used to connect to SQL Server once the container is running. Important note: This
+  password needs to include at least 8 characters of at least three of these four categories: uppercase letters, lowercase letters, numbers and non-alphanumeric symbols.
+
+- MSSQL_PID is the Product ID (PID) or Edition that the container will run with. Acceptable values:
+
+  -- Developer : This will run the container using the Developer Edition (this is the default if no MSSQL_PID environment variable is supplied)
+  -- Express : This will run the container using the Express Edition
+  -- Standard : This will run the container using the Standard Edition
+  -- Enterprise : This will run the container using the Enterprise Edition
+  -- EnterpriseCore : This will run the container using the Enterprise Edition Core
+
+  ## Docker Compose Setup
+
+- In Docker-Compose connection string server name should be "sqlserver"
+- Set Environment variable as per you need i.e - "Development", "Production"
+-
