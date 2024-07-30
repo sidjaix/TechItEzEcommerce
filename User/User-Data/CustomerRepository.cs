@@ -23,6 +23,13 @@ public class CustomerRepository : ICustomerRepository
     public UserModel CreateUser(UserModel userData)
     {
         var user = UserMapper.MapToEntity(userData);
+        //user.CreatedBy=1;
+        user.UserRoles = new List<UserRole>{
+            new UserRole{
+                RoleId = (int)Roles.User,
+                User = user
+            }
+        };
         db.Users.Add(user);
 
         db.SaveChanges();

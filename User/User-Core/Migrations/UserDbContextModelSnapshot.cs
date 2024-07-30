@@ -312,7 +312,9 @@ namespace User_Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("PaymentMethod")
                         .HasMaxLength(100)
@@ -497,12 +499,9 @@ namespace User_Core.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
+                        .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Email")
@@ -518,12 +517,9 @@ namespace User_Core.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<int>("LastModifiedBy")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("LastModifiedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
+                        .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("LastName")
@@ -551,22 +547,6 @@ namespace User_Core.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRoleId"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<int>("LastModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("LastModifiedOn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("getdate()");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");

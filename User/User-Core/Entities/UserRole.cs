@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace User_Core.Entities;
 
-public partial class UserRole : BaseEntity
+public partial class UserRole
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

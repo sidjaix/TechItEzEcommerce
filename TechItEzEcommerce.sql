@@ -241,13 +241,14 @@ Cart and Wishlist Microservices:
 ShoppingCart
 Wishlist
 */
--- Roles Table
-INSERT INTO Users (Username, Password, Email, FirstName, LastName, Address, CreatedBy, LastModifiedBy)
+-- Users Table
+INSERT INTO Users (Username, Password, Email, FirstName, LastName, Address)
 VALUES
-('jane_smith', 'securePass456', 'jane.smith@tie.com', 'Jane', 'Smith', '456 Elm St, Othertown, USA',1,1),
-('sidjaix', 'admin@123', 'sidjaix@tie.com', 'Siddharth', 'Jaiswal', '123 Main St, Anytown, USA',1,1),
-('sam_brown', 'myPassword789', 'sam.brown@tie.com', 'Sam', 'Brown', '789 Oak St, Anycity, USA',1,1);
+('jane_smith', 'securePass456', 'jane.smith@tie.com', 'Jane', 'Smith', '456 Elm St, Othertown, USA'),
+('sidjaix', 'admin@123', 'sidjaix@tie.com', 'Siddharth', 'Jaiswal', '123 Main St, Anytown, USA'),
+('sam_brown', 'myPassword789', 'sam.brown@tie.com', 'Sam', 'Brown', '789 Oak St, Anycity, USA');
 
+-- Roles Table
 INSERT INTO Roles (RoleName)
 VALUES
 ('Admin'),
@@ -256,13 +257,14 @@ VALUES
 ('ReadOnly'),
 ('Guest');
 
+-- UserRoles Table
 INSERT INTO UserRoles (RoleID, UserID, CreatedBy, LastModifiedBy)
 VALUES
-(3, 1, 1, 1), -- Assigning 'User' role to 'jane_smith'
-(1, 2, 1, 1), -- Assigning 'Admin' role to 'sidjaix'
-(4, 3, 1, 1), -- Assigning 'Readonly' role to 'sam_brown'
-(2, 2, 1, 1), -- Assigning 'Support' role to 'sidjaix'
-(2, 1, 1, 1); -- Assigning 'Support' role to 'jane_smith'
+(3, 1), -- Assigning 'User' role to 'jane_smith'
+(1, 2), -- Assigning 'Admin' role to 'sidjaix'
+(4, 3), -- Assigning 'Readonly' role to 'sam_brown'
+(2, 2), -- Assigning 'Support' role to 'sidjaix'
+(2, 1); -- Assigning 'Support' role to 'jane_smith'
 
 -- Inserting sample categories
 INSERT INTO Categories (CategoryName, CreatedBy, LastModifiedBy)

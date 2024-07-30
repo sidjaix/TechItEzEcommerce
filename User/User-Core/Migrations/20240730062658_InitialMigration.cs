@@ -73,10 +73,8 @@ namespace User_Core.Migrations
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    CreatedOn = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getdate()"),
-                    CreatedBy = table.Column<int>(type: "int", nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getdate()"),
-                    LastModifiedBy = table.Column<int>(type: "int", nullable: false)
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()")
                 },
                 constraints: table =>
                 {
@@ -165,11 +163,7 @@ namespace User_Core.Migrations
                     UserRoleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getdate()"),
-                    CreatedBy = table.Column<int>(type: "int", nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getdate()"),
-                    LastModifiedBy = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -381,7 +375,7 @@ namespace User_Core.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "datetime", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getdate()"),
                     PaymentMethod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>

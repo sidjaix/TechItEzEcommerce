@@ -37,3 +37,24 @@ public static class UserMapper
         };
     }
 }
+
+public static class RoleMapper
+{
+    public static Role MapToEntity(RoleModel roleModel)
+    {
+        return new Role
+        {
+            RoleId = roleModel.RoleId,
+            RoleName = roleModel.RoleName
+        };
+    }
+
+    public static RoleModel MapToDto(Role role)
+    {
+        return new RoleModel
+        {
+            RoleId = role.RoleId,
+            RoleName = role.RoleName
+        };
+    }
+}

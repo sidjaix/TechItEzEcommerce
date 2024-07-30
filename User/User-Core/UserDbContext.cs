@@ -99,13 +99,6 @@ public class UserDbContext : DbContext
         .Property(b => b.LastModifiedOn)
         .HasDefaultValueSql("getdate()");
 
-        modelBuilder.Entity<UserRole>()
-       .Property(b => b.CreatedOn)
-       .HasDefaultValueSql("getdate()");
-        modelBuilder.Entity<UserRole>()
-        .Property(b => b.LastModifiedOn)
-        .HasDefaultValueSql("getdate()");
-
         base.OnModelCreating(modelBuilder);
     }
 }
