@@ -1,6 +1,7 @@
 ﻿
 using User_Core;
 using User_Core.Entities;
+using User_Core.Enums;
 using User_Core.Models;
 using User_Data.Interface;
 

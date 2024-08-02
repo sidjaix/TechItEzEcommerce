@@ -1,4 +1,4 @@
-﻿namespace User_Core;
+﻿namespace User_Core.Enums;
 
 public enum Roles
 {

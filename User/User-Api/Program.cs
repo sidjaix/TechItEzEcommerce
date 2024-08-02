@@ -14,6 +14,7 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         var configuration = builder.Configuration;
+        var connectionType = configuration.GetValue<string>("ConnectionStringType");
 
         //Add services to the container.
         builder.Services.AddControllers().AddNewtonsoftJson(o =>
@@ -35,7 +36,7 @@ internal class Program
         {
             var environment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
             options
-            .UseSqlServer(configuration.GetConnectionString("DockerDBConnection"))
+            .UseSqlServer(configuration.GetConnectionString(connectionType))
             .EnableSensitiveDataLogging(environment.IsDevelopment());  //should not be used in production, only for development purpose
         });
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -75,15 +76,15 @@ internal class Program
 
         // Configure the HTTP request pipeline.
         app.UseCors("default");
-        if (app.Environment.IsDevelopment())
+        // if (app.Environment.IsDevelopment())
+        // {
+        app.UseSwagger();
+        app.UseSwaggerUI(option =>
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(option =>
-            {
-                option.SwaggerEndpoint("/swagger/v1/swagger.json", "Tech-It-Ez-Ecommerce API V1");
-                option.RoutePrefix = string.Empty; // Serve Swagger UI at the app's root
-            });
-        }
+            option.SwaggerEndpoint("/swagger/v1/swagger.json", "Tech-It-Ez-Ecommerce API V1");
+            option.RoutePrefix = string.Empty; // Serve Swagger UI at the app's root
+        });
+        //}
         //app.UseHttpsRedirection();
         app.UseRouting();
         app.MapControllers();

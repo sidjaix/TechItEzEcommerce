@@ -11,7 +11,8 @@ services:
       - '8080:80'
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DockerDBConnection=Server=sqlserver;Database=TechItEzEcommerce;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;
+      - ConnectionStrings__DockerDB=Server=sqlserver;Database=TechItEzEcommerce;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;
+      - ConnectionStrings__AzureDB=Server=tcp:techitez.database.windows.net,1433;Initial Catalog=TechItEzEcommerce;Persist Security Info=False;User ID=sidjaix;Password=admin@123; MultipleActiveResultSets=True; Encrypt=True; TrustServerCertificate=True; Connection Timeout=60;
     networks:
       - techitez_network
 

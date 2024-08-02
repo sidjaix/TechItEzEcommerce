@@ -258,7 +258,7 @@ VALUES
 ('Guest');
 
 -- UserRoles Table
-INSERT INTO UserRoles (RoleID, UserID, CreatedBy, LastModifiedBy)
+INSERT INTO UserRoles (RoleID, UserID)
 VALUES
 (3, 1), -- Assigning 'User' role to 'jane_smith'
 (1, 2), -- Assigning 'Admin' role to 'sidjaix'
