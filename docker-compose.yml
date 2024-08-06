@@ -1,16 +1,21 @@
+name: techitezecommerce
 version: '3.4'
 
 services:
   webapi:
     container_name: techitez_user_api
-    image: user-api
+    image: sidjaix/user-api:latest
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '8080:80'
+      - '5001:80'
+    depends_on:
+      - sqlserver
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStringType=AzureDB
       - ConnectionStrings__DockerDB=Server=sqlserver;Database=TechItEzEcommerce;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;
       - ConnectionStrings__AzureDB=Server=tcp:techitez.database.windows.net,1433;Initial Catalog=TechItEzEcommerce;Persist Security Info=False;User ID=sidjaix;Password=admin@123; MultipleActiveResultSets=True; Encrypt=True; TrustServerCertificate=True; Connection Timeout=60;
     networks:
