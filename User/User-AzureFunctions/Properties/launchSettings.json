@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "User_AzureFunctions": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7226",
+      "launchBrowser": true
+    }
+  }
+}
