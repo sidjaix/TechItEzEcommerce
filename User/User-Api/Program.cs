@@ -7,14 +7,18 @@ using User_Api;
 using User_Data.Interface;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        var configuration = builder.Configuration;
-        var connectionType = configuration.GetValue<string>("ConnectionStringType");
+
+        // Retrieve the connection string of Azure App Config Store
+        string connectionString = builder.Configuration.GetConnectionString("AppConfig");
+        builder.Configuration.AddAzureAppConfiguration(connectionString);
+        var config = builder.Configuration;
 
         //Add services to the container.
         builder.Services.AddControllers().AddNewtonsoftJson(o =>
@@ -35,8 +39,9 @@ internal class Program
         builder.Services.AddDbContextPool<UserDbContext>((serviceProvider, options) =>
         {
             var environment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
+            var azureDB = config.GetConnectionString("AzureDB");
             options
-            .UseSqlServer(configuration.GetConnectionString(connectionType))
+            .UseSqlServer(azureDB)
             .EnableSensitiveDataLogging(environment.IsDevelopment());  //should not be used in production, only for development purpose
         });
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

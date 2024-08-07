@@ -9,7 +9,7 @@ namespace User_Data;
 
 public class CustomerRepository : ICustomerRepository
 {
-    private UserDbContext db { get; }
+    private readonly UserDbContext db;
     public CustomerRepository(UserDbContext dbContext)
     {
         db = dbContext;
