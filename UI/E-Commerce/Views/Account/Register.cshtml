@@ -1,0 +1,127 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"]= "Register";
+}
+
+<section class='h-100'>
+      <div class='container h-100'>
+        <div class='row justify-content-sm-center h-100'>
+          <div class='col-xxl-5 col-xl-5 col-lg-6 col-md-7 col-sm-6'>
+            <div class='text-center my-3'>
+              <img src=@Url.Content("~/img/logo.png") alt='logo' width='100' />
+            </div>
+            <div class='card shadow-lg'>
+              <div class='card-body p-5'>
+                <h1 class='fs-4 card-title fw-bold mb-4'>Register</h1>
+                <form>
+                  <div class='input-group mb-3'>
+                    <span class='input-group-text text-muted'>Name</span>
+                    <input
+                      id='name'
+                      type='text'
+                      class='form-control'
+                      name='name'
+                    />
+                  </div>
+
+                  <div class='input-group mb-3'>
+                    <span class='input-group-text text-muted'>Email</span>
+                    <input
+                      id='email'
+                      class='form-control'
+                      name='email'
+                    />
+                  </div>
+
+                  <div class='input-group mb-3'>
+                    <span class='input-group-text text-muted'>Password</span>
+                    <input
+                      id='password'
+                      type='password'
+                      class='form-control'
+                      name='password'
+                    />
+                  </div>
+
+                  <div class='input-group mb-3'>
+                    <span class='input-group-text text-muted'>Confirm Password</span>
+                    <input
+                      id='confirmPassword'
+                      type='password'
+                      class='form-control'
+                      name='confirmPassword'
+                    />
+                  </div>
+
+                  <div class='input-group mb-3'>
+                    <span class='input-group-text text-muted'>City</span>
+                    <input
+                      id='city'
+                      type='text'
+                      class='form-control'
+                      name='city'
+                    />
+                  </div>
+
+                  <div class='input-group mb-3'>
+                    <div class='form-check form-check-inline'>
+                      <input
+                        value='Male'
+                        class='form-check-input'
+                        type='radio'
+                        name='gender'
+                        id='male'
+                      />
+                      <label class='form-check-label' htmlFor='male'>
+                        Male
+                      </label>
+                    </div>
+                    <div class='form-check form-check-inline'>
+                      <input
+                        value='Female'
+                        class='form-check-input'
+                        type='radio'
+                        name='gender'
+                        id='female'
+                      />
+                      <label class='form-check-label' htmlFor='female'>
+                        Female
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class='input-group mb-3'>
+                    <textarea
+                      name='description'
+                      class='form-control'
+                      placeholder='bio'
+                      id='description'
+                      rows='3'></textarea>
+                  </div>
+                  <div class='align-items-center d-flex'>
+                    <button type='reset' class='btn btn-secondary ms-auto'>
+                      Reset
+                    </button>
+                    <button type='submit' class='btn btn-primary ms-2'>
+                      Register
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div class='card-footer py-3 border-0'>
+                <div class='text-center'>
+                  Already have an account? 
+                  <a 
+                  asp-controller="account" 
+                  asp-action="login" 
+                  class='btn btn-sm btn-warning text-dark'
+                  >Login</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
