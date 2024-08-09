@@ -17,6 +17,7 @@ RUN dotnet restore "User/User-Core/User-Core.csproj"
 RUN dotnet restore "User/User-Data/User-Data.csproj"
 RUN dotnet restore "User/User-Api/User-Api.csproj"
 
+
 # Copy the remaining source code and build the application
 COPY . .
 WORKDIR "/src/User/User-Api"

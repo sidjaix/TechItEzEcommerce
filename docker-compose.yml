@@ -1,36 +1,51 @@
-name: techitezecommerce
-version: '3.4'
+name: tie-e-commerce
+version: '3.8'
 
 services:
-  webapi:
-    container_name: techitez_user_api
+  user_api:
+    container_name: e_commerce_user_api
     image: sidjaix/user-api:latest
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./User/Dockerfile
     ports:
       - '5001:80'
-    depends_on:
-      - sqlserver
+    # depends_on:
+    #   - sqlserver
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStringType=AzureDB
       - ConnectionStrings__DockerDB=Server=sqlserver;Database=TechItEzEcommerce;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;
-      - ConnectionStrings__AzureDB=Server=tcp:techitez.database.windows.net,1433;Initial Catalog=TechItEzEcommerce;Persist Security Info=False;User ID=sidjaix;Password=admin@123; MultipleActiveResultSets=True; Encrypt=True; TrustServerCertificate=True; Connection Timeout=60;
     networks:
       - techitez_network
 
-  sqlserver:
-    container_name: techitez_sqlserver
-    image: mcr.microsoft.com/azure-sql-edge
-    environment:
-      SA_PASSWORD: 'admin@123'
-      ACCEPT_EULA: 'Y'
+  product_api:
+    container_name: e_commerce_product_api
+    image: sidjaix/product-api:latest
+    build:
+      context: .
+      dockerfile: ./Product/Dockerfile
     ports:
-      - '1433:1433'
+      - '5002:80'
+    # depends_on:
+    #   - sqlserver
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DockerDB=Server=sqlserver;Database=TechItEzEcommerce;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;- ConnectionStrings__AzureDB=Server=tcp:techitez.database.windows.net,1433;Initial Catalog=TechItEzEcommerce;Persist Security Info=False;User ID=sidjaix;Password=admin@123; MultipleActiveResultSets=True; Encrypt=True; TrustServerCertificate=True; Connection Timeout=60;
     networks:
       - techitez_network
+
+  # sqlserver:
+  #   container_name: techitez_sqlserver
+  #   image: mcr.microsoft.com/azure-sql-edge
+  #   environment:
+  #     SA_PASSWORD: 'admin@123'
+  #     ACCEPT_EULA: 'Y'
+  #   ports:
+  #     - '1433:1433'
+  #   networks:
+  #     - techitez_network
 
 networks:
   techitez_network:
