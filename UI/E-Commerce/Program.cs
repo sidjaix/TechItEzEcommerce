@@ -1,5 +1,5 @@
-using ApiServices.Product;
-using ApiServices.User;
+using ApiServices.ProductService;
+using ApiServices.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 

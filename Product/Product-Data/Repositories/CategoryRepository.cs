@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Product_Core;
 using Product_Core.Entities;
+using Product_Core.Mapper;
+using Product_Core.Models;
 
 namespace Product_Data.Repositories;
 
@@ -11,13 +13,12 @@ public class CategoryRepository : ICategoryRepository
     {
         db = context;
     }
-    public async Task<Category> CreateNewCategoryAsync(Category categoryModel)
+    public async Task<CategoryModel> CreateNewCategoryAsync(CategoryModel categoryModel)
     {
-        categoryModel.LastModifiedBy = 1;
-        categoryModel.CreatedBy = 1;
-        db.Categories.Add(categoryModel);
+        var category = categoryModel.MapToEntity();
+        db.Categories.Add(category);
         await db.SaveChangesAsync();
-        return categoryModel;
+        return category.MapToDto();
     }
 
     public async Task<bool> DeleteCategoryAsync(int categoryId)
@@ -26,23 +27,23 @@ public class CategoryRepository : ICategoryRepository
         return numberOfRowDeleted > 0;
     }
 
-    public async Task<List<Category>> GetAllCategoryAsync()
+    public async Task<List<CategoryModel>> GetAllCategoryAsync()
     {
-        var categories = await db.Categories.ToListAsync();
+        var categories = await db.Categories.Select(x => x.MapToDto()).ToListAsync();
         return categories;
     }
 
-    public async Task<Category> GetCategoryAsync(int categoryId)
+    public async Task<CategoryModel> GetCategoryAsync(int categoryId)
     {
         var category = await db.Categories.FindAsync(categoryId);
         if (category == null)
         {
             return default;
         }
-        return category;
+        return category.MapToDto();
     }
 
-    public async Task<Category> UpdateExistingCategoryAsync(Category categoryModel)
+    public async Task<CategoryModel> UpdateExistingCategoryAsync(CategoryModel categoryModel)
     {
         var category = await db.Categories.FindAsync(categoryModel.CategoryId);
         if (category == null)
@@ -52,6 +53,6 @@ public class CategoryRepository : ICategoryRepository
         category.CategoryName = categoryModel.CategoryName;
         db.Attach(category);
         await db.SaveChangesAsync();
-        return category;
+        return category.MapToDto();
     }
 }

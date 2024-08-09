@@ -1,8 +1,9 @@
+using ApiServices.Models;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
 using System.Text;
 
-namespace ApiServices.Product;
+namespace ApiServices.ProductService;
 
 public class ProductService : IProductService
 {
@@ -12,10 +13,10 @@ public class ProductService : IProductService
         this.httpClient = httpClient;
     }
 
-    public async Task<Product_Core.Entities.Product> CreateNewProductAsync(Product_Core.Entities.Product productModel)
+    public async Task<ProductModel> CreateNewProductAsync(ProductModel productModel)
     {
         var url = $"product";
-        var product = new Product_Core.Entities.Product();
+        var product = new ProductModel();
         // Convert the data to JSON
         var jsonData = JsonConvert.SerializeObject(product);
         var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -24,16 +25,16 @@ public class ProductService : IProductService
         if (responce.IsSuccessStatusCode)
         {
             var jsonString = await responce.Content.ReadAsStringAsync();
-            product = JsonConvert.DeserializeObject<Product_Core.Entities.Product>(jsonString);
+            product = JsonConvert.DeserializeObject<ProductModel>(jsonString);
             return product;
         }
         return product;
     }
 
-    public async Task<Product_Core.Entities.Product> UpdateExistingProductAsync(Product_Core.Entities.Product productModel)
+    public async Task<ProductModel> UpdateExistingProductAsync(ProductModel productModel)
     {
         var url = $"product/update";
-        var product = new Product_Core.Entities.Product();
+        var product = new ProductModel();
         // Convert the data to JSON
         var jsonData = JsonConvert.SerializeObject(product);
         var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -42,49 +43,49 @@ public class ProductService : IProductService
         if (responce.IsSuccessStatusCode)
         {
             var jsonString = await responce.Content.ReadAsStringAsync();
-            product = JsonConvert.DeserializeObject<Product_Core.Entities.Product>(jsonString);
+            product = JsonConvert.DeserializeObject<ProductModel>(jsonString);
             return product;
         }
         return product;
     }
 
-    public async Task<List<Product_Core.Entities.Product>> GetProductsAsync()
+    public async Task<List<ProductModel>> GetProductsAsync()
     {
         var url = "product";
-        var products = new List<Product_Core.Entities.Product>();
+        var products = new List<ProductModel>();
         var responce = await httpClient.GetAsync(url);
         if (responce.IsSuccessStatusCode)
         {
             var jsonString = await responce.Content.ReadAsStringAsync();
-            products = JsonConvert.DeserializeObject<List<Product_Core.Entities.Product>>(jsonString);
+            products = JsonConvert.DeserializeObject<List<ProductModel>>(jsonString);
             return products;
         }
         return products;
     }
 
-    public async Task<Product_Core.Entities.Product> GetProductDetailAsync(int productId)
+    public async Task<ProductModel> GetProductDetailAsync(int productId)
     {
         var url = $"product/{productId}";
-        var product = new Product_Core.Entities.Product();
+        var product = new ProductModel();
         var responce = await httpClient.GetAsync(url);
         if (responce.IsSuccessStatusCode)
         {
             var jsonString = await responce.Content.ReadAsStringAsync();
-            product = JsonConvert.DeserializeObject<Product_Core.Entities.Product>(jsonString);
+            product = JsonConvert.DeserializeObject<ProductModel>(jsonString);
             return product;
         }
         return product;
     }
 
-    public async Task<List<Product_Core.Entities.Product>> GetProductsByCategoryAsync(int categoriesId)
+    public async Task<List<ProductModel>> GetProductsByCategoryAsync(int categoriesId)
     {
         var url = $"product/GetProductByCategory/{categoriesId}";
-        var products = new List<Product_Core.Entities.Product>();
+        var products = new List<ProductModel>();
         var responce = await httpClient.GetAsync(url);
         if (responce.IsSuccessStatusCode)
         {
             var jsonString = await responce.Content.ReadAsStringAsync();
-            products = JsonConvert.DeserializeObject<List<Product_Core.Entities.Product>>(jsonString);
+            products = JsonConvert.DeserializeObject<List<ProductModel>>(jsonString);
             return products;
         }
         return products;

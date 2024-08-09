@@ -1,9 +1,9 @@
 using Newtonsoft.Json;
-using Product_Core.Entities;
+using ApiServices.Models;
 using System.Net.Http.Json;
 using System.Text;
 
-namespace ApiServices.Product;
+namespace ApiServices.ProductService;
 
 public class CategoryService : ICategoryService
 {
@@ -13,10 +13,10 @@ public class CategoryService : ICategoryService
         this.httpClient = httpClient;
     }
 
-    public async Task<Category> CreateNewCategoryAsync(Category productModel)
+    public async Task<CategoryModel> CreateNewCategoryAsync(CategoryModel productModel)
     {
         var url = $"category";
-        var category = new Category();
+        var category = new CategoryModel();
         // Convert the data to JSON
         var jsonData = JsonConvert.SerializeObject(category);
         var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -25,16 +25,16 @@ public class CategoryService : ICategoryService
         if (responce.IsSuccessStatusCode)
         {
             var jsonString = await responce.Content.ReadAsStringAsync();
-            category = JsonConvert.DeserializeObject<Category>(jsonString);
+            category = JsonConvert.DeserializeObject<CategoryModel>(jsonString);
             return category;
         }
         return category;
     }
 
-    public async Task<Category> UpdateExistingCategoryAsync(Category productModel)
+    public async Task<CategoryModel> UpdateExistingCategoryAsync(CategoryModel productModel)
     {
         var url = $"category/update";
-        var category = new Category();
+        var category = new CategoryModel();
         // Convert the data to JSON
         var jsonData = JsonConvert.SerializeObject(category);
         var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -43,35 +43,35 @@ public class CategoryService : ICategoryService
         if (responce.IsSuccessStatusCode)
         {
             var jsonString = await responce.Content.ReadAsStringAsync();
-            category = JsonConvert.DeserializeObject<Category>(jsonString);
+            category = JsonConvert.DeserializeObject<CategoryModel>(jsonString);
             return category;
         }
         return category;
     }
 
-    public async Task<List<Category>> GetAllCategoryAsync()
+    public async Task<List<CategoryModel>> GetAllCategoryAsync()
     {
         var url = "category";
-        var categories = new List<Category>();
+        var categories = new List<CategoryModel>();
         var responce = await httpClient.GetAsync(url);
         if (responce.IsSuccessStatusCode)
         {
             var jsonString = await responce.Content.ReadAsStringAsync();
-            categories = JsonConvert.DeserializeObject<List<Category>>(jsonString);
+            categories = JsonConvert.DeserializeObject<List<CategoryModel>>(jsonString);
             return categories;
         }
         return categories;
     }
 
-    public async Task<Category> GetCategoryAsync(int categoryId)
+    public async Task<CategoryModel> GetCategoryAsync(int categoryId)
     {
         var url = $"category/{categoryId}";
-        var category = new Category();
+        var category = new CategoryModel();
         var responce = await httpClient.GetAsync(url);
         if (responce.IsSuccessStatusCode)
         {
             var jsonString = await responce.Content.ReadAsStringAsync();
-            category = JsonConvert.DeserializeObject<Category>(jsonString);
+            category = JsonConvert.DeserializeObject<CategoryModel>(jsonString);
             return category;
         }
         return category;

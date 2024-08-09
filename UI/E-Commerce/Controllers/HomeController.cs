@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce.Models;
-using ApiServices.Product;
+using ApiServices.ProductService;
 
 namespace E_Commerce.Controllers;
 

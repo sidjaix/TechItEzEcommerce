@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Product_Api.Common.Filters;
-using Product_Core.Entities;
+using Product_Core.Models;
 using Product_Data.Repositories;
 
 namespace Product_Api.Controllers
@@ -18,21 +18,25 @@ namespace Product_Api.Controllers
         /// <summary>
         /// Create new category
         /// </summary>
-        /// <returns></returns>
+        /// <returns>CategoryModel</returns>
         [HttpPost]
         [ValidateModel]
-        public async Task<ActionResult<Category>> CreateNewCategoryAsync([FromBody] Category categoryData)
+        public async Task<ActionResult<CategoryModel>> CreateNewCategoryAsync([FromBody] CategoryModel categoryData)
         {
             var category = await categoryRepository.CreateNewCategoryAsync(categoryData);
-            return category;
+            if (category is null)
+            {
+                return BadRequest("New Category has not created");
+            }
+            return Ok(category);
         }
 
         /// <summary>
         /// Get all categories
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of CategoryModel</returns>
         [HttpGet]
-        public async Task<ActionResult<List<Category>>> GetAllCategoryAsync()
+        public async Task<ActionResult<List<CategoryModel>>> GetAllCategoryAsync()
         {
             var categories = await categoryRepository.GetAllCategoryAsync();
             return Ok(categories);
@@ -42,9 +46,9 @@ namespace Product_Api.Controllers
         /// Get category detail
         /// </summary>
         /// <param name="categoryId"></param>
-        /// <returns>Category</returns>
+        /// <returns>CategoryModel</returns>
         [HttpGet("{categoryId}")]
-        public async Task<ActionResult<Category>> GetCategoryAsync(int categoryId)
+        public async Task<ActionResult<CategoryModel>> GetCategoryAsync(int categoryId)
         {
             var category = await categoryRepository.GetCategoryAsync(categoryId);
             if (category is null)
@@ -58,20 +62,20 @@ namespace Product_Api.Controllers
         /// Update existing category
         /// </summary>
         /// <param name="categoryData"></param>
-        /// <returns>Category</returns>
+        /// <returns>CategoryModel</returns>
         [HttpPut("Update")]
-        public async Task<ActionResult<Category>> UpdateExistingCategoryAsync(Category categoryData)
+        public async Task<ActionResult<CategoryModel>> UpdateExistingCategoryAsync(CategoryModel categoryData)
         {
             var category = await categoryRepository.UpdateExistingCategoryAsync(categoryData);
             if (category is null)
             {
-                return BadRequest("Category has not updated due to in appropriate data");
+                return BadRequest("CategoryModel has not updated due to in appropriate data");
             }
             return Ok(category);
         }
 
         /// <summary>
-        /// Delete Category
+        /// Delete CategoryModel
         /// </summary>
         /// <param name="categoryId"></param>
         /// <returns>bool</returns>
@@ -79,14 +83,11 @@ namespace Product_Api.Controllers
         public async Task<ActionResult<bool>> DeleteCategoryAsync(int categoryId)
         {
             var isdeleted = await categoryRepository.DeleteCategoryAsync(categoryId);
-            if (isdeleted)
-            {
-                return Ok("Category has deleted");
-            }
-            else
+            if (!isdeleted)
             {
                 return BadRequest();
             }
+            return Ok("Category has deleted");
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Product_Core;
 using Product_Core.Entities;
+using Product_Core.Mapper;
+using Product_Core.Models;
 
 namespace Product_Data.Repositories;
 
@@ -12,48 +14,61 @@ public class ProductRepository : IProductRepository
         db = context;
     }
 
-    public async Task<Product> CreateNewProductAsync(Product productData)
+    public async Task<ProductModel> CreateNewProductAsync(ProductModel productData)
     {
-        db.Products.Add(productData);
+        Product product = productData.MapToEntity();
+        db.Products.Add(product);
         await db.SaveChangesAsync();
-        return productData;
+        var productDto = product.MapToDto();
+        return productDto;
     }
-    public async Task<Product> UpdateExistingProductAsync(Product productData)
+    public async Task<ProductModel> UpdateExistingProductAsync(ProductModel productData)
     {
-        var product = await db.Products.FindAsync(productData.ProductId);
+
+        var existingProduct = await db.Products.FindAsync(productData.ProductId);
+        if (existingProduct == null)
+        {
+            return default;
+        }
+        existingProduct.ProductName = productData.ProductName;
+        existingProduct.CategoryId = productData.CategoryId;
+        existingProduct.Description = productData.Description;
+        existingProduct.Price = productData.Price;
+        existingProduct.LastModifiedBy = 1;
+
+        db.Attach(existingProduct);
+        await db.SaveChangesAsync();
+        return existingProduct.MapToDto();
+    }
+    public async Task<List<ProductModel>> GetProductsAsync()
+    {
+        var products = await db.Products.Select(x => x.MapToDto()).ToListAsync();
+        return products;
+    }
+
+    public async Task<ProductModel> GetProductDetailAsync(int productId)
+    {
+        var product = await db.Products.FindAsync(productId);
         if (product == null)
         {
             return default;
         }
-        product.ProductName = productData.ProductName;
-        product.CategoryId = productData.CategoryId;
-        product.Description = productData.Description;
-        product.Price = productData.Price;
-        product.LastModifiedBy = 1;
-        db.Attach(product);
-        await db.SaveChangesAsync();
-        return product;
+        return product.MapToDto();
     }
-    public async Task<List<Product>> GetProductsAsync()
+
+    public async Task<List<ProductModel>> GetProductsByCategoryAsync(int categoryId)
     {
-        var products = await db.Products.ToListAsync();
+        var products = await db.Products
+        .Where(x => x.CategoryId == categoryId)
+        .Select(x => x.MapToDto())
+        .ToListAsync();
+
         return products;
     }
 
-    public async Task<Product> GetProductDetailAsync(int productId)
+    public async Task<bool> DeleteProductAsync(int productId)
     {
-        var product = await db.Products.FindAsync(productId);
-        return product;
-    }
-
-    public async Task<List<Product>> GetProductsByCategoryAsync(int categoryId)
-    {
-        var products = await db.Products.Where(x => x.CategoryId == categoryId).ToListAsync();
-        return products;
-    }
-
-    public async Task DeleteProductAsync(int productId)
-    {
-        await db.Products.Where(p => p.ProductId == productId).ExecuteDeleteAsync();
+        var numberOfRowDeleted = await db.Products.Where(p => p.ProductId == productId).ExecuteDeleteAsync();
+        return numberOfRowDeleted > 0;
     }
 }

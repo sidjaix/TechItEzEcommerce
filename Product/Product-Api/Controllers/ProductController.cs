@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Product_Api.Common.Filters;
 using Product_Core.Entities;
+using Product_Core.Models;
 using Product_Data.Repositories;
 
 namespace Product_Api.Controllers
@@ -18,10 +19,10 @@ namespace Product_Api.Controllers
         /// <summary>
         /// Create new product
         /// </summary>
-        /// <returns></returns>
+        /// <returns>ProductModel</returns>
         [HttpPost]
         [ValidateModel]
-        public async Task<ActionResult<Product>> CreateNewProduct([FromBody] Product productData)
+        public async Task<ActionResult<ProductModel>> CreateNewProduct([FromBody] ProductModel productData)
         {
             var product = await productRepository.CreateNewProductAsync(productData);
             return CreatedAtAction(nameof(GetProductById), new { productId = product.ProductId }, product);
@@ -30,9 +31,9 @@ namespace Product_Api.Controllers
         /// <summary>
         /// Get all products
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of ProductModel</returns>
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts()
+        public async Task<ActionResult<List<ProductModel>>> GetProducts()
         {
             var products = await productRepository.GetProductsAsync();
             return Ok(products);
@@ -41,9 +42,9 @@ namespace Product_Api.Controllers
         /// <summary>
         /// Get all products of a category
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of ProductModel</returns>
         [HttpGet("GetProductByCategory/{categoryId}")]
-        public async Task<ActionResult<List<Product>>> GetProductsByCategoryAsync(int categoryId)
+        public async Task<ActionResult<List<ProductModel>>> GetProductsByCategoryAsync(int categoryId)
         {
             var products = await productRepository.GetProductsByCategoryAsync(categoryId);
             return Ok(products);
@@ -53,10 +54,10 @@ namespace Product_Api.Controllers
         /// Get product by Id
         /// </summary>
         /// <param name="productId"></param>
-        /// <returns>Product</returns>
+        /// <returns>ProductModel</returns>
         [HttpGet("{productId}")]
         //[Route("GetProductById")]
-        public async Task<ActionResult<Product>> GetProductById(int productId)
+        public async Task<ActionResult<ProductModel>> GetProductById(int productId)
         {
             var product = await productRepository.GetProductDetailAsync(productId);
             if (product is null)
@@ -70,14 +71,14 @@ namespace Product_Api.Controllers
         /// Update existing product
         /// </summary>
         /// <param name="productData"></param>
-        /// <returns>Product</returns>
+        /// <returns>ProductModel</returns>
         [HttpPut("Update")]
-        public async Task<ActionResult<Product>> UpdateProduct(Product productData)
+        public async Task<ActionResult<ProductModel>> UpdateProduct(ProductModel productData)
         {
             var product = await productRepository.UpdateExistingProductAsync(productData);
             if (product is null)
             {
-                return BadRequest("Product has not been updated due to in appropriate data");
+                return BadRequest("ProductModel has not been updated due to in appropriate data");
             }
             return Ok(product);
         }
@@ -90,16 +91,12 @@ namespace Product_Api.Controllers
         [HttpDelete("{productId}")]
         public async Task<IActionResult> DeleteProductAsync(int productId)
         {
-            try
+            var isdeleted = await productRepository.DeleteProductAsync(productId);
+            if (!isdeleted)
             {
-                await productRepository.DeleteProductAsync(productId);
-                return Ok("Product Deleted");
+                return BadRequest("Product has not deleted");
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok("Product has deleted");
         }
-
     }
 }
