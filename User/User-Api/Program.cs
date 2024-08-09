@@ -3,11 +3,10 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using User_Core;
 using User_Data;
-using User_Api;
+using User_Api.Extensions;
 using User_Data.Interface;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using Microsoft.Extensions.Configuration;
 
 internal class Program
 {
@@ -51,9 +50,9 @@ internal class Program
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Tech It Ez E-Commerce API",
+                Title = "User API",
                 Version = "v1",
-                Description = "An API to perform e-commerce related operations",
+                Description = "An API to perform e-commerce User related operations",
                 TermsOfService = new Uri("https://twitter.com/sidjaix"),
                 Contact = new OpenApiContact
                 {
@@ -86,7 +85,7 @@ internal class Program
         app.UseSwagger();
         app.UseSwaggerUI(option =>
         {
-            option.SwaggerEndpoint("/swagger/v1/swagger.json", "Tech-It-Ez-Ecommerce API V1");
+            option.SwaggerEndpoint("/swagger/v1/swagger.json", "User API V1");
             option.RoutePrefix = string.Empty; // Serve Swagger UI at the app's root
         });
         //}

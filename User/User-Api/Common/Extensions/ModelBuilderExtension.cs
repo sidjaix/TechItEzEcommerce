@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using User_Core;
 
-namespace User_Api;
+namespace User_Api.Extensions;
 
 public static class ModelBuilderExtension
 {
