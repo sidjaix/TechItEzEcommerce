@@ -15,7 +15,7 @@ public class CategoryService : ICategoryService
 
     public async Task<CategoryModel> CreateNewCategoryAsync(CategoryModel productModel)
     {
-        var url = $"category";
+        var url = $"api/category";
         var category = new CategoryModel();
         // Convert the data to JSON
         var jsonData = JsonConvert.SerializeObject(category);
@@ -33,7 +33,7 @@ public class CategoryService : ICategoryService
 
     public async Task<CategoryModel> UpdateExistingCategoryAsync(CategoryModel productModel)
     {
-        var url = $"category/update";
+        var url = $"api/category/update";
         var category = new CategoryModel();
         // Convert the data to JSON
         var jsonData = JsonConvert.SerializeObject(category);
@@ -51,7 +51,7 @@ public class CategoryService : ICategoryService
 
     public async Task<List<CategoryModel>> GetAllCategoryAsync()
     {
-        var url = "category";
+        var url = "api/category";
         var categories = new List<CategoryModel>();
         var responce = await httpClient.GetAsync(url);
         if (responce.IsSuccessStatusCode)
@@ -65,7 +65,7 @@ public class CategoryService : ICategoryService
 
     public async Task<CategoryModel> GetCategoryAsync(int categoryId)
     {
-        var url = $"category/{categoryId}";
+        var url = $"api/category/{categoryId}";
         var category = new CategoryModel();
         var responce = await httpClient.GetAsync(url);
         if (responce.IsSuccessStatusCode)
@@ -79,7 +79,7 @@ public class CategoryService : ICategoryService
 
     public async Task<bool> DeleteCategoryAsync(int categoryId)
     {
-        var url = $"category/{categoryId}";
+        var url = $"api/category/{categoryId}";
         var responce = await httpClient.DeleteAsync(url);
         return responce.IsSuccessStatusCode;
     }

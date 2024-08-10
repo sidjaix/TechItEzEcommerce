@@ -1,7 +1,6 @@
 namespace ApiServices.Models;
 
-public class DashboardModel
+public class HomeModel
 {
     public List<CategoryModel> Categories { get; set; }
-
 }

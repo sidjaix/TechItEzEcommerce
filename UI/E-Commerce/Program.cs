@@ -16,6 +16,10 @@ builder.Services.AddHttpClient<IProductService, ProductService>(c =>
 {
     c.BaseAddress = new Uri("http://localhost:5002/api/product");
 });
+builder.Services.AddHttpClient<ICategoryService, CategoryService>(c =>
+{
+    c.BaseAddress = new Uri("http://localhost:5002");
+});
 
 var app = builder.Build();
 
