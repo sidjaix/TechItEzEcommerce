@@ -10,9 +10,11 @@ namespace Product_Api.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryRepository categoryRepository;
+        private ResponseDto _response;
         public CategoryController(ICategoryRepository categoryRepository)
         {
             this.categoryRepository = categoryRepository;
+            _response = new ResponseDto();
         }
 
         /// <summary>
@@ -34,12 +36,21 @@ namespace Product_Api.Controllers
         /// <summary>
         /// Get all categories
         /// </summary>
-        /// <returns>List of CategoryModel</returns>
+        /// <returns>ResponseDto</returns>
         [HttpGet]
-        public async Task<ActionResult<List<CategoryModel>>> GetAllCategoryAsync()
+        public async Task<ActionResult<ResponseDto>> GetAllCategoryAsync()
         {
-            var categories = await categoryRepository.GetAllCategoryAsync();
-            return Ok(categories);
+            try
+            {
+                var categories = await categoryRepository.GetAllCategoryAsync();
+                _response.Result = categories;
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+            }
+            return Ok(_response);
         }
 
         /// <summary>

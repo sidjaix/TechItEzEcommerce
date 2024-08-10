@@ -1,6 +1,6 @@
 ﻿using ApiServices.Models;
 
-namespace ApiServices.UserService;
+namespace ApiServices.Services.IService;
 
 public interface IUserService
 {

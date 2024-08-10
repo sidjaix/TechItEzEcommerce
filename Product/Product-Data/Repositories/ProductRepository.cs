@@ -17,6 +17,10 @@ public class ProductRepository : IProductRepository
     public async Task<ProductModel> CreateNewProductAsync(ProductModel productData)
     {
         Product product = productData.MapToEntity();
+        product.ProductImages.Add(new ProductImage
+        {
+            ImageUrl = productData.ProductImageUrl
+        });
         db.Products.Add(product);
         await db.SaveChangesAsync();
         var productDto = product.MapToDto();
@@ -42,30 +46,61 @@ public class ProductRepository : IProductRepository
     }
     public async Task<List<ProductModel>> GetProductsAsync()
     {
-        var products = await db.Products.Select(x => x.MapToDto()).ToListAsync();
+        var products = await db.Products
+        .Include(p => p.ProductImages)
+        .Select(x => new ProductModel
+        {
+            ProductId = x.ProductId,
+            CategoryId = x.CategoryId,
+            ProductName = x.ProductName,
+            Description = x.Description,
+            Price = x.Price,
+            ProductImageUrl = x.ProductImages.FirstOrDefault(pi => pi.ProductId == x.ProductId).ImageUrl
+        })
+        .AsSplitQuery()
+        .ToListAsync();
         return products;
     }
-
     public async Task<ProductModel> GetProductDetailAsync(int productId)
     {
-        var product = await db.Products.FindAsync(productId);
+        var product = await db.Products
+        .Include(p => p.ProductImages)
+        .Select(x => new ProductModel
+        {
+            ProductId = x.ProductId,
+            CategoryId = x.CategoryId,
+            ProductName = x.ProductName,
+            Description = x.Description,
+            Price = x.Price,
+            ProductImageUrl = x.ProductImages.FirstOrDefault(pi => pi.ProductId == x.ProductId).ImageUrl
+        })
+        .AsSplitQuery()
+        .SingleOrDefaultAsync(p => p.ProductId == productId);
         if (product == null)
         {
             return default;
         }
-        return product.MapToDto();
+        return product;
     }
-
     public async Task<List<ProductModel>> GetProductsByCategoryAsync(int categoryId)
     {
         var products = await db.Products
+        .Include(p => p.ProductImages)
         .Where(x => x.CategoryId == categoryId)
-        .Select(x => x.MapToDto())
+        .Select(x => new ProductModel
+        {
+            ProductId = x.ProductId,
+            CategoryId = x.CategoryId,
+            ProductName = x.ProductName,
+            Description = x.Description,
+            Price = x.Price,
+            ProductImageUrl = x.ProductImages.FirstOrDefault(pi => pi.ProductId == x.ProductId).ImageUrl
+        })
+        .AsSplitQuery()
         .ToListAsync();
 
         return products;
     }
-
     public async Task<bool> DeleteProductAsync(int productId)
     {
         var numberOfRowDeleted = await db.Products.Where(p => p.ProductId == productId).ExecuteDeleteAsync();

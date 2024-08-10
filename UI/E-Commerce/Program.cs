@@ -1,5 +1,5 @@
-using ApiServices.ProductService;
-using ApiServices.UserService;
+using ApiServices.Services.IService;
+using ApiServices.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,15 +11,16 @@ builder.Services.AddHttpClient<IUserService, UserService>(c =>
 {
     c.BaseAddress = new Uri("http:localhost:5001");
 });
-
 builder.Services.AddHttpClient<IProductService, ProductService>(c =>
 {
-    c.BaseAddress = new Uri("http://localhost:5002/api/product");
+    c.BaseAddress = new Uri("http://localhost:5002");
 });
 builder.Services.AddHttpClient<ICategoryService, CategoryService>(c =>
 {
     c.BaseAddress = new Uri("http://localhost:5002");
 });
+
+builder.Services.AddSingleton<IBaseService, BaseService>();
 
 var app = builder.Build();
 

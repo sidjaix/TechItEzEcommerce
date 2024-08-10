@@ -1,8 +1,9 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using E_Commerce.Models;
-using ApiServices.ProductService;
 using ApiServices.Models;
+using ApiServices.Services.IService;
+using Newtonsoft.Json;
 
 namespace E_Commerce.Controllers;
 
@@ -26,7 +27,11 @@ public class HomeController : Controller
     {
         _logger.LogInformation("Getting Category");
         var model = new HomeModel();
-        model.Categories = await categoryService.GetAllCategoryAsync();
+        var response = await categoryService.GetAllCategoryAsync();
+        if (response != null && response.IsSuccess)
+        {
+            model.Categories = JsonConvert.DeserializeObject<List<CategoryModel>>(Convert.ToString(response.Result));
+        }
         return View(model);
     }
 

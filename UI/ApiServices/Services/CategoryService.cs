@@ -2,15 +2,22 @@ using Newtonsoft.Json;
 using ApiServices.Models;
 using System.Net.Http.Json;
 using System.Text;
+using ApiServices.Services.IService;
+using ApiServices.Utility.Enums;
+using Microsoft.Extensions.Configuration;
 
-namespace ApiServices.ProductService;
+namespace ApiServices.Services;
 
 public class CategoryService : ICategoryService
 {
     private readonly HttpClient httpClient;
-    public CategoryService(HttpClient httpClient)
+    private readonly IBaseService baseService;
+    private readonly IConfiguration configuration;
+    public CategoryService(HttpClient httpClient, IBaseService baseService, IConfiguration configuration)
     {
         this.httpClient = httpClient;
+        baseService.BaseAddress = configuration["ApiBaseAddress:Product"];
+        this.baseService = baseService;
     }
 
     public async Task<CategoryModel> CreateNewCategoryAsync(CategoryModel productModel)
@@ -49,18 +56,17 @@ public class CategoryService : ICategoryService
         return category;
     }
 
-    public async Task<List<CategoryModel>> GetAllCategoryAsync()
+    public async Task<ResponseDto> GetAllCategoryAsync()
     {
-        var url = "api/category";
-        var categories = new List<CategoryModel>();
-        var responce = await httpClient.GetAsync(url);
-        if (responce.IsSuccessStatusCode)
+        var request = new RequestDto
         {
-            var jsonString = await responce.Content.ReadAsStringAsync();
-            categories = JsonConvert.DeserializeObject<List<CategoryModel>>(jsonString);
-            return categories;
-        }
-        return categories;
+            Url = "api/category",
+            ApiMethod = ApiMethod.GET
+        };
+
+        var response = await baseService.SendAsync(request);
+
+        return response;
     }
 
     public async Task<CategoryModel> GetCategoryAsync(int categoryId)

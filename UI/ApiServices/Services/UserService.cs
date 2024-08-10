@@ -1,7 +1,8 @@
 using Newtonsoft.Json;
 using ApiServices.Models;
+using ApiServices.Services.IService;
 
-namespace ApiServices.UserService;
+namespace ApiServices.Services;
 
 public class UserService : IUserService
 {
