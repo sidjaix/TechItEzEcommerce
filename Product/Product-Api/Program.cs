@@ -6,6 +6,7 @@ using Product_Api.Common.Extensions;
 using Product_Data.Repositories;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 internal class Program
 {
@@ -14,10 +15,10 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Retrieve the connection string of Azure App Config Store
-        string connectionString = builder.Configuration.GetConnectionString("AppConfig");
-        if (!string.IsNullOrEmpty(connectionString))
+        string azAppConfigconnectionString = builder.Configuration.GetValue<string>("Azure:AppConfig");
+        if (!string.IsNullOrEmpty(azAppConfigconnectionString))
         {
-            builder.Configuration.AddAzureAppConfiguration(connectionString);
+            builder.Configuration.AddAzureAppConfiguration(azAppConfigconnectionString);
         }
         var config = builder.Configuration;
 
@@ -28,6 +29,13 @@ internal class Program
             o.SerializerSettings.Formatting = Formatting.Indented;
             o.SerializerSettings.ContractResolver = new DefaultContractResolver();
         });
+
+        // Add application Authentication configuration
+        builder.AddAppAuthetication();
+
+        // Add application Authorization configuration
+        builder.Services.AddAuthorization();
+
         // In production, modify this with the actual domains you want to allow
         builder.Services.AddCors(o => o.AddPolicy("default", builder =>
         {
@@ -36,20 +44,45 @@ internal class Program
             .AllowAnyMethod()
             .AllowAnyHeader();
         }));
+
         // Register db context pool for sql server
         builder.Services.AddDbContextPool<ProductDbContext>((serviceProvider, options) =>
         {
             var environment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
-            var azureDB = config.GetConnectionString("AzureDB");
+            var azureDB = config.GetConnectionString("ProductApi");
             options
             .UseSqlServer(azureDB)
             .EnableSensitiveDataLogging(environment.IsDevelopment());  //should not be used in production, only for development purpose
         });
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
         builder.Services.AddEndpointsApiExplorer();
+
         // Register the Swagger generator, defining 1 or more Swagger documents
         builder.Services.AddSwaggerGen(c =>
         {
+            c.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                BearerFormat = "JWT",
+                Scheme = JwtBearerDefaults.AuthenticationScheme
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = JwtBearerDefaults.AuthenticationScheme
+                        }
+                    },
+                    new string[] {}
+                }
+            });
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "Product API",
@@ -82,6 +115,11 @@ internal class Program
 
         // Configure the HTTP request pipeline.
         app.UseCors("default");
+
+        // Apply Authentication and Authorization
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         // if (app.Environment.IsDevelopment())
         // {
         app.UseSwagger();
@@ -96,7 +134,7 @@ internal class Program
         app.MapControllers();
 
         // Apply Pending Migration
-        ModelBuilderExtension.UseMigiration(app);
+        app.UseMigiration();
 
         app.Run();
     }
