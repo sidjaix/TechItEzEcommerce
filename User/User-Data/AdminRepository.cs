@@ -1,4 +1,5 @@
-﻿using User_Core;
+﻿using Microsoft.EntityFrameworkCore;
+using User_Core;
 using User_Core.Entities;
 using User_Core.Models;
 
@@ -12,23 +13,23 @@ public class AdminRepository : IAdminRepository
         db = context;
     }
 
-    public List<Role> GetRoles()
+    public async Task<List<Role>> GetRolesAsync()
     {
-        var roles = db.Roles.ToList();
+        var roles = await db.Roles.ToListAsync();
         return roles;
     }
 
-    public Role CreateRole(RoleModel roleModel)
+    public async Task<Role> CreateRoleAsync(RoleModel roleModel)
     {
-        var role = RoleMapper.MapToEntity(roleModel);
+        var role = roleModel.MapToEntity();
         db.Roles.Add(role);
-        db.SaveChanges();
+        await db.SaveChangesAsync();
         return role;
     }
 
-    public Role GetRoleById(int roleId)
+    public async Task<Role> GetRoleByIdAsync(int roleId)
     {
-        var role = db.Roles.Find(roleId);
+        var role = await db.Roles.FindAsync(roleId);
         if (role is null)
         {
             return default;
@@ -36,19 +37,20 @@ public class AdminRepository : IAdminRepository
         return role;
     }
 
-    public Role UpdateRole(RoleModel roleData)
+    public async Task<Role> UpdateRoleAsync(RoleModel roleData)
     {
-        var role = db.Roles.SingleOrDefault(u => u.RoleId == roleData.RoleId);
-        role.RoleName = roleData.RoleName;
+        var role = await db.Roles.SingleOrDefaultAsync(u => u.Id == roleData.RoleId);
+        role.Name = roleData.RoleName;
         db.Attach(role);
-        db.SaveChanges();
+        await db.SaveChangesAsync();
         return role;
     }
 
-    public void DeleteRole(int roleId)
+    public async Task<bool> DeleteRoleAsync(int roleId)
     {
-        var role = db.Roles.Find(roleId);
+        var role = await db.Roles.FindAsync(roleId);
         db.Roles.Remove(role);
-        db.SaveChanges();
+        var numberOfRowAffected = await db.SaveChangesAsync();
+        return numberOfRowAffected > 0;
     }
 }

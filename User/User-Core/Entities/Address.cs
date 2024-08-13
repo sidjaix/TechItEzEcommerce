@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace User_Core.Entities;
 
@@ -13,7 +10,8 @@ public partial class Address : BaseEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int AddressId { get; set; }
 
-    public int CustomerId { get; set; }
+    [Required]
+    public string UserId { get; set; }
 
     [StringLength(255)]
     public string Street { get; set; } = null!;
@@ -28,8 +26,4 @@ public partial class Address : BaseEntity
     public string ZipCode { get; set; } = null!;
 
     public bool IsShippingAddress { get; set; }
-
-    [ForeignKey("CustomerId")]
-    [InverseProperty("Addresses")]
-    public virtual User Customer { get; set; } = null!;
 }

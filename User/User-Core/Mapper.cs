@@ -5,34 +5,26 @@ namespace User_Core;
 
 public static class UserMapper
 {
-
-    public static User MapToEntity(UserModel userModel)
+    public static User MapToEntity(this UserModel userModel)
     {
         return new User
         {
-            UserId = userModel.UserId,
-            //AdObjId = userModel.AdObjId
-            Username = userModel.DisplayName,
+            Id = userModel.UserId,
+            UserName = userModel.UserName,
             Email = userModel.Email,
-            Password = userModel.Password,
-            FirstName = userModel.FirstName,
-            LastName = userModel.LastName,
-            Address = userModel.Address,
-            // Add other properties as needed
+            Name = userModel.Name,
+            // // Add other properties as needed
         };
     }
 
-    public static UserModel MapToDto(User user)
+    public static UserModel MapToDto(this User user)
     {
         return new UserModel
         {
-            UserId = user.UserId,
-            //AdObjId = user.AdObjId
-            DisplayName = user.Username,
+            UserId = user.Id,
+            UserName = user.UserName,
             Email = user.Email,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Address = user.Address
+            Name = user.Name,
             // Add other properties as needed
         };
     }
@@ -40,21 +32,23 @@ public static class UserMapper
 
 public static class RoleMapper
 {
-    public static Role MapToEntity(RoleModel roleModel)
+    public static Role MapToEntity(this RoleModel roleModel)
     {
         return new Role
         {
-            RoleId = roleModel.RoleId,
-            RoleName = roleModel.RoleName
+            //Id = roleModel.RoleId,
+            Name = roleModel.RoleName,
+            Description = roleModel.Description
         };
     }
 
-    public static RoleModel MapToDto(Role role)
+    public static RoleModel MapToDto(this Role role)
     {
         return new RoleModel
         {
-            RoleId = role.RoleId,
-            RoleName = role.RoleName
+            RoleId = role.Id,
+            RoleName = role.Name,
+            Description = role.Description
         };
     }
 }

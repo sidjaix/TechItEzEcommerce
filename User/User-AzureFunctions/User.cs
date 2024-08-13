@@ -9,24 +9,24 @@ namespace User_AzureFunctions
     public class User
     {
         private readonly ILogger<User> _logger;
-        private readonly ICustomerRepository _customerRepository;
+        private readonly IUserRepository _customerRepository;
 
-        public User(ILogger<User> logger, ICustomerRepository customerRepository)
+        public User(ILogger<User> logger, IUserRepository customerRepository)
         {
             _logger = logger;
             _customerRepository = customerRepository;
         }
 
         [Function("GetUsers")]
-        public IActionResult GetUsers([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        public async Task<IActionResult> GetUsers([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-            var users = _customerRepository.GetUsers();
+            var users = await _customerRepository.GetUsersAsync();
             return new OkObjectResult(users);
         }
 
         [Function("GetUser")]
-        public IActionResult GetUser([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
+        public async Task<IActionResult> GetUser([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
             _logger.LogInformation("HTTP trigger GetUser function processed a request.");
             var userIdQuery = req.Query["userId"];
@@ -39,7 +39,7 @@ namespace User_AzureFunctions
                 return new BadRequestObjectResult("Invalid User ID format.");
             }
 
-            var user = _customerRepository.GetUserById(userId);
+            var user = await _customerRepository.GetUserByIdAsync(userId);
             return new OkObjectResult(user);
         }
     }

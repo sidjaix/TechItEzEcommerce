@@ -11,9 +11,10 @@ public partial class ContactUs : BaseEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ContactUsId { get; set; }
 
-    public string UserName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-    public string UserEmail { get; set; } = null!;
+    [Required]
+    public string Email { get; set; } = null!;
 
-    public string MessageDetail { get; set; } = null!;
+    public string Message { get; set; } = null!;
 }

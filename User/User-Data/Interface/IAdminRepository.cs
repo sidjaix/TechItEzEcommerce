@@ -5,9 +5,9 @@ namespace User_Data;
 
 public interface IAdminRepository
 {
-    List<Role> GetRoles();
-    Role CreateRole(RoleModel role);
-    Role GetRoleById(int roleId);
-    Role UpdateRole(RoleModel roleData);
-    void DeleteRole(int roleId);
+    Task<List<Role>> GetRolesAsync();
+    Task<Role> CreateRoleAsync(RoleModel role);
+    Task<Role> GetRoleByIdAsync(int roleId);
+    Task<Role> UpdateRoleAsync(RoleModel roleData);
+    Task<bool> DeleteRoleAsync(int roleId);
 }

@@ -21,6 +21,6 @@ public static class Startup
         // Register DbContext with dependency injection
         services.AddDbContext<UserDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("AzureDB")));
-        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
     }
 }
