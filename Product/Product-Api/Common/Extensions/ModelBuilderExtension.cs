@@ -6,7 +6,7 @@ namespace Product_Api.Common.Extensions;
 
 public static class ModelBuilderExtension
 {
-    public static void UseMigiration(IApplicationBuilder app)
+    public static void UseMigiration(this IApplicationBuilder app)
     {
         using var serviceScope = app.ApplicationServices.CreateScope();
         ApplyMigration(serviceScope.ServiceProvider.GetService<ProductDbContext>());

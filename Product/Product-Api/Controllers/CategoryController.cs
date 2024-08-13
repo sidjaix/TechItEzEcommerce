@@ -10,7 +10,7 @@ namespace Product_Api.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryRepository categoryRepository;
-        private ResponseDto _response;
+        private readonly ResponseDto _response;
         public CategoryController(ICategoryRepository categoryRepository)
         {
             this.categoryRepository = categoryRepository;
@@ -25,12 +25,18 @@ namespace Product_Api.Controllers
         [ValidateModel]
         public async Task<ActionResult<CategoryModel>> CreateNewCategoryAsync([FromBody] CategoryModel categoryData)
         {
-            var category = await categoryRepository.CreateNewCategoryAsync(categoryData);
-            if (category is null)
+            try
             {
-                return BadRequest("New Category has not created");
+                var category = await categoryRepository.CreateNewCategoryAsync(categoryData);
+                _response.Result = category;
             }
-            return Ok(category);
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
         }
 
         /// <summary>
@@ -49,6 +55,7 @@ namespace Product_Api.Controllers
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
+                return BadRequest(_response);
             }
             return Ok(_response);
         }
@@ -61,12 +68,23 @@ namespace Product_Api.Controllers
         [HttpGet("{categoryId}")]
         public async Task<ActionResult<CategoryModel>> GetCategoryAsync(int categoryId)
         {
-            var category = await categoryRepository.GetCategoryAsync(categoryId);
-            if (category is null)
+
+            try
             {
-                return NotFound();
+                var category = await categoryRepository.GetCategoryAsync(categoryId);
+                _response.Result = category;
+                if (category is null)
+                {
+                    return NotFound(_response);
+                }
             }
-            return Ok(category);
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
         }
 
         /// <summary>
@@ -77,12 +95,23 @@ namespace Product_Api.Controllers
         [HttpPut("Update")]
         public async Task<ActionResult<CategoryModel>> UpdateExistingCategoryAsync(CategoryModel categoryData)
         {
-            var category = await categoryRepository.UpdateExistingCategoryAsync(categoryData);
-            if (category is null)
+            try
             {
-                return BadRequest("CategoryModel has not updated due to in appropriate data");
+                var category = await categoryRepository.UpdateExistingCategoryAsync(categoryData);
+                _response.Result = category;
+                if (category is null)
+                {
+                    _response.Message = "CategoryModel has not updated due to in appropriate data";
+                    return BadRequest(_response);
+                }
             }
-            return Ok(category);
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
         }
 
         /// <summary>
@@ -93,12 +122,23 @@ namespace Product_Api.Controllers
         [HttpDelete("{categoryId}")]
         public async Task<ActionResult<bool>> DeleteCategoryAsync(int categoryId)
         {
-            var isdeleted = await categoryRepository.DeleteCategoryAsync(categoryId);
-            if (!isdeleted)
+            try
             {
-                return BadRequest();
+                var isdeleted = await categoryRepository.DeleteCategoryAsync(categoryId);
+                if (!isdeleted)
+                {
+                    _response.Message = "Record does not delete due to incorrect data.";
+                    return BadRequest(_response);
+                }
             }
-            return Ok("Category has deleted");
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+                return BadRequest(_response);
+            }
+
+            return NoContent();
         }
     }
 }

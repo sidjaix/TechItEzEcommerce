@@ -8,13 +8,7 @@ public partial class Category : BaseEntity
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int CategoryId { get; set; }
-
+    [Required]
     [StringLength(100)]
     public string CategoryName { get; set; } = null!;
-
-    [InverseProperty("Category")]
-    public virtual ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
-
-    [InverseProperty("Category")]
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

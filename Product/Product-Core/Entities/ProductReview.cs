@@ -12,22 +12,11 @@ public partial class ProductReview
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ReviewId { get; set; }
 
+    [ForeignKey("Product")]
     public int ProductId { get; set; }
-
-    public int CustomerId { get; set; }
-
+    public int UserId { get; set; }
     public string ReviewText { get; set; } = null!;
-
     public int Rating { get; set; }
-
     [Column(TypeName = "datetime")]
     public DateTime CreatedOn { get; set; }
-
-    [ForeignKey("CustomerId")]
-    [InverseProperty("ProductReviews")]
-    public virtual User Customer { get; set; } = null!;
-
-    [ForeignKey("ProductId")]
-    [InverseProperty("ProductReviews")]
-    public virtual Product Product { get; set; } = null!;
 }

@@ -10,7 +10,6 @@ public interface IProductRepository
     Task<List<ProductModel>> GetProductsAsync();
     Task<ProductModel> GetProductDetailAsync(int productId);
     Task<List<ProductModel>> GetProductsByCategoryAsync(int categoriesId);
-
-    //Task<List<Product>> GetFeaturedProducts();
     Task<bool> DeleteProductAsync(int productId);
+    //Task<List<Product>> GetFeaturedProducts();
 }

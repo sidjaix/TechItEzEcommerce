@@ -26,7 +26,8 @@ public static class ProductMapperExtension
             CategoryId = product.CategoryId,
             ProductName = product.ProductName,
             Description = product.Description,
-            Price = product.Price
+            Price = product.Price,
+            ImageUrl = product.ImageUrl
             // Add other properties as needed
         };
     }

@@ -11,92 +11,157 @@ namespace Product_Api.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository productRepository;
+        private readonly ResponseDto _response;
         public ProductController(IProductRepository productRepository)
         {
             this.productRepository = productRepository;
+            _response = new ResponseDto();
         }
 
         /// <summary>
         /// Create new product
         /// </summary>
-        /// <returns>ProductModel</returns>
+        /// <returns>Custom response with product model as result</returns>
         [HttpPost]
         [ValidateModel]
         public async Task<ActionResult<ProductModel>> CreateNewProduct([FromBody] ProductModel productData)
         {
-            var product = await productRepository.CreateNewProductAsync(productData);
-            return CreatedAtAction(nameof(GetProductById), new { productId = product.ProductId }, product);
+            try
+            {
+                var product = await productRepository.CreateNewProductAsync(productData);
+                _response.Result = CreatedAtAction(nameof(GetProductById), new { productId = product.ProductId }, product);
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
         }
 
         /// <summary>
         /// Get all products
         /// </summary>
-        /// <returns>List of ProductModel</returns>
+        /// <returns>custom response with list of product model as result</returns>
         [HttpGet]
         public async Task<ActionResult<List<ProductModel>>> GetProducts()
         {
-            var products = await productRepository.GetProductsAsync();
-            return Ok(products);
+            try
+            {
+                var products = await productRepository.GetProductsAsync();
+                _response.Result = products;
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
         }
 
         /// <summary>
         /// Get all products of a category
         /// </summary>
-        /// <returns>List of ProductModel</returns>
+        /// <returns>Custom response with list of product model as result</returns>
         [HttpGet("GetProductByCategory/{categoryId}")]
-        public async Task<ActionResult<List<ProductModel>>> GetProductsByCategoryAsync(int categoryId)
+        public async Task<ActionResult<ResponseDto>> GetProductsByCategoryAsync(int categoryId)
         {
-            var products = await productRepository.GetProductsByCategoryAsync(categoryId);
-            return Ok(products);
+            try
+            {
+                var products = await productRepository.GetProductsByCategoryAsync(categoryId);
+                _response.Result = products;
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
         }
 
         /// <summary>
         /// Get product by Id
         /// </summary>
         /// <param name="productId"></param>
-        /// <returns>ProductModel</returns>
+        /// <returns>Custom response with product model as result</returns>
         [HttpGet("{productId}")]
         //[Route("GetProductById")]
-        public async Task<ActionResult<ProductModel>> GetProductById(int productId)
+        public async Task<ActionResult<ResponseDto>> GetProductById(int productId)
         {
-            var product = await productRepository.GetProductDetailAsync(productId);
-            if (product is null)
+            try
             {
-                return NotFound();
+                var product = await productRepository.GetProductDetailAsync(productId);
+                _response.Result = product;
+                if (product is null)
+                {
+                    _response.Message = "Record has not found with specified Product ID.";
+                    return NotFound(_response);
+                }
             }
-            return Ok(product);
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
         }
 
         /// <summary>
         /// Update existing product
         /// </summary>
         /// <param name="productData"></param>
-        /// <returns>ProductModel</returns>
+        /// <returns>Custom Response</returns>
         [HttpPut("Update")]
-        public async Task<ActionResult<ProductModel>> UpdateProduct(ProductModel productData)
+        public async Task<ActionResult<ResponseDto>> UpdateProduct(ProductModel productData)
         {
-            var product = await productRepository.UpdateExistingProductAsync(productData);
-            if (product is null)
+            try
             {
-                return BadRequest("ProductModel has not been updated due to in appropriate data");
+                var product = await productRepository.UpdateExistingProductAsync(productData);
+                _response.Result = product;
+                if (product is null)
+                {
+                    _response.Message = "ProductModel has not been updated due to in appropriate data";
+                    return BadRequest(_response);
+                }
             }
-            return Ok(product);
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
         }
 
         /// <summary>
         /// Delete product
         /// </summary>
         /// <param name="productId"></param>
-        /// <returns></returns>
+        /// <returns>Custom Response</returns>
         [HttpDelete("{productId}")]
-        public async Task<IActionResult> DeleteProductAsync(int productId)
+        public async Task<ActionResult<ResponseDto>> DeleteProductAsync(int productId)
         {
-            var isdeleted = await productRepository.DeleteProductAsync(productId);
-            if (!isdeleted)
+            try
             {
-                return BadRequest("Product has not deleted");
+                var isdeleted = await productRepository.DeleteProductAsync(productId);
+                _response.Result = isdeleted;
+                if (!isdeleted)
+                {
+                    _response.Message = "Product has not deleted";
+                    return BadRequest(_response);
+                }
             }
-            return Ok("Product has deleted");
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+                return BadRequest(_response);
+            }
+            return Ok(_response);
         }
     }
 }
