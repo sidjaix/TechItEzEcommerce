@@ -1,0 +1,22 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Order_Core.Entities;
+
+[Table("UserPaymentMethod")]
+public class UserPaymentMethod
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+    [Required]
+    public string UserId { get; set; } = null!;
+    [Required]
+    public int PaymentTypeId { get; set; }
+    public string AccountNumber { get; set; }
+    public DateOnly? ExpiryDate { get; set; }
+    public bool IsDefault { get; set; }
+
+    [ForeignKey(nameof(PaymentTypeId))]
+    public PaymentType PaymentType { get; set; }
+}

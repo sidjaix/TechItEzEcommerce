@@ -1,6 +1,6 @@
 ﻿namespace Order_Core;
 
-public class Class1
+public class OrderDbContext
 {
 
 }

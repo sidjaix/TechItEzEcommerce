@@ -3,7 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Product_Core.Entities;
 
-public partial class Category : BaseEntity
+[Table("Categories")]
+public partial class Category
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -11,4 +12,9 @@ public partial class Category : BaseEntity
     [Required]
     [StringLength(100)]
     public string CategoryName { get; set; } = null!;
+    [InverseProperty("Category")]
+    public virtual ICollection<Product> Products { get; set; }
+
+    [InverseProperty("Category")]
+    public virtual ICollection<Variation> Variations { get; set; } = [];
 }

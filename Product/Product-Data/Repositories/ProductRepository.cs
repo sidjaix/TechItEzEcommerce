@@ -36,7 +36,6 @@ public class ProductRepository : IProductRepository
         existingProduct.Description = productData.Description;
         existingProduct.Price = productData.Price;
         existingProduct.ImageUrl = productData.ImageUrl;
-        existingProduct.LastModifiedBy = 1;
 
         db.Attach(existingProduct);
         await db.SaveChangesAsync();

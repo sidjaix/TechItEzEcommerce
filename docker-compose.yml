@@ -15,7 +15,7 @@ services:
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DockerDB=Server=sqlserver;Database=TechItEzEcommerce;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;
+      - ConnectionStrings__UserApi=Server=sqlserver;Database=UserApiDb;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;
     networks:
       - techitez_network
 
@@ -32,20 +32,38 @@ services:
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DockerDB=Server=sqlserver;Database=TechItEzEcommerce;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;- ConnectionStrings__AzureDB=Server=tcp:techitez.database.windows.net,1433;Initial Catalog=TechItEzEcommerce;Persist Security Info=False;User ID=sidjaix;Password=admin@123; MultipleActiveResultSets=True; Encrypt=True; TrustServerCertificate=True; Connection Timeout=60;
+      - ConnectionStrings__ProductApi=Server=sqlserver;Database=ProductApiDb;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;- ConnectionStrings__AzureDB=Server=tcp:techitez.database.windows.net,1433;Initial Catalog=TechItEzEcommerce;Persist Security Info=False;User ID=sidjaix;Password=admin@123; MultipleActiveResultSets=True; Encrypt=True; TrustServerCertificate=True; Connection Timeout=60;
     networks:
       - techitez_network
 
-  # sqlserver:
-  #   container_name: techitez_sqlserver
-  #   image: mcr.microsoft.com/azure-sql-edge
-  #   environment:
-  #     SA_PASSWORD: 'admin@123'
-  #     ACCEPT_EULA: 'Y'
-  #   ports:
-  #     - '1433:1433'
-  #   networks:
-  #     - techitez_network
+  e-commerce-web:
+    container_name: e_commerce_web
+    image: sidjaix/e-commerce-web:latest
+    build:
+      context: .
+      dockerfile: ./UI/Dockerfile
+    ports:
+      - '5005:80'
+    # depends_on:
+    #   - sqlserver
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ServiceUrls__AuthApi='http://localhost:5001'
+      - ServiceUrls__ProductApi='http://localhost:5002'
+    networks:
+      - techitez_network
+
+  sqlserver:
+    container_name: techitez_sqlserver
+    image: mcr.microsoft.com/azure-sql-edge
+    environment:
+      SA_PASSWORD: 'admin@123'
+      ACCEPT_EULA: 'Y'
+    ports:
+      - '1433:1433'
+    networks:
+      - techitez_network
 
 networks:
   techitez_network:

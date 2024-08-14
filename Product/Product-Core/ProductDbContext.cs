@@ -17,24 +17,24 @@ public class ProductDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         var cat = modelBuilder.Entity<Category>();
-        cat
-        .Property(b => b.CreatedOn)
-        .HasDefaultValueSql("getdate()");
-        cat
-        .Property(b => b.LastModifiedOn)
-        .HasDefaultValueSql("getdate()");
+        // cat
+        // .Property(b => b.CreatedOn)
+        // .HasDefaultValueSql("getdate()");
+        // cat
+        // .Property(b => b.LastModifiedOn)
+        // .HasDefaultValueSql("getdate()");
 
         var prod = modelBuilder.Entity<Product>();
-        prod
-        .Property(b => b.CreatedOn)
-        .HasDefaultValueSql("getdate()");
-        prod
-        .Property(b => b.LastModifiedOn)
-        .HasDefaultValueSql("getdate()");
-        prod
-        .HasOne<Category>()
-        .WithMany()
-        .HasForeignKey(a => a.CategoryId);
+        // prod
+        // .Property(b => b.CreatedOn)
+        // .HasDefaultValueSql("getdate()");
+        // prod
+        // .Property(b => b.LastModifiedOn)
+        // .HasDefaultValueSql("getdate()");
+        // prod
+        // .HasOne<Category>()
+        // .WithMany()
+        // .HasForeignKey(a => a.CategoryId);
 
         var pr = modelBuilder.Entity<ProductReview>();
         pr
