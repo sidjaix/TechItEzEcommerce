@@ -101,6 +101,10 @@ a:focus {
   color: #ffffff;
 }
 
+.header__menu ul li a {
+  text-decoration: none;
+}
+
 ul,
 ol {
   padding: 0;
@@ -177,9 +181,14 @@ ol {
   font-weight: 800;
   text-transform: uppercase;
   display: inline-block;
-  padding: 13px 30px 12px;
+  padding: 10px 10px 10px;
   background: #7fad39;
   border: none;
+}
+
+.site-form-check-input:checked {
+  background-color: #7fad39;
+  border-color: #7fad39;
 }
 
 /* Preloder */
