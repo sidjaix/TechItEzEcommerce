@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using E_Commerce.Models;
 using ApiServices.Models;
 using ApiServices.Services.IService;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -25,13 +26,10 @@ public class HomeController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        _logger.LogInformation("Getting Category");
-        var model = new HomeModel();
-        var response = await categoryService.GetAllCategoryAsync();
-        if (response != null && response.IsSuccess)
+        var model = new HomeModel
         {
-            model.Categories = JsonConvert.DeserializeObject<List<CategoryModel>>(Convert.ToString(response.Result));
-        }
+            Categories = await categoryService.GetAllCategoryAsync()
+        };
         return View(model);
     }
 

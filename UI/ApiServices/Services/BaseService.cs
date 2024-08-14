@@ -2,10 +2,10 @@ using ApiServices.Models;
 using ApiServices.Services.IService;
 using ApiServices.Utility.Enums;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace ApiServices.Services;
@@ -14,38 +14,36 @@ public class BaseService : IBaseService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<BaseService> _logger;
-    private string _baseAddress;
-    //private readonly ITokenProvider _tokenProvider;
-    public BaseService(HttpClient client, ILogger<BaseService> logger)//, ITokenProvider tokenProvider)
+    private readonly ITokenProvider _tokenProvider;
+
+    public BaseService(HttpClient client, ILogger<BaseService> logger, ITokenProvider tokenProvider)
     {
-        _httpClient = client;
         _logger = logger;
-        // _tokenProvider = tokenProvider;
+        _httpClient = client;
+        _tokenProvider = tokenProvider;
     }
 
-    public string BaseAddress { get => _baseAddress; set => _baseAddress = value; }
-
-    public async Task<ResponseDto> SendAsync(RequestDto requestDto)//, bool withBearer = true)
+    public async Task<ResponseDto> SendAsync(RequestDto requestDto, bool withBearer = true)
     {
         try
         {
-            HttpRequestMessage message = new();
+            HttpRequestMessage requestMessage = new();
             if (requestDto.ContentType == ContentType.MultipartFormData)
             {
-                message.Headers.Add("Accept", "*/*");
+                requestMessage.Headers.Add("Accept", "*/*");
             }
             else
             {
-                message.Headers.Add("Accept", "application/json");
+                requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             }
             //token
-            // if (withBearer)
-            // {
-            //     var token = _tokenProvider.GetToken();
-            //     message.Headers.Add("Authorization", $"Bearer {token}");
-            // }
+            if (withBearer)
+            {
+                var token = _tokenProvider.GetToken();
+                requestMessage.Headers.Add("Authorization", $"Bearer {token}");
+            }
 
-            message.RequestUri = new Uri(BaseAddress + requestDto.Url);
+            requestMessage.RequestUri = new Uri(requestDto.Url);
 
             if (requestDto.ContentType == ContentType.MultipartFormData)
             {
@@ -67,13 +65,13 @@ public class BaseService : IBaseService
                         content.Add(new StringContent(value == null ? "" : value.ToString()), prop.Name);
                     }
                 }
-                message.Content = content;
+                requestMessage.Content = content;
             }
             else
             {
                 if (requestDto.Data != null)
                 {
-                    message.Content = new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
+                    requestMessage.Content = new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
                 }
             }
 
@@ -82,20 +80,20 @@ public class BaseService : IBaseService
             switch (requestDto.ApiMethod)
             {
                 case ApiMethod.POST:
-                    message.Method = HttpMethod.Post;
+                    requestMessage.Method = HttpMethod.Post;
                     break;
                 case ApiMethod.DELETE:
-                    message.Method = HttpMethod.Delete;
+                    requestMessage.Method = HttpMethod.Delete;
                     break;
                 case ApiMethod.PUT:
-                    message.Method = HttpMethod.Put;
+                    requestMessage.Method = HttpMethod.Put;
                     break;
                 default:
-                    message.Method = HttpMethod.Get;
+                    requestMessage.Method = HttpMethod.Get;
                     break;
             }
 
-            apiResponse = await _httpClient.SendAsync(message);
+            apiResponse = await _httpClient.SendAsync(requestMessage);
 
             switch (apiResponse.StatusCode)
             {

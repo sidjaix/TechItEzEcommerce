@@ -1,35 +1,30 @@
-using Newtonsoft.Json;
 using ApiServices.Models;
-using System.Net.Http.Json;
-using System.Text;
 using ApiServices.Services.IService;
+using ApiServices.Utility;
 using ApiServices.Utility.Enums;
-using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace ApiServices.Services;
 
 public class CategoryService : ICategoryService
 {
-    private readonly HttpClient httpClient;
-    private readonly IBaseService baseService;
-    public CategoryService(HttpClient httpClient, IBaseService baseService, IConfiguration configuration)
+    private readonly IBaseService _baseService;
+    public CategoryService(IBaseService baseService)
     {
-        this.httpClient = httpClient;
-        baseService.BaseAddress = configuration["ApiBaseAddress:Product"];
-        this.baseService = baseService;
+        _baseService = baseService;
     }
 
     public async Task<ResponseDto> CreateNewCategoryAsync(CategoryModel categoryData)
     {
         var request = new RequestDto
         {
-            Url = "/api/category",
+            Url = $"{ApplicationData.ProductApiBaseAddress}/api/category",
             ApiMethod = ApiMethod.POST,
             Data = categoryData,
             ContentType = ContentType.Json
         };
 
-        var response = await baseService.SendAsync(request);
+        var response = await _baseService.SendAsync(request);
         return response;
     }
 
@@ -37,37 +32,41 @@ public class CategoryService : ICategoryService
     {
         var request = new RequestDto
         {
-            Url = $"/api/category/update",
+            Url = $"{ApplicationData.ProductApiBaseAddress}/api/category/update",
             ApiMethod = ApiMethod.PUT,
             Data = categoryData,
             ContentType = ContentType.Json
         };
-        var response = await baseService.SendAsync(request);
+        var response = await _baseService.SendAsync(request);
         return response;
     }
 
-    public async Task<ResponseDto> GetAllCategoryAsync()
+    public async Task<List<CategoryModel>> GetAllCategoryAsync()
     {
+        var categories = new List<CategoryModel>();
         var request = new RequestDto
         {
-            Url = "api/category",
+            Url = $"{ApplicationData.ProductApiBaseAddress}/api/category",
             ApiMethod = ApiMethod.GET
         };
 
-        var response = await baseService.SendAsync(request);
-
-        return response;
+        var response = await _baseService.SendAsync(request);
+        if (response != null && response.IsSuccess)
+        {
+            categories = JsonConvert.DeserializeObject<List<CategoryModel>>(Convert.ToString(response.Result));
+        }
+        return categories;
     }
 
     public async Task<ResponseDto> GetCategoryAsync(int categoryId)
     {
         var request = new RequestDto
         {
-            Url = $"/api/category/{categoryId}",
+            Url = $"{ApplicationData.ProductApiBaseAddress}/api/category/{categoryId}",
             ApiMethod = ApiMethod.GET
         };
 
-        var response = await baseService.SendAsync(request);
+        var response = await _baseService.SendAsync(request);
         return response;
     }
 
@@ -75,10 +74,10 @@ public class CategoryService : ICategoryService
     {
         var request = new RequestDto
         {
-            Url = $"/api/category/{categoryId}",
+            Url = $"{ApplicationData.ProductApiBaseAddress}/api/category/{categoryId}",
             ApiMethod = ApiMethod.DELETE
         };
-        var response = await baseService.SendAsync(request);
+        var response = await _baseService.SendAsync(request);
         return response;
     }
 

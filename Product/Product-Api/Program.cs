@@ -116,10 +116,6 @@ internal class Program
         // Configure the HTTP request pipeline.
         app.UseCors("default");
 
-        // Apply Authentication and Authorization
-        app.UseAuthentication();
-        app.UseAuthorization();
-
         // if (app.Environment.IsDevelopment())
         // {
         app.UseSwagger();
@@ -131,6 +127,11 @@ internal class Program
         //}
         //app.UseHttpsRedirection();
         app.UseRouting();
+
+        // Apply Authentication and Authorization
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         app.MapControllers();
 
         // Apply Pending Migration

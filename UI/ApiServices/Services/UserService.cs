@@ -1,29 +1,61 @@
-using Newtonsoft.Json;
 using ApiServices.Models;
 using ApiServices.Services.IService;
+using ApiServices.Utility;
 
 namespace ApiServices.Services;
 
 public class UserService : IUserService
 {
-    private readonly HttpClient httpClient;
+    private readonly IBaseService _baseService;
 
-    public UserService(HttpClient httpClient)
+    public UserService(IBaseService baseService)
     {
-        this.httpClient = httpClient;
+        _baseService = baseService;
     }
 
-    public async Task<List<UserModel>> GetUsersAsync()
+    public async Task<ResponseDto> GetUsersAsync()
     {
-        var url = "user";
-        var users = new List<UserModel>();
-        var response = await httpClient.GetAsync(url);
-        if (response.IsSuccessStatusCode)
+        var req = new RequestDto
         {
-            var jsonString = await response.Content.ReadAsStringAsync();
-            users = JsonConvert.DeserializeObject<List<UserModel>>(jsonString);
-            return users;
-        }
-        return users;
+            Url = $"{ApplicationData.AuthApiBaseAddress}/user",
+            ApiMethod = Utility.Enums.ApiMethod.GET
+        };
+        var response = await _baseService.SendAsync(req);
+        return response;
+    }
+
+    public async Task<ResponseDto> GetUserAsync(string userId)
+    {
+        var req = new RequestDto
+        {
+            Url = $"{ApplicationData.AuthApiBaseAddress}/user/{userId}",
+            ApiMethod = Utility.Enums.ApiMethod.GET
+        };
+        var response = await _baseService.SendAsync(req);
+        return response;
+    }
+
+    public async Task<ResponseDto> UpdateUserAsync(UserModel userData)
+    {
+        var req = new RequestDto
+        {
+            Url = $"{ApplicationData.AuthApiBaseAddress}/user/",
+            ApiMethod = Utility.Enums.ApiMethod.PUT,
+            ContentType = Utility.Enums.ContentType.Json,
+            Data = userData
+        };
+        var response = await _baseService.SendAsync(req);
+        return response;
+    }
+
+    public async Task<ResponseDto> DeleteUserAsync(string userId)
+    {
+        var req = new RequestDto
+        {
+            Url = $"{ApplicationData.AuthApiBaseAddress}/user/{userId}",
+            ApiMethod = Utility.Enums.ApiMethod.DELETE
+        };
+        var response = await _baseService.SendAsync(req);
+        return response;
     }
 }
