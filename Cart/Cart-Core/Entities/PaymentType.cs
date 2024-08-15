@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Order_Core.Entities;
+namespace Cart_Core.Entities;
 
 [Table("PaymentType")]
 public class PaymentType

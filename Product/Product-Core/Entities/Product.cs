@@ -22,7 +22,7 @@ public partial class Product
     public string ImageUrl { get; set; }
 
     [ForeignKey(nameof(CategoryId))]
-    public Category Category { get; set; }
+    public virtual Category Category { get; set; }
 
     [InverseProperty(nameof(Product))]
     public virtual ICollection<ProductItem> ProductItems { get; set; } = [];

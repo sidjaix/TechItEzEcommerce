@@ -1,6 +1,23 @@
-﻿namespace Cart_Core;
+﻿using Cart_Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
-public class CartDbContext
+namespace Cart_Core;
+
+public class CartDbContext : DbContext
 {
+    public CartDbContext(DbContextOptions<CartDbContext> options)
+          : base(options)
+    {
+    }
+
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+    public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+    public DbSet<PaymentType> PaymentTypes { get; set; }
+    public DbSet<UserPaymentMethod> UserPaymentMethods { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+    }
 
 }

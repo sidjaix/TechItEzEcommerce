@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace User_Core.Entities;
 
 [Table("Address")]
-public partial class Address : BaseEntity
+public partial class Address
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

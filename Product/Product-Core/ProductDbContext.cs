@@ -12,39 +12,15 @@ public class ProductDbContext : DbContext
 
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
-    public DbSet<ProductReview> ProductReviews { get; set; }
+    public DbSet<ProductItem> ProductItems { get; set; }
+    public DbSet<Variation> Variations { get; set; }
+    public DbSet<VariationOption> VariationOptions { get; set; }
+    public DbSet<ProductConfiguration> ProductConfigurations { get; set; }
+    public DbSet<Promotion> Promotions { get; set; }
+    public DbSet<PromotionCategory> PromotionCategories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        var cat = modelBuilder.Entity<Category>();
-        // cat
-        // .Property(b => b.CreatedOn)
-        // .HasDefaultValueSql("getdate()");
-        // cat
-        // .Property(b => b.LastModifiedOn)
-        // .HasDefaultValueSql("getdate()");
-
-        var prod = modelBuilder.Entity<Product>();
-        // prod
-        // .Property(b => b.CreatedOn)
-        // .HasDefaultValueSql("getdate()");
-        // prod
-        // .Property(b => b.LastModifiedOn)
-        // .HasDefaultValueSql("getdate()");
-        // prod
-        // .HasOne<Category>()
-        // .WithMany()
-        // .HasForeignKey(a => a.CategoryId);
-
-        var pr = modelBuilder.Entity<ProductReview>();
-        pr
-        .Property(b => b.CreatedOn)
-        .HasDefaultValueSql("getdate()");
-        pr
-        .HasOne<Product>()
-        .WithMany()
-        .HasForeignKey(pr => pr.ProductId);
-
         base.OnModelCreating(modelBuilder);
     }
 }

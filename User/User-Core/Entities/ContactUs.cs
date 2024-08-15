@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace User_Core.Entities;
 
-public partial class ContactUs : BaseEntity
+public partial class ContactUs
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

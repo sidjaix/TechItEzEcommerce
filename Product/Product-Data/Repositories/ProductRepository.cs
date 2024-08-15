@@ -6,14 +6,8 @@ using Product_Core.Models;
 
 namespace Product_Data.Repositories;
 
-public class ProductRepository : IProductRepository
+public class ProductRepository(ProductDbContext db) : IProductRepository
 {
-    private readonly ProductDbContext db;
-    public ProductRepository(ProductDbContext context)
-    {
-        db = context;
-    }
-
     public async Task<ProductModel> CreateNewProductAsync(ProductModel productData)
     {
         Product product = productData.MapToEntity();

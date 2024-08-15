@@ -17,5 +17,5 @@ public class ProductItem
     public decimal Price { get; set; }
 
     [ForeignKey(nameof(ProductId))]
-    public Product Product { get; set; }
+    public virtual Product Product { get; set; }
 }
