@@ -32,6 +32,5 @@ public partial class Address
 
     public bool IsShippingAddress { get; set; }
 
-    [ForeignKey(nameof(CountryId))]
     public Country Country { get; set; }
 }

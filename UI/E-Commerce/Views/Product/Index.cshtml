@@ -1,5 +1,4 @@
-﻿@using ApiServices.Models.Product
-@model ProductPageModel
+﻿@model ProductPageModel
 
 @{
     ViewData["Title"] = "Product";
@@ -278,7 +277,7 @@
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <div class="filter__found">
-                                <h6><span>16</span> Products found</h6>
+                                <h6><span>@Model.Products.Count()</span> Products found</h6>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-3">
@@ -307,7 +306,7 @@
                                             asp-route-productId="@product.ProductId">@product.ProductName
                                         </a>
                                     </h6>
-                                    <h5>₹@product.Price</h5>
+                                    <h5>₹@product.SellingPrice</h5>
                                 </div>
                             </div>
                         </div>

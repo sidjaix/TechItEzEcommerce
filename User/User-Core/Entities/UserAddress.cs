@@ -7,14 +7,11 @@ namespace User_Core.Entities;
 public class UserAddress
 {
     [Required]
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     [Required]
     public int AddressId { get; set; }
     public bool IsDefault { get; set; }
 
-    [ForeignKey(nameof(UserId))]
-    public User User { get; set; }
-
-    [ForeignKey(nameof(AddressId))]
-    public Address Address { get; set; }
+    public virtual User User { get; set; }
+    public virtual Address Address { get; set; }
 }

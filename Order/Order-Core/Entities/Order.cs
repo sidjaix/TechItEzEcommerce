@@ -19,9 +19,5 @@ public class Order
     [Required]
     public int OrderStatusId { get; set; }
 
-
-
-
-    [ForeignKey(nameof(OrderStatusId))]
     public virtual OrderStatus OrderStatus { get; set; }
 }

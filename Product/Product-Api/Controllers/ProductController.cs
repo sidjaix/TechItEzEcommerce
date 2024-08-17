@@ -90,7 +90,6 @@ namespace Product_Api.Controllers
         /// <param name="productId"></param>
         /// <returns>Custom response with product model as result</returns>
         [HttpGet("{productId}")]
-        //[Route("GetProductById")]
         public async Task<ActionResult<ResponseDto>> GetProductById(int productId)
         {
             try
@@ -118,6 +117,7 @@ namespace Product_Api.Controllers
         /// <param name="productData"></param>
         /// <returns>Custom Response</returns>
         [HttpPut("Update")]
+        [ValidateModel]
         public async Task<ActionResult<ResponseDto>> UpdateProduct(ProductModel productData)
         {
             try

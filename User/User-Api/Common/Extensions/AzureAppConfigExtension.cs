@@ -15,7 +15,7 @@ public class AzureAppConfigExtension
         var client = new ConfigurationClient(connectionString);
 
         string azureDbKey = "ConnectionStrings:AzureDB";
-        string azureDbValue = "";
+        string azureDbValue = string.Empty;
 
         ConfigurationSetting setting = new ConfigurationSetting(azureDbKey, azureDbValue);
         await client.SetConfigurationSettingAsync(setting);

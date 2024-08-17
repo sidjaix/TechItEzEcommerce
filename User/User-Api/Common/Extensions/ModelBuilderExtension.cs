@@ -14,10 +14,16 @@ public static class ModelBuilderExtension
     {
         if (dbContext != null)
         {
+            Console.WriteLine("Checking for pending migration(s) to applying...");
             if (dbContext.Database.GetPendingMigrations().Any())
             {
-                System.Console.WriteLine("Applying Migration...");
+                Console.WriteLine("Applying Migration...");
                 dbContext.Database.Migrate();
+                Console.WriteLine("Migration has applied");
+            }
+            else
+            {
+                Console.WriteLine("No pending migration(s) found to apply.");
             }
         }
     }

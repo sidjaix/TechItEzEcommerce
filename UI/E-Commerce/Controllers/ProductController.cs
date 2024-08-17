@@ -1,4 +1,3 @@
-using ApiServices.Models;
 using ApiServices.Models.Product;
 using ApiServices.Services.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -30,20 +29,19 @@ namespace E_Commerce.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductDetail(int productId)
         {
-            ProductModel product = new();
+            ProductViewModel product = new();
             var response = await _productService.GetProductDetailAsync(productId);
             if (response != null && response.IsSuccess)
             {
-                product = JsonConvert.DeserializeObject<ProductModel>(Convert.ToString(response.Result));
+                product = JsonConvert.DeserializeObject<ProductViewModel>(Convert.ToString(response.Result));
             }
             response = await _productService.GetProductsByCategoryAsync(product.CategoryId);
             if (response != null && response.IsSuccess)
             {
-                product.ProductsByCategory = JsonConvert.DeserializeObject<List<ProductModel>>(Convert.ToString(response.Result));
+                product.ProductsByCategory = JsonConvert.DeserializeObject<List<ProductViewModel>>(Convert.ToString(response.Result));
                 product.ProductsByCategory = product.ProductsByCategory.Where(x => x.ProductId != productId).Take(4).ToList();
             }
             return View(product);
         }
-
     }
 }

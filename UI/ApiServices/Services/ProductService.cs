@@ -1,4 +1,5 @@
 using ApiServices.Models;
+using ApiServices.Models.Product;
 using ApiServices.Services.IService;
 using ApiServices.Utility;
 using ApiServices.Utility.Enums;
@@ -14,7 +15,7 @@ public class ProductService : IProductService
         _baseService = baseService;
     }
 
-    public async Task<ResponseDto> CreateNewProductAsync(ProductModel productModel)
+    public async Task<ResponseDto> CreateNewProductAsync(ProductViewModel productModel)
     {
         var request = new RequestDto
         {
@@ -27,7 +28,7 @@ public class ProductService : IProductService
         return response;
     }
 
-    public async Task<ResponseDto> UpdateExistingProductAsync(ProductModel productModel)
+    public async Task<ResponseDto> UpdateExistingProductAsync(ProductViewModel productModel)
     {
         var request = new RequestDto
         {
@@ -40,9 +41,9 @@ public class ProductService : IProductService
         return response;
     }
 
-    public async Task<List<ProductModel>> GetProductsAsync()
+    public async Task<List<ProductViewModel>> GetProductsAsync()
     {
-        var products = new List<ProductModel>();
+        var products = new List<ProductViewModel>();
         var request = new RequestDto
         {
             Url = $"{ApplicationData.ProductApiBaseAddress}/api/product",
@@ -51,7 +52,7 @@ public class ProductService : IProductService
         var response = await _baseService.SendAsync(request);
         if (response != null && response.IsSuccess)
         {
-            products = JsonConvert.DeserializeObject<List<ProductModel>>(Convert.ToString(response.Result));
+            products = JsonConvert.DeserializeObject<List<ProductViewModel>>(Convert.ToString(response.Result));
         }
         return products;
     }

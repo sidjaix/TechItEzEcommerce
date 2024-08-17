@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace User_Core.Entities;
 
+[Table("ContactUs")]
 public partial class ContactUs
 {
     [Key]
@@ -14,5 +15,6 @@ public partial class ContactUs
     [Required]
     public string Email { get; set; } = null!;
 
+    [StringLength(255)]
     public string Message { get; set; } = null!;
 }

@@ -1,3 +1,4 @@
+using ApiServices.Models.User;
 using ApiServices.Models;
 using ApiServices.Services.IService;
 using ApiServices.Utility;
@@ -13,7 +14,7 @@ public class AuthService : IAuthService
         _baseService = baseService;
     }
 
-    public async Task<ResponseDto> LoginAsync(LoginModel login)
+    public async Task<ResponseDto> LoginAsync(LoginViewModel login)
     {
         var req = new RequestDto
         {
@@ -26,7 +27,7 @@ public class AuthService : IAuthService
         return response;
     }
 
-    public async Task<ResponseDto> RegisterAsync(RegisterModel register)
+    public async Task<ResponseDto> RegisterAsync(RegisterViewModel register)
     {
         var req = new RequestDto
         {

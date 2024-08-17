@@ -24,13 +24,9 @@ public class HomeController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
-        var model = new HomeModel
-        {
-            Categories = await categoryService.GetAllCategoryAsync()
-        };
-        return View(model);
+        return View();
     }
 
     //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

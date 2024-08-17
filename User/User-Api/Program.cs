@@ -20,10 +20,10 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Retrieve the connection string of Azure App Config Store
-        var azAppConfigConnectionString = builder.Configuration.GetValue<string>("Azure:AppConfig");
-        if (!string.IsNullOrEmpty(azAppConfigConnectionString))
+        var useAzureAppConfig = builder.Configuration.GetValue<bool>("Azure:UseAzureAppConfig");
+        if (useAzureAppConfig)
         {
-            //string connectionString = builder.Configuration.GetConnectionString("AppConfig");
+            var azAppConfigConnectionString = builder.Configuration.GetValue<string>("Azure:AppConfig");
             builder.Configuration.AddAzureAppConfiguration(azAppConfigConnectionString);
         }
         var config = builder.Configuration;
@@ -116,7 +116,6 @@ internal class Program
 
         // Register Dependency Services
         builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddScoped<IAdminRepository, AdminRepository>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<ResponseDto>();
 

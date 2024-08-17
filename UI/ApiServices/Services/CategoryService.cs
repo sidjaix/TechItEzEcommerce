@@ -1,4 +1,5 @@
 using ApiServices.Models;
+using ApiServices.Models.Product;
 using ApiServices.Services.IService;
 using ApiServices.Utility;
 using ApiServices.Utility.Enums;
@@ -14,7 +15,7 @@ public class CategoryService : ICategoryService
         _baseService = baseService;
     }
 
-    public async Task<ResponseDto> CreateNewCategoryAsync(CategoryModel categoryData)
+    public async Task<ResponseDto> CreateNewCategoryAsync(CategoryViewModel categoryData)
     {
         var request = new RequestDto
         {
@@ -28,7 +29,7 @@ public class CategoryService : ICategoryService
         return response;
     }
 
-    public async Task<ResponseDto> UpdateExistingCategoryAsync(CategoryModel categoryData)
+    public async Task<ResponseDto> UpdateExistingCategoryAsync(CategoryViewModel categoryData)
     {
         var request = new RequestDto
         {
@@ -41,9 +42,9 @@ public class CategoryService : ICategoryService
         return response;
     }
 
-    public async Task<List<CategoryModel>> GetAllCategoryAsync()
+    public async Task<List<CategoryViewModel>> GetAllCategoryAsync()
     {
-        var categories = new List<CategoryModel>();
+        var categories = new List<CategoryViewModel>();
         var request = new RequestDto
         {
             Url = $"{ApplicationData.ProductApiBaseAddress}/api/category",
@@ -53,7 +54,7 @@ public class CategoryService : ICategoryService
         var response = await _baseService.SendAsync(request);
         if (response != null && response.IsSuccess)
         {
-            categories = JsonConvert.DeserializeObject<List<CategoryModel>>(Convert.ToString(response.Result));
+            categories = JsonConvert.DeserializeObject<List<CategoryViewModel>>(Convert.ToString(response.Result));
         }
         return categories;
     }

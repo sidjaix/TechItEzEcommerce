@@ -28,8 +28,10 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
         existingProduct.ProductName = productData.ProductName;
         existingProduct.CategoryId = productData.CategoryId;
         existingProduct.Description = productData.Description;
-        existingProduct.Price = productData.Price;
+        existingProduct.SellingPrice = productData.SellingPrice;
+        existingProduct.OriginalPrice = productData.OriginalPrice;
         existingProduct.ImageUrl = productData.ImageUrl;
+        existingProduct.ProductImages = productData.ProductImages;
 
         db.Attach(existingProduct);
         await db.SaveChangesAsync();
@@ -37,53 +39,63 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
     }
     public async Task<List<ProductModel>> GetProductsAsync()
     {
-        var products = await db.Products
-        .Select(x => new ProductModel
-        {
-            ProductId = x.ProductId,
-            CategoryId = x.CategoryId,
-            ProductName = x.ProductName,
-            Description = x.Description,
-            ImageUrl = x.ImageUrl,
-            Price = x.Price,
-        })
+        var productQuery = from product in db.Products
+                           select new ProductModel
+                           {
+                               ProductId = product.ProductId,
+                               ProductName = product.ProductName,
+                               Description = product.Description,
+                               SellingPrice = product.SellingPrice,
+                               OriginalPrice = product.OriginalPrice,
+                               QuantityInStock = product.QuantityInStock,
+                               ImageUrl = product.ImageUrl,
+                               CategoryId = product.CategoryId
+                           };
+        var products = await productQuery
         .AsSplitQuery()
         .ToListAsync();
+
         return products;
     }
     public async Task<ProductModel> GetProductDetailAsync(int productId)
     {
-        var product = await db.Products
-        .Select(x => new ProductModel
-        {
-            ProductId = x.ProductId,
-            CategoryId = x.CategoryId,
-            ProductName = x.ProductName,
-            Description = x.Description,
-            ImageUrl = x.ImageUrl,
-            Price = x.Price
-        })
+        var productQuery = from p in db.Products
+                           where p.ProductId == productId
+                           select new ProductModel
+                           {
+                               ProductId = p.ProductId,
+                               ProductName = p.ProductName,
+                               Description = p.Description,
+                               SellingPrice = p.SellingPrice,
+                               OriginalPrice = p.OriginalPrice,
+                               QuantityInStock = p.QuantityInStock,
+                               ImageUrl = p.ImageUrl,
+                               CategoryId = p.CategoryId,
+                               ProductImages = p.ProductImages.ToList()
+                           };
+        var product = await productQuery
         .AsSplitQuery()
-        .SingleOrDefaultAsync(p => p.ProductId == productId);
-        if (product == null)
-        {
-            return default;
-        }
-        return product;
+        .SingleOrDefaultAsync();
+
+        return product ?? default;
     }
     public async Task<List<ProductModel>> GetProductsByCategoryAsync(int categoryId)
     {
-        var products = await db.Products
-        .Where(x => x.CategoryId == categoryId)
-        .Select(x => new ProductModel
-        {
-            ProductId = x.ProductId,
-            CategoryId = x.CategoryId,
-            ProductName = x.ProductName,
-            Description = x.Description,
-            ImageUrl = x.ImageUrl,
-            Price = x.Price
-        })
+        var productsQuery = from product in db.Products
+                            where product.CategoryId == categoryId
+                            select new ProductModel
+                            {
+                                ProductId = product.ProductId,
+                                ProductName = product.ProductName,
+                                Description = product.Description,
+                                SellingPrice = product.SellingPrice,
+                                OriginalPrice = product.OriginalPrice,
+                                QuantityInStock = product.QuantityInStock,
+                                ImageUrl = product.ImageUrl,
+                                CategoryId = product.CategoryId
+                            };
+
+        var products = await productsQuery
         .AsSplitQuery()
         .ToListAsync();
 
@@ -94,6 +106,7 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
         var numberOfRowDeleted = await db.Products
         .Where(p => p.ProductId == productId)
         .ExecuteDeleteAsync();
+
         return numberOfRowDeleted > 0;
     }
 }

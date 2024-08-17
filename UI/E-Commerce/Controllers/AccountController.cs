@@ -1,10 +1,10 @@
 using ApiServices.Models;
+using ApiServices.Models.User;
 using ApiServices.Services.IService;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -27,7 +27,7 @@ namespace E_Commerce.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                var login = new LoginModel();
+                var login = new LoginViewModel();
                 return View(login);
             }
             return RedirectToAction("Index", "Home");
@@ -35,7 +35,7 @@ namespace E_Commerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel login)
+        public async Task<IActionResult> Login(LoginViewModel login)
         {
             ResponseDto responseDto = await _authService.LoginAsync(login);
             if (responseDto != null && responseDto.IsSuccess)
@@ -61,14 +61,14 @@ namespace E_Commerce.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                var register = new RegisterModel();
+                var register = new RegisterViewModel();
                 return View(register);
             }
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterModel register)
+        public async Task<IActionResult> Register(RegisterViewModel register)
         {
             ResponseDto result = await _authService.RegisterAsync(register);
 

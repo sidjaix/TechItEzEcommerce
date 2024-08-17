@@ -15,10 +15,11 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Retrieve the connection string of Azure App Config Store
-        string azAppConfigconnectionString = builder.Configuration.GetValue<string>("Azure:AppConfig");
-        if (!string.IsNullOrEmpty(azAppConfigconnectionString))
+        var useAzureAppConfig = builder.Configuration.GetValue<bool>("Azure:UseAzureAppConfig");
+        if (useAzureAppConfig)
         {
-            builder.Configuration.AddAzureAppConfiguration(azAppConfigconnectionString);
+            var azAppConfigConnectionString = builder.Configuration.GetValue<string>("Azure:AppConfig");
+            builder.Configuration.AddAzureAppConfiguration(azAppConfigConnectionString);
         }
         var config = builder.Configuration;
 

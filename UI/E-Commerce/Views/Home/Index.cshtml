@@ -1,5 +1,4 @@
-﻿@model HomeModel
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -14,13 +13,14 @@
                         <span>All Category</span>
                     </div>
                     <ul>
-                        @if (Model.Categories is not null)
+                        @* @if (Model.Categories is not null)
                         {
-                            @foreach (var category in Model.Categories)
-                            {
-                                <li><a href="#">@category.CategoryName</a></li>
-                            }
+                        @foreach (var category in Model.Categories)
+                        {
+                        <li><a href="#">@category.CategoryName</a></li>
                         }
+                        } *@
+                        <li><a href="#">category CategoryName</a></li>
                     </ul>
                 </div>
             </div>

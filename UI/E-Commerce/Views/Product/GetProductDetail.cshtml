@@ -1,4 +1,4 @@
-﻿@model ProductModel
+﻿@model ProductViewModel
 @{
     ViewData["Title"] = "Product Detail";
 }
@@ -36,7 +36,7 @@
                         <i class="fa fa-star-half-o"></i>
                         <span>(18 reviews)</span>
                     </div>
-                    <div class="product__details__price">₹@Model.Price</div>
+                    <div class="product__details__price">₹@Model.SellingPrice</div>
                     <p>@Model.Description</p>
                     <div class="product__details__quantity">
                         <div class="quantity">
@@ -175,7 +175,7 @@
                                     asp-route-productId="@prod.ProductId">@prod.ProductName
                                 </a>
                             </h6>
-                            <h5>₹@prod.Price</h5>
+                            <h5>₹@prod.SellingPrice</h5>
                         </div>
                     </div>
                 </div>

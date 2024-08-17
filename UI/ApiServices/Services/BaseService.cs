@@ -62,7 +62,7 @@ public class BaseService : IBaseService
                     }
                     else
                     {
-                        content.Add(new StringContent(value == null ? "" : value.ToString()), prop.Name);
+                        content.Add(new StringContent(value == null ? string.Empty : value.ToString()), prop.Name);
                     }
                 }
                 requestMessage.Content = content;

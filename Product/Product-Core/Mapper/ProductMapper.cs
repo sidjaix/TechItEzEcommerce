@@ -7,16 +7,19 @@ public static class ProductMapperExtension
 {
     public static Product MapToEntity(this ProductModel productModel)
     {
-        return new Product
+        var product = new Product
         {
             ProductId = productModel.ProductId,
             CategoryId = productModel.CategoryId,
             ProductName = productModel.ProductName,
             Description = productModel.Description,
-            Price = productModel.Price,
-            ImageUrl = productModel.ImageUrl
-            // Add other properties as needed
+            OriginalPrice = productModel.OriginalPrice,
+            SellingPrice = productModel.SellingPrice,
+            QuantityInStock = productModel.QuantityInStock,
+            ProductImages = productModel.ProductImages
         };
+
+        return product;
     }
 
     public static ProductModel MapToDto(this Product product)
@@ -27,9 +30,11 @@ public static class ProductMapperExtension
             CategoryId = product.CategoryId,
             ProductName = product.ProductName,
             Description = product.Description,
-            Price = product.Price,
-            ImageUrl = product.ImageUrl
-            // Add other properties as needed
+            OriginalPrice = product.OriginalPrice,
+            SellingPrice = product.SellingPrice,
+            QuantityInStock = product.QuantityInStock,
+            ImageUrl = product.ImageUrl,
+            ProductImages = product.ProductImages.ToList()
         };
     }
 }

@@ -1,4 +1,5 @@
 using ApiServices.Models;
+using ApiServices.Models.User;
 using ApiServices.Services.IService;
 using ApiServices.Utility;
 
@@ -35,7 +36,7 @@ public class UserService : IUserService
         return response;
     }
 
-    public async Task<ResponseDto> UpdateUserAsync(UserModel userData)
+    public async Task<ResponseDto> UpdateUserAsync(UserViewModel userData)
     {
         var req = new RequestDto
         {

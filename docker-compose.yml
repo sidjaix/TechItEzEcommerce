@@ -10,12 +10,12 @@ services:
       dockerfile: ./User/Dockerfile
     ports:
       - '5001:80'
+    #restart: always
     # depends_on:
     #   - sqlserver
-    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__UserApi=Server=sqlserver;Database=UserApiDb;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;
+      - ConnectionStrings__UserApi=server=techitez_sqlserver;Initial Catalog=UserApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
     networks:
       - techitez_network
 
@@ -27,12 +27,12 @@ services:
       dockerfile: ./Product/Dockerfile
     ports:
       - '5002:80'
+    #restart: always
     # depends_on:
     #   - sqlserver
-    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__ProductApi=Server=sqlserver;Database=ProductApiDb;User Id=SA;Password=admin@123;TrustServerCertificate=true; MultipleActiveResultSets=True;- ConnectionStrings__AzureDB=Server=tcp:techitez.database.windows.net,1433;Initial Catalog=TechItEzEcommerce;Persist Security Info=False;User ID=sidjaix;Password=admin@123; MultipleActiveResultSets=True; Encrypt=True; TrustServerCertificate=True; Connection Timeout=60;
+      - ConnectionStrings__ProductApi=server=techitez_sqlserver;Initial Catalog=ProductApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
     networks:
       - techitez_network
 
@@ -44,26 +44,35 @@ services:
       dockerfile: ./UI/Dockerfile
     ports:
       - '5005:80'
-    # depends_on:
-    #   - sqlserver
-    restart: always
+    depends_on:
+      - product_api
+      - user_api
+    volumes:
+      - data-protection-keys:/var/aspnetcore/data-protection-keys
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ServiceUrls__AuthApi='http://localhost:5001'
-      - ServiceUrls__ProductApi='http://localhost:5002'
+      - ServiceUrls__AuthApi='http://e_commerce_user_api'
+      - ServiceUrls__ProductApi='http://e_commerce_product_api'
+      - ServiceUrls__CartApi='http://localhost:5003'
     networks:
       - techitez_network
 
-  sqlserver:
-    container_name: techitez_sqlserver
-    image: mcr.microsoft.com/azure-sql-edge
-    environment:
-      SA_PASSWORD: 'admin@123'
-      ACCEPT_EULA: 'Y'
-    ports:
-      - '1433:1433'
-    networks:
-      - techitez_network
+  # sqlserver:
+  #   container_name: techitez_sqlserver
+  #   hostname: sqledge
+  #   image: mcr.microsoft.com/azure-sql-edge
+  #   environment:
+  #     SA_PASSWORD: 'Admin@123'
+  #     ACCEPT_EULA: '1'
+  #   ports:
+  #     - '1433:1433'
+  #   volumes:
+  #     - techitez-sqledge:/var/opt/mssql
+  #   networks:
+  #     - techitez_network
+
+volumes:
+  data-protection-keys:
 
 networks:
   techitez_network:

@@ -3,18 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Product_Core.Entities;
 
-[Table("Categories")]
+[Table("Category")]
 public partial class Category
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int CategoryId { get; set; }
-    [Required]
-    [StringLength(100)]
-    public string CategoryName { get; set; } = null!;
-    [InverseProperty("Category")]
-    public virtual ICollection<Product> Products { get; set; }
-
-    [InverseProperty("Category")]
-    public virtual ICollection<Variation> Variations { get; set; } = [];
+    public string CategoryName { get; set; }
+    public string CategoryDescription { get; set; }
+    public string CategoryImageUrl { get; set; }
+    public virtual ICollection<Product> Products { get; set; } = [];
 }

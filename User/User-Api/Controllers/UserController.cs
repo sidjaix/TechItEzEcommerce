@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using User_Api.Common.Filters;
-using User_Core;
 using User_Core.Entities;
 using User_Core.Models;
 using User_Data.Interface;

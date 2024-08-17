@@ -3,27 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Product_Core.Entities;
 
-[Table("Products")]
+[Table("Product")]
 public partial class Product
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ProductId { get; set; }
-    [StringLength(255)]
-    [Required]
-    public string ProductName { get; set; }
-    [Required]
-    public string Description { get; set; }
-    [Column(TypeName = "decimal(10, 2)")]
-    public decimal Price { get; set; }
-    [Required]
     public int CategoryId { get; set; }
-    [StringLength(500)]
+    public string ProductName { get; set; }
+    public string Description { get; set; }
+    public int SellingPrice { get; set; }
+    public int OriginalPrice { get; set; }
+    public int QuantityInStock { get; set; }
     public string ImageUrl { get; set; }
 
-    [ForeignKey(nameof(CategoryId))]
     public virtual Category Category { get; set; }
-
-    [InverseProperty(nameof(Product))]
-    public virtual ICollection<ProductItem> ProductItems { get; set; } = [];
+    public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
 }

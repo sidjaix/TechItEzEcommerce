@@ -2,10 +2,10 @@ namespace ApiServices.Models.Product;
 
 public class ProductPageModel
 {
-    public List<ProductModel> Products { get; set; }
-    public List<CategoryModel> Categories { get; set; }
-    public List<ProductModel> LatestProducts { get; set; }
-    public List<ProductModel> SaleOfProducts { get; set; }
+    public List<ProductViewModel> Products { get; set; }
+    public List<CategoryViewModel> Categories { get; set; }
+    public List<ProductViewModel> LatestProducts { get; set; }
+    public List<ProductViewModel> SaleOfProducts { get; set; }
     public List<string> Colors { get; set; } = new List<string>(){
         "White",
         "Yellow",
@@ -22,5 +22,4 @@ public class ProductPageModel
         "XL",
         "XXL",
     };
-
 }

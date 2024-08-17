@@ -95,6 +95,7 @@ namespace Product_Api.Controllers
         /// <param name="categoryData"></param>
         /// <returns>CategoryModel</returns>
         [HttpPut("Update")]
+        [ValidateModel]
         public async Task<ActionResult<CategoryModel>> UpdateExistingCategoryAsync(CategoryModel categoryData)
         {
             try

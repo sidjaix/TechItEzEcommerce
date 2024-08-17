@@ -5,21 +5,18 @@ using User_Api.Common.Filters;
 using User_Core;
 using User_Core.Entities;
 using User_Core.Models;
-using User_Data;
 
-namespace User_Api;
+namespace User_Api.Controllers;
 
 [ApiController]
 [Route("api/admin")]
 public class AdminController : ControllerBase
 {
-    private readonly IAdminRepository adminRepository;
     private readonly RoleManager<Role> _roleManager;
     private readonly UserManager<User> _userManager;
     private readonly ResponseDto _response;
-    public AdminController(IAdminRepository adminRepository, RoleManager<Role> roleManager, UserManager<User> userManager)
+    public AdminController(RoleManager<Role> roleManager, UserManager<User> userManager)
     {
-        this.adminRepository = adminRepository;
         _roleManager = roleManager;
         _userManager = userManager;
         _response = new ResponseDto();

@@ -7,47 +7,38 @@ namespace User_Api.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(IAuthService authService, ResponseDto response) : ControllerBase
     {
-        private readonly IAuthService _authService;
-        private readonly ResponseDto _response;
-        public AuthController(IAuthService authService, ResponseDto response)
-        {
-            _authService = authService;
-            _response = response;
-
-        }
-
         [HttpPost("login")]
         [ValidateModel]
         public async Task<ActionResult<ResponseDto>> LoginAsync([FromBody] LoginModel loginModel)
         {
-            var response = await _authService.LoginAsync(loginModel);
-            if (response.User is null || string.IsNullOrEmpty(response.Token))
+            var loginResponse = await authService.LoginAsync(loginModel);
+            if (loginResponse.User is null || string.IsNullOrEmpty(loginResponse.Token))
             {
-                _response.Message = "Username or password is incorrect.";
-                _response.IsSuccess = false;
-                _response.Result = default;
-                return BadRequest(_response);
+                response.Message = "Username or password is incorrect.";
+                response.IsSuccess = false;
+                response.Result = default;
+                return BadRequest(response);
             }
-            _response.Result = response;
-            _response.Message = "User has logged in successfully";
-            return Ok(_response);
+            response.Result = loginResponse;
+            response.Message = "User has logged in successfully";
+            return Ok(response);
         }
 
         [HttpPost("register")]
         [ValidateModel]
         public async Task<ActionResult<ResponseDto>> RegisterAsync([FromBody] RegisterModel register)
         {
-            var response = await _authService.RegisterAsync(register);
+            var response = await authService.RegisterAsync(register);
             if (!response.IsSuccess)
             {
-                _response.Message = "User has not registered.";
-                _response.IsSuccess = false;
-                _response.Result = default;
-                return BadRequest(_response);
+                response.Message = "User has not registered.";
+                response.IsSuccess = false;
+                response.Result = default;
+                return BadRequest(response);
             }
-            _response.Result = response;
+            response.Result = response;
             return Ok(response);
         }
 

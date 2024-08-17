@@ -10,8 +10,8 @@ public class CartDbContext : DbContext
     {
     }
 
-    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-    public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
+    public DbSet<UserCart> ShoppingCarts { get; set; }
+    public DbSet<UserCartItem> ShoppingCartItems { get; set; }
     public DbSet<PaymentType> PaymentTypes { get; set; }
     public DbSet<UserPaymentMethod> UserPaymentMethods { get; set; }
 

@@ -11,7 +11,9 @@ public static class CategoryMapper
         return new Category
         {
             CategoryId = categoryModel.CategoryId,
-            CategoryName = categoryModel.CategoryName
+            CategoryName = categoryModel.CategoryName,
+            CategoryDescription = categoryModel.CategoryDescription,
+            CategoryImageUrl = categoryModel.CategoryImageUrl
             // Add other properties as needed
         };
     }
@@ -21,7 +23,9 @@ public static class CategoryMapper
         return new CategoryModel
         {
             CategoryId = category.CategoryId,
-            CategoryName = category.CategoryName
+            CategoryName = category.CategoryName,
+            CategoryDescription = category.CategoryDescription,
+            CategoryImageUrl = category.CategoryImageUrl
             // Add other properties as needed
         };
     }
