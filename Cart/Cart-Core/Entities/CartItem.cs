@@ -3,16 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Cart_Core.Entities;
 
-[Table("UserCartItem")]
-public class UserCartItem
+[Table("CartItem")]
+public class CartItem
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int UserCartItemId { get; set; }
-    public int UserCartId { get; set; }
+    public int CartItemId { get; set; }
+    public int CartId { get; set; }
     public int ProductId { get; set; }
     public int Quantity { get; set; }
-
-    [ForeignKey(nameof(UserCartId))]
-    public UserCart Cart { get; set; }
+    public virtual Cart Cart { get; set; }
 }

@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Cart_Core.Entities;
 
-[Table("UserCart")]
-public class UserCart
+[Table("Wishlist")]
+public class Wishlist
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public int WishlistId { get; set; }
     [Required]
     public string UserId { get; set; } = null!;
 }

@@ -1,7 +1,8 @@
-﻿namespace Cart_Cores.Models;
+﻿
+namespace Cart_Core.Models;
 public partial class WishlistModel
 {
     public int WishlistId { get; set; }
-    public int CustomerId { get; set; }
-    public int ProductId { get; set; }
+    public string UserId { get; set; }
+    public List<WishlistItemModel> WishlistItems { get; set; }
 }

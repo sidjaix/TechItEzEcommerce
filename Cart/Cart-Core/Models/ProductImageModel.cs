@@ -1,8 +1,9 @@
-﻿namespace Cart_Cores.Models;
+﻿namespace Cart_Core.Models;
 
 public partial class ProductImageModel
 {
-    public int ImageId { get; set; }
+    public int ProductImageId { get; set; }
     public int ProductId { get; set; }
-    public string ImageUrl { get; set; } = null!;
+    public string ProductImageUrl { get; set; } = null!;
+    public bool IsThumbnail { get; set; }
 }

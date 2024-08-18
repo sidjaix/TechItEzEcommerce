@@ -3,12 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Cart_Core.Entities;
 
-[Table("UserWishlist")]
-public class UserWishlist
+[Table("Cart")]
+public class Cart
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public int CartId { get; set; }
     [Required]
-    public string UserId { get; set; } = null!;
+    public string UserId { get; set; }
+
+    public virtual ICollection<CartItem> CartItems { get; set; } = [];
 }

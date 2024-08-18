@@ -9,7 +9,10 @@ using Cart_Core;
 using Cart_Data.Repositories;
 using Cart_Api.Common.Extensions;
 using Cart_Data.Repositories.IRepositories;
-using Cart_Api.Common;
+using Cart_Api.Utility;
+using Cart_Data.Services.IServices;
+using Cart_Data.Services;
+using Cart_Core.Models;
 
 internal class Program
 {
@@ -57,6 +60,15 @@ internal class Program
             .UseSqlServer(azureDB)
             .EnableSensitiveDataLogging(environment.IsDevelopment());  //should not be used in production, only for development purpose
         });
+
+        builder.Services.AddHttpContextAccessor();
+
+        builder.Services.AddScoped<AuthenticationHandler>();
+
+        builder.Services.AddHttpClient<IProductService, ProductService>(u =>
+        {
+            u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductApi"]);
+        }).AddHttpMessageHandler<AuthenticationHandler>();
 
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -115,6 +127,7 @@ internal class Program
         // Register Dependency Services
         builder.Services.AddScoped<ICartRepository, CartRepository>();
         builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
+        builder.Services.AddScoped<ResponseDto>();
 
         var app = builder.Build();
 

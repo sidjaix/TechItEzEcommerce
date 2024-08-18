@@ -10,13 +10,31 @@ public class CartDbContext : DbContext
     {
     }
 
-    public DbSet<UserCart> ShoppingCarts { get; set; }
-    public DbSet<UserCartItem> ShoppingCartItems { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Wishlist> Wishlists { get; set; }
+    public DbSet<WishlistItem> WishlistItems { get; set; }
     public DbSet<PaymentType> PaymentTypes { get; set; }
     public DbSet<UserPaymentMethod> UserPaymentMethods { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        modelBuilder.Entity<CartItem>(entity =>
+        {
+            entity.HasIndex(e => e.CartId, "IX_CartItem_CartId");
+
+            entity
+            .HasOne(d => d.Cart)
+            .WithMany(p => p.CartItems)
+            .HasForeignKey(d => d.CartId);
+        });
+
+        modelBuilder.Entity<Cart>(entity =>
+        {
+            entity.HasIndex(e => e.CartId, "IX_Cart_UserId");
+        });
+
         base.OnModelCreating(modelBuilder);
     }
 

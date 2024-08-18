@@ -1,8 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace Cart_Api.Controllers;
 
-public class WishlistController
+[Route("api/wishlist")]
+[ApiController]
+[Authorize]
+public class WishlistController : ControllerBase
 {
 
 }

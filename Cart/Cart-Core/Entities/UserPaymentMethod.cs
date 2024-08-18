@@ -10,7 +10,7 @@ public class UserPaymentMethod
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int UserPaymentMethodId { get; set; }
     [Required]
-    public string UserId { get; set; } = null!;
+    public string UserId { get; set; }
     [Required]
     public int PaymentTypeId { get; set; }
     public string AccountNumber { get; set; }
