@@ -2,6 +2,14 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 
+# # Create the keys directory and set permissions
+# RUN mkdir -p /app/keys && \
+#     chown -R www-data:www-data /app/keys && \
+#     chmod -R 755 /app/keys
+
+# # Set the user to ensure correct access
+# USER www-data
+
 ENV ASPNETCORE_URLS=http://+:80
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build

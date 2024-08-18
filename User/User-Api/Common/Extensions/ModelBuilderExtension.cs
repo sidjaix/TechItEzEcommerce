@@ -5,7 +5,7 @@ namespace User_Api.Extensions;
 
 public static class ModelBuilderExtension
 {
-    public static void UseMigiration(IApplicationBuilder app)
+    public static void UseMigiration(this IApplicationBuilder app)
     {
         using var serviceScope = app.ApplicationServices.CreateScope();
         ApplyMigration(serviceScope.ServiceProvider.GetService<UserDbContext>());
@@ -14,16 +14,15 @@ public static class ModelBuilderExtension
     {
         if (dbContext != null)
         {
-            Console.WriteLine("Checking for pending migration(s) to applying...");
+            Console.WriteLine("Checking pending migration from User-Api...");
             if (dbContext.Database.GetPendingMigrations().Any())
             {
-                Console.WriteLine("Applying Migration...");
+                Console.WriteLine("Applying Migration for User-Api...");
                 dbContext.Database.Migrate();
-                Console.WriteLine("Migration has applied");
             }
             else
             {
-                Console.WriteLine("No pending migration(s) found to apply.");
+                Console.WriteLine("Did not find any pending migration for User-Api...");
             }
         }
     }

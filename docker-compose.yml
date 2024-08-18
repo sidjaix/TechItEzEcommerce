@@ -36,6 +36,23 @@ services:
     networks:
       - techitez_network
 
+  cart_api:
+    container_name: e_commerce_cart_api
+    image: sidjaix/cart-api:latest
+    build:
+      context: .
+      dockerfile: ./Cart/Dockerfile
+    ports:
+      - '5003:80'
+    #restart: always
+    # depends_on:
+    #   - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__CartApi=server=techitez_sqlserver;Initial Catalog=CartApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
+    networks:
+      - techitez_network
+
   e-commerce-web:
     container_name: e_commerce_web
     image: sidjaix/e-commerce-web:latest
@@ -47,13 +64,10 @@ services:
     depends_on:
       - product_api
       - user_api
-    volumes:
-      - data-protection-keys:/var/aspnetcore/data-protection-keys
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ServiceUrls__AuthApi='http://e_commerce_user_api'
       - ServiceUrls__ProductApi='http://e_commerce_product_api'
-      - ServiceUrls__CartApi='http://localhost:5003'
     networks:
       - techitez_network
 
@@ -70,9 +84,6 @@ services:
   #     - techitez-sqledge:/var/opt/mssql
   #   networks:
   #     - techitez_network
-
-volumes:
-  data-protection-keys:
 
 networks:
   techitez_network:

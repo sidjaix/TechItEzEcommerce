@@ -1,3 +1,9 @@
+-- ('Admin', 'Has full access to all system features and settings'),
+-- ('User', 'Standard user with access to basic features'),
+-- ('Manager', 'Can manage user activities and has limited admin rights'),
+-- ('Guest', 'Limited access, mostly read-only permissions'),
+-- ('Support', 'Provides customer support and resolves user issues');
+
 USE ProductApiDb
 
 GO

@@ -24,12 +24,15 @@ dotnet ef dbcontext scaffold "Server=localhost; Initial Catalog=TechItEzEcommerc
 1. DbContextFolderIsRoot => dotnet ef migrations add AddedBaseEntityProperty -c UserDbContext --output-dir ./Migrations -s ../User-Api/User-Api.csproj
 
 - dotnet ef migrations add AddedBaseEntityProperty -c ProductDbContext --output-dir ./Migrations -s ../Product-Api/Product-Api.csproj
+- dotnet ef migrations add InitialMigration -c CartDbContext --output-dir ./Migrations -s ../Cart-Api/Cart-Api.csproj
 
-2. dotnet ef migrations script -s ../User-Api/User-Api.csproj
+2. DbContextFolderIsRoot => dotnet ef database update -s ../User-Api/User-Api.csproj
+
+- dotnet ef database update -s ../Product-Api/Product-Api.csproj
+- dotnet ef database update -s ../Cart-Api/Cart-Api.csproj
+
+3. dotnet ef migrations script -s ../User-Api/User-Api.csproj
    (if needed as script)dotnet ef database update
-
-3. DbContextFolderIsRoot => dotnet ef database update -s ../User-Api/User-Api.csproj
-   dotnet ef database update -s ../Product-Api/Product-Api.csproj
 
 4. dotnet ef database drop -s ../User-Api/User-Api.csproj
    (to drop database)

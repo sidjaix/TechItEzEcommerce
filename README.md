@@ -180,13 +180,9 @@ Database script can be found at root level of this repository E.g. TechItEzEcomm
   -- Enterprise : This will run the container using the Enterprise Edition
   -- EnterpriseCore : This will run the container using the Enterprise Edition Core
 
-- Run docker image
-  docker run -d --name techitez_sqlserver \  
-  -e SA_PASSWORD='Admin@123' \
-  -e ACCEPT_EULA='1' \
-  -p 1433:1433 \
-  -v techitez-sqledge:/var/opt/mssql \
-  techitez-sqledgeserver
+- docker build -t techitez-sqlserver .
+- docker run -d --name techitez_sqlserver -e SA_PASSWORD='Admin@123' -e ACCEPT_EULA='1' -p 1433:1433 -v techitez-sqledge:/var/opt/mssql techitez-sqlserver
+- docker network connect techitez_network techitez_sqlserver
 
 ## Docker Push new build to Existing registry repo
 

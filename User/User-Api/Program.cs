@@ -139,7 +139,7 @@ internal class Program
         app.MapControllers();
 
         // Apply Pending Migration
-        ModelBuilderExtension.UseMigiration(app);
+        app.UseMigiration();
 
         app.Run();
     }

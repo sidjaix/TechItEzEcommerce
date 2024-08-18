@@ -15,15 +15,15 @@ public static class ModelBuilderExtension
     {
         if (dbContext != null)
         {
-            Console.WriteLine("Checking pending migration from Product-Api...");
+            Console.WriteLine("Checking pending migration for Product-Api...");
             if (dbContext.Database.GetPendingMigrations().Any())
             {
-                Console.WriteLine("Applying Migration from Product...");
+                Console.WriteLine("Applying Migration for Product-Api...");
                 dbContext.Database.Migrate();
             }
             else
             {
-                Console.WriteLine("Did not find any pending migration from Product-Api...");
+                Console.WriteLine("Did not find any pending migration for Product-Api...");
             }
         }
     }
