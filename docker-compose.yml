@@ -14,7 +14,7 @@ services:
     # depends_on:
     #   - sqlserver
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__UserApi=server=techitez_sqlserver;Initial Catalog=UserApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
     networks:
       - techitez_network
@@ -31,7 +31,7 @@ services:
     # depends_on:
     #   - sqlserver
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__ProductApi=server=techitez_sqlserver;Initial Catalog=ProductApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
     networks:
       - techitez_network
@@ -48,28 +48,28 @@ services:
     # depends_on:
     #   - sqlserver
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__CartApi=server=techitez_sqlserver;Initial Catalog=CartApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
     networks:
       - techitez_network
 
-  e-commerce-web:
-    container_name: e_commerce_web
-    image: sidjaix/e-commerce-web:latest
-    build:
-      context: .
-      dockerfile: ./UI/Dockerfile
-    ports:
-      - '5005:80'
-    depends_on:
-      - product_api
-      - user_api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ServiceUrls__AuthApi='http://e_commerce_user_api'
-      - ServiceUrls__ProductApi='http://e_commerce_product_api'
-    networks:
-      - techitez_network
+  # e-commerce-web:
+  #   container_name: e_commerce_web
+  #   image: sidjaix/e-commerce-web:latest
+  #   build:
+  #     context: .
+  #     dockerfile: ./UI/Dockerfile
+  #   ports:
+  #     - '5005:80'
+  #   depends_on:
+  #     - product_api
+  #     - user_api
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Production
+  #     - ServiceUrls__AuthApi='http://e_commerce_user_api'
+  #     - ServiceUrls__ProductApi='http://e_commerce_product_api'
+  #   networks:
+  #     - techitez_network
 
   # sqlserver:
   #   container_name: techitez_sqlserver

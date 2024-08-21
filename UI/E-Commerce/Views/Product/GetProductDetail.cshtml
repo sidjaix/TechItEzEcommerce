@@ -10,18 +10,14 @@
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
-                        <img class="product__details__pic__item--large"
-                            src=@Url.Content("~/img/product/details/product-details-1.jpg") alt="">
+                        <img class="product__details__pic__item--large" src=@Url.Content(Model.ImageUrl) alt="">
                     </div>
                     <div class="product__details__pic__slider owl-carousel">
-                        <img data-imgbigurl=@Url.Content("~/img/product/details/product-details-2.jpg")
-                            src=@Url.Content("~/img/product/details/thumb-1.jpg") alt="">
-                        <img data-imgbigurl=@Url.Content("~/img/product/details/product-details-3.jpg")
-                            src=@Url.Content("~/img/product/details/thumb-2.jpg") alt="">
-                        <img data-imgbigurl=@Url.Content("~/img/product/details/product-details-5.jpg")
-                            src=@Url.Content("~/img/product/details/thumb-3.jpg") alt="">
-                        <img data-imgbigurl=@Url.Content("~/img/product/details/product-details-4.jpg")
-                            src=@Url.Content("~/img/product/details/thumb-4.jpg") alt="">
+                        @foreach (var image in Model.ProductImages)
+                        {
+                            <img data-imgbigurl=@Url.Content(image.ThumbBigImageUrl) src=@Url.Content(image.ProductImageUrl)
+                                alt="">
+                        }
                     </div>
                 </div>
             </div>
@@ -48,7 +44,10 @@
                     <a href="#" class="primary-btn">ADD TO CARD</a>
                     <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                     <ul>
-                        <li><b>Availability</b> <span>In Stock</span></li>
+                        <li>
+                            <b>Availability</b>
+                            <span>@Model.StockAvailability</span>
+                        </li>
                         <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
                         <li><b>Weight</b> <span>0.5 kg</span></li>
                         <li><b>Share on</b>
@@ -165,7 +164,6 @@
                         <div class="product__item__pic set-bg" data-setbg=@Url.Content(prod.ImageUrl)>
                             <ul class="product__item__pic__hover">
                                 <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                @* <li><a href="#"><i class="fa fa-retweet"></i></a></li> *@
                                 <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                             </ul>
                         </div>

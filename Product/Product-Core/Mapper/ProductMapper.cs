@@ -14,9 +14,17 @@ public static class ProductMapperExtension
             ProductName = productModel.ProductName,
             Description = productModel.Description,
             OriginalPrice = productModel.OriginalPrice,
+            ImageUrl = productModel.ImageUrl,
             SellingPrice = productModel.SellingPrice,
             QuantityInStock = productModel.QuantityInStock,
-            ProductImages = productModel.ProductImages
+            ProductImages = productModel.ProductImages?.Select(x => new ProductImage
+            {
+                ProductId = productModel.ProductId,
+                ImageUrl = x.ProductImageUrl,
+                ThumbBigImageUrl = x.ThumbBigImageUrl,
+                IsThumbnail = x.IsThumbnail,
+                ProductImageId = x.ProductImageId
+            }).ToList()
         };
 
         return product;
@@ -27,14 +35,21 @@ public static class ProductMapperExtension
         return new ProductModel
         {
             ProductId = product.ProductId,
-            CategoryId = product.CategoryId,
             ProductName = product.ProductName,
+            CategoryId = product.CategoryId,
             Description = product.Description,
             OriginalPrice = product.OriginalPrice,
             SellingPrice = product.SellingPrice,
             QuantityInStock = product.QuantityInStock,
             ImageUrl = product.ImageUrl,
-            ProductImages = product.ProductImages.ToList()
+            ProductImages = product.ProductImages?.Select(x => new ProductImageModel
+            {
+                ProductId = product.ProductId,
+                ProductImageUrl = x.ImageUrl,
+                ThumbBigImageUrl = x.ThumbBigImageUrl,
+                IsThumbnail = x.IsThumbnail,
+                ProductImageId = x.ProductImageId
+            }).ToList()
         };
     }
 }

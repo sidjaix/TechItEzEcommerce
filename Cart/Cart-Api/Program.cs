@@ -20,6 +20,7 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        var environment = builder.Environment;
         // Retrieve the connection string of Azure App Config Store
         var useAzureAppConfig = builder.Configuration.GetValue<bool>("Azure:UseAzureAppConfig");
         if (useAzureAppConfig)
@@ -54,7 +55,6 @@ internal class Program
         // Register db context pool for sql server
         builder.Services.AddDbContextPool<CartDbContext>((serviceProvider, options) =>
         {
-            var environment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
             var azureDB = config.GetConnectionString("CartApi");
             options
             .UseSqlServer(azureDB)
@@ -67,7 +67,9 @@ internal class Program
 
         builder.Services.AddHttpClient<IProductService, ProductService>(u =>
         {
-            u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductApi"]);
+            u.BaseAddress = environment.IsDevelopment() ?
+            new Uri("http://localhost:5002") :
+            new Uri(builder.Configuration["ServiceUrls:ProductApi"]);
         }).AddHttpMessageHandler<AuthenticationHandler>();
 
         // Add services to the container.

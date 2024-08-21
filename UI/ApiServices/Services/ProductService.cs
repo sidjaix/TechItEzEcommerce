@@ -15,7 +15,7 @@ public class ProductService : IProductService
         _baseService = baseService;
     }
 
-    public async Task<ResponseDto> CreateNewProductAsync(ProductViewModel productModel)
+    public async Task<ResponseDto> CreateNewProductAsync(CreateProductViewModel productModel)
     {
         var request = new RequestDto
         {
@@ -28,7 +28,7 @@ public class ProductService : IProductService
         return response;
     }
 
-    public async Task<ResponseDto> UpdateExistingProductAsync(ProductViewModel productModel)
+    public async Task<ResponseDto> UpdateExistingProductAsync(CreateProductViewModel productModel)
     {
         var request = new RequestDto
         {

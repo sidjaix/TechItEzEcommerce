@@ -98,11 +98,10 @@ namespace E_Commerce.Controllers
                 jwtToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
             claimsIdentity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub,
                 jwtToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value));
-            claimsIdentity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
-                jwtToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
-
+            claimsIdentity.AddClaim(new Claim(JwtRegisteredClaimNames.NameId,
+                jwtToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.NameId).Value));
             claimsIdentity.AddClaim(new Claim(ClaimTypes.Name,
-                jwtToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+                jwtToken.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
 
             foreach (var role in jwtToken.Claims)
             {

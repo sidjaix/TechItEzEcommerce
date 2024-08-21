@@ -93,7 +93,7 @@ GO
 INSERT INTO ProductImage(ProductId, ImageUrl, IsThumbnail) VALUES
 (19, '~/img/product/apples.jpg', 0),
 (20, '~/img/product/banana.jpg', 0),
-(21, '~/img/product/orange.jpg', 0),
+(21, '~/img/product/orange.jpeg', 0),
 (22, '~/img/product/blueberry.jpg', 0),
 (23, '~/img/product/watermelon.jpg', 0),
 (24, '~/img/product/guava.jpg', 0);
@@ -118,3 +118,45 @@ INSERT INTO ProductImage(ProductId, ImageUrl, IsThumbnail) VALUES
 (29, '~/img/product/potato.jpeg', 0),
 (30, '~/img/product/onion.jpeg', 0),
 (31, '~/img/product/tomato.jpeg', 0);
+
+
+
+-----------------Thumbnail image insert----------------
+use ProductApiDb
+select  pi.ProductImageId, pi.productId, pi.ImageUrl, p.ImageUrl, pi.IsThumbnail, p.ProductName  from ProductImage PI
+join Product p on pi.ProductId=p.ProductId
+
+
+insert into ProductImage (ProductId, ImageUrl, IsThumbnail, ThumbBigImageUrl) VALUES
+(1, '~/img/product/iphone-thumbnail.jpeg', 1, '~/img/product/iphone15.jpeg'),
+(2, '~/img/product/oppo-thumbnail.jpeg',1, '~/img/product/oppo.jpeg'),
+(3, '~/img/product/samsung-thumbnail.jpeg',1, '~/img/product/samsungs12pro.jpeg'),
+(4, '~/img/product/macbook-thumbnail.jpeg',1, '~/img/product/macbook.jpeg'),
+(5, '~/img/product/dell-thumbnail.jpeg',1, '~/img/product/dell-laptop.jpeg'),
+(6, '~/img/product/tshirt-thumbnail.jpeg',1, '~/img/product/tshirt.jpeg'),
+(7, '~/img/product/suit-thumbnail.jpeg',1, '~/img/product/suit.jpeg'),
+(8, '~/img/product/dress-thumbnail.jpeg',1, '~/img/product/dress-2-5.jpeg'),
+(9, '~/img/product/dress-thumbnail.jpeg',1, '~/img/product/dress-2-5.jpeg'),
+(10, '~/img/product/shirt-thumbnail.jpeg',1, '~/img/product/shirt.jpeg'),
+(11, '~/img/product/spatula-thumbnail.jpeg',1, '~/img/product/spatula.jpeg'),
+(12, '~/img/product/gas-stove-thumbnail.jpeg',1, '~/img/product/gas-stove.jpeg'),
+(13, '~/img/product/utensils-thumbnail.jpeg',1, '~/img/product/utensils.jpeg'),
+(14, '~/img/product/richdadpoordad-thumbnail.jpeg',1, '~/img/product/richdadpoordad.jpeg'),
+(15, '~/img/product/ramcharitmanas-thumbnail.jpeg',1, '~/img/product/ramcharitmanas.jpeg'),
+(16, '~/img/product/csharp-thumbnail.jpeg',1, '~/img/product/csharp.jpeg'),
+(17, '~/img/product/java-thumbnail.jpeg',1, '~/img/product/java.jpeg'),
+(18, '~/img/product/geeta-thumbnail.jpeg',1, '~/img/product/geeta.jpeg'),
+(19, '~/img/product/apple.jpeg',1, '~/img/product/apples.jpg'),
+(20, '~/img/product/banana-thumbnail.jpeg',1, '~/img/product/banana.jpg'),
+(21, '~/img/product/orange-thumbnail.jpeg',1, '~/img/product/orange.jpeg'),
+(22, '~/img/product/blueberry-thumbnail.jpeg',1, '~/img/product/blueberry.jpg'),
+(23, '~/img/product/watermelon-thumbnail.jpeg',1, '~/img/product/watermelon.jpg'),
+(24, '~/img/product/guava-thumbnail.jpeg',1, '~/img/product/guava.jpg'),
+(25, '~/img/product/carrot-thumbnail.jpeg',1, '~/img/product/carrot.jpeg'),
+(26, '~/img/product/broccoli-thumbnail.jpeg',1, '~/img/product/broccoli.jpeg'),
+(27, '~/img/product/beetroot-thumbnail.jpeg',1, '~/img/product/beetroot.jpeg'),
+(28, '~/img/product/bittergourd-thumbnail.jpeg',1, '~/img/product/bitterguard.jpeg'),
+(29, '~/img/product/potato-thumbnail.jpeg',1, '~/img/product/potato.jpeg'),
+(30, '~/img/product/onion-thumbnail.jpeg',1, '~/img/product/onion.jpeg'),
+(31, '~/img/product/tomato-thumbnail.jpeg',1, '~/img/product/tomato.jpeg');
+

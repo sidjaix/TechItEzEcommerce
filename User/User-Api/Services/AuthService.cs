@@ -109,9 +109,10 @@ public class AuthService : IAuthService
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(JwtRegisteredClaimNames.Name, user.UserName)
+            new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Name, user.Name)
         };
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

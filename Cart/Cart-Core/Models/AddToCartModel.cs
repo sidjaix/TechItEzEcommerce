@@ -1,5 +1,6 @@
-﻿namespace ApiServices.Models.Cart;
-public partial class UserCartItemViewModel
+namespace Cart_Core.Models;
+
+public class AddToCartModel
 {
     public int CartId { get; set; }
     public string UserId { get; set; }

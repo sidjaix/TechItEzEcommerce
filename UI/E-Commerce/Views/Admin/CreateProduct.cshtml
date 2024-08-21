@@ -1,0 +1,75 @@
+﻿@model CreateProductViewModel
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<div class="container mt-4">
+    <form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="ProductName" class="form-label">Product Name</label>
+                <input asp-for="ProductName" class="form-control" placeholder="Enter product name" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="CategoryId" class="form-label">Category</label>
+                <select asp-for="CategoryId" class="form-select nice-select">
+                    <option data-display="Select a category">Select a category</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.CategoryId">@category.CategoryName</option>
+                    }
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="3"
+                    placeholder="Enter product description"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label asp-for="SellingPrice" class="form-label">Selling Price</label>
+                <input asp-for="SellingPrice" class="form-control" placeholder="Enter selling price" />
+                <span asp-validation-for="SellingPrice" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="OriginalPrice" class="form-label">Original Price</label>
+                <input asp-for="OriginalPrice" class="form-control" placeholder="Enter original price" />
+                <span asp-validation-for="OriginalPrice" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="QuantityInStock" class="form-label">Quantity in Stock</label>
+                <input asp-for="QuantityInStock" class="form-control" placeholder="Enter quantity in stock" />
+                <span asp-validation-for="QuantityInStock" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label asp-for="ProductImage" class="form-label">Upload Product Image</label>
+                <input asp-for="ProductImage" type="file" class="form-control" />
+                <span asp-validation-for="ProductImage" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12 text-end">
+                <button type="submit" class="site-btn">Create Product</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

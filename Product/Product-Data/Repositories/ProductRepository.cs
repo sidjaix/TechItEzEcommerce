@@ -28,10 +28,19 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
         existingProduct.ProductName = productData.ProductName;
         existingProduct.CategoryId = productData.CategoryId;
         existingProduct.Description = productData.Description;
-        existingProduct.SellingPrice = productData.SellingPrice;
         existingProduct.OriginalPrice = productData.OriginalPrice;
+        existingProduct.SellingPrice = productData.SellingPrice;
+        existingProduct.QuantityInStock = productData.QuantityInStock;
         existingProduct.ImageUrl = productData.ImageUrl;
-        existingProduct.ProductImages = productData.ProductImages;
+        existingProduct.ProductImages = productData.ProductImages?
+                                        .Select(x => new ProductImage
+                                        {
+                                            ProductId = productData.ProductId,
+                                            ImageUrl = x.ProductImageUrl,
+                                            ThumbBigImageUrl = x.ThumbBigImageUrl,
+                                            IsThumbnail = x.IsThumbnail,
+                                            ProductImageId = x.ProductImageId
+                                        }).ToList();
 
         db.Attach(existingProduct);
         await db.SaveChangesAsync();
@@ -49,7 +58,16 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
                                OriginalPrice = product.OriginalPrice,
                                QuantityInStock = product.QuantityInStock,
                                ImageUrl = product.ImageUrl,
-                               CategoryId = product.CategoryId
+                               CategoryId = product.CategoryId,
+                               CategoryName = product.Category.CategoryName,
+                               ProductImages = product.ProductImages.Select(x => new ProductImageModel
+                               {
+                                   ProductId = product.ProductId,
+                                   ProductImageUrl = x.ImageUrl,
+                                   ThumbBigImageUrl = x.ThumbBigImageUrl,
+                                   IsThumbnail = x.IsThumbnail,
+                                   ProductImageId = x.ProductImageId
+                               }).ToList()
                            };
         var products = await productQuery
         .AsSplitQuery()
@@ -71,7 +89,14 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
                                QuantityInStock = p.QuantityInStock,
                                ImageUrl = p.ImageUrl,
                                CategoryId = p.CategoryId,
-                               ProductImages = p.ProductImages.ToList()
+                               ProductImages = p.ProductImages.Select(pi => new ProductImageModel
+                               {
+                                   ProductId = p.ProductId,
+                                   ProductImageUrl = pi.ImageUrl,
+                                   ThumbBigImageUrl = pi.ThumbBigImageUrl,
+                                   IsThumbnail = pi.IsThumbnail,
+                                   ProductImageId = pi.ProductImageId
+                               }).ToList()
                            };
         var product = await productQuery
         .AsSplitQuery()
@@ -92,7 +117,15 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
                                 OriginalPrice = product.OriginalPrice,
                                 QuantityInStock = product.QuantityInStock,
                                 ImageUrl = product.ImageUrl,
-                                CategoryId = product.CategoryId
+                                CategoryId = product.CategoryId,
+                                ProductImages = product.ProductImages.Select(x => new ProductImageModel
+                                {
+                                    ProductId = product.ProductId,
+                                    ProductImageUrl = x.ImageUrl,
+                                    ThumbBigImageUrl = x.ThumbBigImageUrl,
+                                    IsThumbnail = x.IsThumbnail,
+                                    ProductImageId = x.ProductImageId
+                                }).ToList()
                             };
 
         var products = await productsQuery

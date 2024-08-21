@@ -103,6 +103,9 @@ namespace Product_Core.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ThumbBigImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ProductImageId");
 
                     b.HasIndex("ProductId");

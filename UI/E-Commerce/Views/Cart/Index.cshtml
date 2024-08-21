@@ -1,4 +1,5 @@
-﻿@{
+﻿@model CartViewModel
+@{
     ViewData["Title"] = "Cart";
 }
 
@@ -19,72 +20,36 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="shoping__cart__item">
-                                    <img src="img/cart/cart-1.jpg" alt="">
-                                    <h5>Vegetable’s Package</h5>
-                                </td>
-                                <td class="shoping__cart__price">
-                                    ₹55.00
-                                </td>
-                                <td class="shoping__cart__quantity">
-                                    <div class="quantity">
-                                        <div class="pro-qty">
-                                            <input type="text" value="1">
+                            @foreach (var cartItem in Model.CartItems)
+                            {
+                                <tr>
+                                    <td class="shoping__cart__item">
+                                        <a asp-controller="product" asp-action="GetProductDetail"
+                                            asp-route-productId="@cartItem.ProductId"><img
+                                                src=@Url.Content(cartItem.ImageUrl) alt=""></a>
+                                        <h5>@cartItem.ProductName</h5>
+                                    </td>
+                                    <td class="shoping__cart__price">
+                                        ₹@cartItem.SellingPrice
+                                    </td>
+                                    <td class="shoping__cart__quantity">
+                                        <div class="quantity">
+                                            <div class="pro-qty">
+                                                <input type="text" disabled value="@cartItem.Quantity">
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="shoping__cart__total">
-                                    ₹110.00
-                                </td>
-                                <td class="shoping__cart__item__close">
-                                    <span class="icon_close"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="shoping__cart__item">
-                                    <img src="img/cart/cart-2.jpg" alt="">
-                                    <h5>Fresh Garden Vegetable</h5>
-                                </td>
-                                <td class="shoping__cart__price">
-                                    ₹39.00
-                                </td>
-                                <td class="shoping__cart__quantity">
-                                    <div class="quantity">
-                                        <div class="pro-qty">
-                                            <input type="text" value="1">
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="shoping__cart__total">
-                                    ₹39.99
-                                </td>
-                                <td class="shoping__cart__item__close">
-                                    <span class="icon_close"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="shoping__cart__item">
-                                    <img src="img/cart/cart-3.jpg" alt="">
-                                    <h5>Organic Bananas</h5>
-                                </td>
-                                <td class="shoping__cart__price">
-                                    ₹69.00
-                                </td>
-                                <td class="shoping__cart__quantity">
-                                    <div class="quantity">
-                                        <div class="pro-qty">
-                                            <input type="text" value="1">
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="shoping__cart__total">
-                                    ₹69.99
-                                </td>
-                                <td class="shoping__cart__item__close">
-                                    <span class="icon_close"></span>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td class="shoping__cart__total">
+                                        ₹@cartItem.ItemTotal
+                                    </td>
+                                    <td class="shoping__cart__item__close">
+                                        <a asp-controller="cart" asp-action="RemoveItemFromCart"
+                                            asp-route-cartItemId="@cartItem.CartItemId">
+                                            <span class="icon_close"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

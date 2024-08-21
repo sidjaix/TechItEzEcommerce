@@ -5,35 +5,45 @@ namespace Cart_Core.Mapper;
 
 public static class CartMapper
 {
-    public static Cart MapToEntity(this CartModel cartModel)
+    public static object MapToEntity(this object obj)
     {
-        return new Cart
+        if (obj is CartModel)
         {
-            CartId = cartModel.CartId,
-            UserId = cartModel.UserId
-            // CartItems = cartModel.CartItems.Select(x => new CartItem
-            // {
-            //     CartId = x.CartId,
-            //     ProductId = x.ProductId,
-            //     Quantity = x.Quantity,
-            //     CartItemId = x.CartItemId
-            // }).ToList()
+            var cartModel = (CartModel)obj;
+            return new Cart
+            {
+                CartId = cartModel.CartId,
+                UserId = cartModel.UserId
+            };
+        }
+        var cartItem = (CartItemModel)obj;
+        return new CartItem
+        {
+            CartItemId = cartItem.CartItemId,
+            CartId = cartItem.CartId,
+            ProductId = cartItem.ProductId,
+            Quantity = cartItem.Quantity
         };
     }
 
-    public static CartModel MapToDto(this Cart cart)
+    public static object MapToDto(this object obj)
     {
-        return new CartModel
+        if (obj is Cart)
         {
-            CartId = cart.CartId,
-            UserId = cart.UserId,
-            CartItems = cart.CartItems.Select(x => new CartItemModel
+            var cartModel = (Cart)obj;
+            return new CartModel
             {
-                CartId = x.CartId,
-                ProductId = x.ProductId,
-                Quantity = x.Quantity,
-                CartItemId = x.CartItemId
-            }).ToList()
+                CartId = cartModel.CartId,
+                UserId = cartModel.UserId
+            };
+        }
+        var cartItem = (CartItem)obj;
+        return new CartItemModel
+        {
+            CartItemId = cartItem.CartItemId,
+            CartId = cartItem.CartId,
+            ProductId = cartItem.ProductId,
+            Quantity = cartItem.Quantity
         };
     }
 }

@@ -15,6 +15,7 @@
     <script src="~/js/jquery.nice-select.min.js"></script>
     <script src="~/js/main.js"></script>
     <script src="~/js/mixitup.min.js"></script>
+    <script src="~/js/Admin/admin.js"></script>
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="~/css/jquery-ui.min.css" />
@@ -106,14 +107,6 @@
                                     string.Empty)>
                                     <a asp-controller="product" asp-action="index">Product</a>
                                 </li>
-                                @* <li><a href="#">Pages</a>
-                                    <ul class="header__menu__dropdown">
-                                        <li><a href="./shop-details.html">Shop Details</a></li>
-                                        <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                        <li><a href="./checkout.html">Check Out</a></li>
-                                        <li><a href="./blog-details.html">Blog Details</a></li>
-                                    </ul>
-                                </li> *@
                                 <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "blog" ? "active" :
                                     string.Empty)>
                                     <a asp-controller="blog" asp-action="index">Blog</a>
@@ -122,6 +115,17 @@
                                     string.Empty)>
                                     <a asp-controller="contact" asp-action="index">Contact</a>
                                 </li>
+                                @if(User.IsInRole("Admin")){
+                                <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "admin" ? "active" :
+                                    string.Empty)><a href="#">Admin</a>
+                                    <ul class="header__menu__dropdown">
+                                        <li><a asp-controller="admin" asp-action="Users">User</a></li>
+                                        <li><a asp-controller="admin" asp-action="Roles">Role</a></li>
+                                        <li><a asp-controller="admin" asp-action="Products">Product</a></li>
+                                        <li><a href="#">Blog Details</a></li>
+                                    </ul>
+                                </li>
+                                }
                             </ul>
                         </nav>
                     </div>
@@ -130,7 +134,7 @@
                             <ul>
                                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
                                 <li>
-                                    <a asp-controller="cart" asp-action="index">
+                                    <a asp-controller="cart" asp-action="index" asp-route-userId="ae45a0ca-7e27-4043-bbf5-19cb9e5af082">
                                         <i class="fa fa-shopping-bag"></i> 
                                         <span>3</span>
                                     </a>
@@ -236,7 +240,7 @@
     <script src="~/js/main.js" asp-append-version="true"></script>
     @if (IsSectionDefined("Scripts"))
     {
-        @RenderSection("Scripts", required: true)
+        @RenderSection("Scripts", required: false)
     }
 </body>
 
