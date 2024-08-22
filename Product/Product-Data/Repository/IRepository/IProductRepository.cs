@@ -1,7 +1,6 @@
-using Product_Core.Entities;
 using Product_Core.Models;
 
-namespace Product_Data.Repositories;
+namespace Product_Data.Repository.IRepository;
 
 public interface IProductRepository
 {

@@ -1,7 +1,7 @@
 using Cart_Core;
-using Cart_Data.Repositories.IRepositories;
+using Cart_Data.Repository.IRepository;
 
-namespace Cart_Data.Repositories;
+namespace Cart_Data.Repository;
 
 public class CheckoutRepository(CartDbContext db) : ICheckoutRepository
 {

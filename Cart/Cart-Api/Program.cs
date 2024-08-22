@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using Cart_Core;
-using Cart_Data.Repositories;
+using Cart_Data.Repository;
 using Cart_Api.Common.Extensions;
-using Cart_Data.Repositories.IRepositories;
+using Cart_Data.Repository.IRepository;
 using Cart_Api.Utility;
 using Cart_Data.Services.IServices;
 using Cart_Data.Services;

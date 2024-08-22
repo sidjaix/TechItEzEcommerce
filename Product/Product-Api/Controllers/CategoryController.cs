@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Product_Api.Common.Filters;
 using Product_Core.Models;
-using Product_Data.Repositories;
+using Product_Data.Repository.IRepository;
 
 namespace Product_Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/category")]
     [ApiController]
     [Authorize]
     public class CategoryController : ControllerBase

@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using User_Core;
 using Microsoft.EntityFrameworkCore;
-using User_Data.Interface;
-using User_Data;
+using User_Data.Repository.IRepository;
+using User_Data.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace User_AzureFunctions;

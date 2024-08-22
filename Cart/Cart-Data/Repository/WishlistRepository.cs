@@ -1,11 +1,11 @@
 using Cart_Core;
 using Cart_Core.Entities;
 using Cart_Core.Models;
-using Cart_Data.Repositories.IRepositories;
+using Cart_Data.Repository.IRepository;
 using Cart_Data.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cart_Data.Repositories;
+namespace Cart_Data.Repository;
 
 public class WishlistRepository(CartDbContext db, IProductService productService) : IWishlistRepository
 {

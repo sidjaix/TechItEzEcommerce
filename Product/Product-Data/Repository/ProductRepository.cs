@@ -3,8 +3,9 @@ using Product_Core;
 using Product_Core.Entities;
 using Product_Core.Mapper;
 using Product_Core.Models;
+using Product_Data.Repository.IRepository;
 
-namespace Product_Data.Repositories;
+namespace Product_Data.Repository;
 
 public class ProductRepository(ProductDbContext db) : IProductRepository
 {

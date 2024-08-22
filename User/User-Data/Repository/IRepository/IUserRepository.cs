@@ -1,7 +1,6 @@
-﻿using User_Core.Entities;
-using User_Core.Models;
+﻿using User_Core.Models;
 
-namespace User_Data.Interface;
+namespace User_Data.Repository.IRepository;
 
 public interface IUserRepository
 {

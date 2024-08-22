@@ -1,5 +1,5 @@
 using Cart_Core.Models;
-using Cart_Data.Repositories.IRepositories;
+using Cart_Data.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

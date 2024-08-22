@@ -1,6 +1,6 @@
 using System;
 
-namespace Cart_Data.Repositories.IRepositories;
+namespace Cart_Data.Repository.IRepository;
 
 public interface ICheckoutRepository
 {

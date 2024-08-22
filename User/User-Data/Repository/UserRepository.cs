@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using User_Core;
 using User_Core.Models;
-using User_Data.Interface;
+using User_Data.Repository.IRepository;
 
-namespace User_Data;
+namespace User_Data.Repository;
 
 public class UserRepository : IUserRepository
 {

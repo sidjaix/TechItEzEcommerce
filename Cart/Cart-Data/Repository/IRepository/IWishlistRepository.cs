@@ -1,6 +1,6 @@
 using Cart_Core.Models;
 
-namespace Cart_Data.Repositories.IRepositories;
+namespace Cart_Data.Repository.IRepository;
 
 public interface IWishlistRepository
 {
