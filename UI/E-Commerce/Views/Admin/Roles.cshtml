@@ -1,0 +1,40 @@
+﻿@model IEnumerable<RoleViewModel>
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3">
+        <!-- Add Role Button -->
+        <a href="@Url.Action("CreateRole", "Admin")" class="site-btn">Add Role</a>
+    </div>
+
+    <!-- Role Grid -->
+    <table id="roles" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Role Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var role in Model)
+            {
+                <tr>
+                    <td>@role.RoleId</td>
+                    <td>@role.RoleName</td>
+                    <td class="text-center">
+                        <!-- Command actions like Edit/Delete -->
+                        <a href="@Url.Action("EditRole", "Admin", new { roleId = role.RoleId })"
+                            class="btn btn-sm btn-warning"><i class="fa fa-pencil"></i></a>
+                        <a href="@Url.Action("DeleteRole", "Admin", new { roleId = role.RoleId })"
+                            class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                        @* <a href="@Url.Action("GetRoleDetail", "Admin", new { roleId = role.RoleId })"
+                    class="btn btn-sm btn-info"><i class="fa fa-eye"></i></a> *@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

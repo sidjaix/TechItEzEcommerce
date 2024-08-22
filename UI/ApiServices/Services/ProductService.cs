@@ -68,15 +68,20 @@ public class ProductService : IProductService
         return response;
     }
 
-    public async Task<ResponseDto> GetProductsByCategoryAsync(int categoriesId)
+    public async Task<List<ProductViewModel>> GetProductsByCategoryAsync(int categoriesId)
     {
+        var products = new List<ProductViewModel>();
         var request = new RequestDto
         {
             Url = $"{ApplicationData.ProductApiBaseAddress}/api/product/GetProductByCategory/{categoriesId}",
             ApiMethod = ApiMethod.GET
         };
         var response = await _baseService.SendAsync(request);
-        return response;
+        if (response != null && response.IsSuccess)
+        {
+            products = JsonConvert.DeserializeObject<List<ProductViewModel>>(Convert.ToString(response.Result));
+        }
+        return products;
     }
 
     public async Task<ResponseDto> DeleteProductAsync(int productId)

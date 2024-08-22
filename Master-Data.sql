@@ -160,3 +160,28 @@ insert into ProductImage (ProductId, ImageUrl, IsThumbnail, ThumbBigImageUrl) VA
 (30, '~/img/product/onion-thumbnail.jpeg',1, '~/img/product/onion.jpeg'),
 (31, '~/img/product/tomato-thumbnail.jpeg',1, '~/img/product/tomato.jpeg');
 
+
+GO
+----------------Cart-----------------
+USE CartApiDb
+GO
+INSERT INTO PaymentType (Value)
+VALUES 
+('Credit Card'),
+('Debit Card'),
+('Net Banking'),
+('Cash on Delivery'),
+('UPI');
+
+GO
+---------------Order-------------------
+USE OrderApiDb
+GO
+INSERT INTO PaymentType (Value)
+VALUES 
+('Credit Card'),
+('Debit Card'),
+('Net Banking'),
+('Cash on Delivery'),
+('UPI');
+

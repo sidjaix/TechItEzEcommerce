@@ -14,7 +14,7 @@
             </div>
             <div class="col-md-6">
                 <label asp-for="CategoryId" class="form-label">Category</label>
-                <select asp-for="CategoryId" class="form-select nice-select">
+                <select asp-for="CategoryId" class="form-select">
                     <option data-display="Select a category">Select a category</option>
                     @foreach (var category in Model.Categories)
                     {

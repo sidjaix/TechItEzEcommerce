@@ -1,10 +1,29 @@
-﻿<!DOCTYPE html>
+﻿@using ApiServices.Utility
+@inject ITokenProvider tokenProvider
+@{
+    
+    //var controllerName=ViewContext.RouteData.Values["controller"].ToString().ToLower(); 
+    var itemCount=string.Empty;
+    var itemSum=string.Empty;
+    var wishlistItemCount=string.Empty;
+    if(User.Identity.IsAuthenticated){
+        var CartDetail = tokenProvider.GetCartItemsCountAndTotalPrice();
+        if(CartDetail is not null){
+            var cart = CartDetail.Split(',').ToArray();
+            itemCount = cart[0];
+            itemSum = cart[1];
+        }
+        wishlistItemCount = tokenProvider.GetWishlistItemsCount();
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - E-Commerce</title>
+    <title>@ViewData["Title"]</title>
 
     <!-- js plugins -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -119,7 +138,7 @@
                                 <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "admin" ? "active" :
                                     string.Empty)><a href="#">Admin</a>
                                     <ul class="header__menu__dropdown">
-                                        <li><a asp-controller="admin" asp-action="Users">User</a></li>
+                                        @* <li><a asp-controller="admin" asp-action="Users">User</a></li> *@
                                         <li><a asp-controller="admin" asp-action="Roles">Role</a></li>
                                         <li><a asp-controller="admin" asp-action="Products">Product</a></li>
                                         <li><a href="#">Blog Details</a></li>
@@ -132,15 +151,15 @@
                     <div class="col-lg-3">
                         <div class="header__cart">
                             <ul>
-                                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                                <li><a asp-controller="wishlist" asp-action="index"><i class="fa fa-heart"></i> <span>@wishlistItemCount</span></a></li>
                                 <li>
-                                    <a asp-controller="cart" asp-action="index" asp-route-userId="ae45a0ca-7e27-4043-bbf5-19cb9e5af082">
+                                    <a asp-controller="cart" asp-action="index">
                                         <i class="fa fa-shopping-bag"></i> 
-                                        <span>3</span>
+                                        <span>@itemCount</span>
                                     </a>
                                 </li>
                             </ul>
-                            <div class="header__cart__price">item: <span>₹150.00</span></div>
+                            <div class="header__cart__price">item: <span>₹@itemSum</span></div>
                         </div>
                     </div>
                 </div>

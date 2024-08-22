@@ -1,7 +1,11 @@
-﻿namespace ApiServices.Models.User;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ApiServices.Models.User;
 
 public class RoleViewModel
 {
-    public int RoleId { get; set; }
+    public string RoleId { get; set; }
+    [Required]
     public string RoleName { get; set; }
+    public string Description { get; set; }
 }

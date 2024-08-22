@@ -179,7 +179,7 @@
   /*--------------------------
         Select
     ----------------------------*/
-  $('select.nice-select').niceSelect();
+  $('select').niceSelect();
 
   /*------------------
 		Single Product

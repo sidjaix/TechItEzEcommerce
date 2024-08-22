@@ -10,5 +10,7 @@ public class Wishlist
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int WishlistId { get; set; }
     [Required]
-    public string UserId { get; set; } = null!;
+    public string UserId { get; set; }
+
+    public virtual ICollection<WishlistItem> WishlistItems { get; set; } = [];
 }

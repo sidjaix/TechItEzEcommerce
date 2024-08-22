@@ -38,13 +38,15 @@ namespace E_Commerce.Controllers
         public async Task<IActionResult> Login(LoginViewModel login)
         {
             ResponseDto responseDto = await _authService.LoginAsync(login);
+
             if (responseDto != null && responseDto.IsSuccess)
             {
-                var loginResponseDto =
-                    JsonConvert.DeserializeObject<LoginResponseModel>(Convert.ToString(responseDto.Result));
+                var loginResponseDto = JsonConvert
+                .DeserializeObject<LoginResponseModel>(Convert.ToString(responseDto.Result));
 
                 await SignInUser(loginResponseDto);
                 _tokenProvider.SetToken(loginResponseDto.Token);
+                TempData["RedirectedFromAccount"] = true;
                 return RedirectToAction("Index", "Home");
             }
             else

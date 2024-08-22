@@ -82,7 +82,12 @@ public class AdminController : ControllerBase
                 _response.Message = "Role does not exist.";
                 return NotFound(_response);
             }
-            _response.Result = role;
+            _response.Result = new RoleModel
+            {
+                RoleId = roleId,
+                RoleName = role.Name,
+                Description = role.Description
+            };
         }
         catch (Exception ex)
         {
@@ -155,6 +160,7 @@ public class AdminController : ControllerBase
         if (role is null)
         {
             _response.Message = "Role does not exist";
+            _response.IsSuccess = false;
             return NotFound(_response);
         }
         var result = await _roleManager.DeleteAsync(role);

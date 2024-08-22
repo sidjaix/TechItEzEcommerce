@@ -1,11 +1,13 @@
 using ApiServices.Models.Product;
+using ApiServices.Models.User;
 using ApiServices.Services.IService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 
 namespace E_Commerce.Controllers;
 
-public class AdminController(IProductService productService, ICategoryService categoryService) : Controller
+public class AdminController(IProductService productService, ICategoryService categoryService, IAdminService adminService) : Controller
 {
     [HttpGet]
     public async Task<ActionResult> Products()
@@ -15,6 +17,21 @@ public class AdminController(IProductService productService, ICategoryService ca
     }
 
     [HttpGet]
+    public async Task<ActionResult> Roles()
+    {
+        List<RoleViewModel> roles = [];
+        var response = await adminService.GetRolesAsync();
+        if (response is not null && response.IsSuccess)
+        {
+            roles = JsonConvert.DeserializeObject<List<RoleViewModel>>(Convert.ToString(response.Result));
+        }
+        return View(roles);
+    }
+
+    public ActionResult CreateRole()
+    {
+        return View(new RoleViewModel());
+    }
     public async Task<ActionResult> CreateProduct()
     {
         CreateProductViewModel product = new()
@@ -24,6 +41,19 @@ public class AdminController(IProductService productService, ICategoryService ca
         return View(product);
     }
 
+    [HttpPost]
+    public async Task<ActionResult> CreateRole(RoleViewModel roleModel)
+    {
+        if (ModelState.IsValid)
+        {
+            var response = await adminService.CreateRoleAsync(roleModel);
+            if (response is not null && !response.IsSuccess)
+            {
+                return View(roleModel);
+            }
+        }
+        return RedirectToAction(nameof(Roles));
+    }
     [HttpPost]
     public async Task<ActionResult> CreateProduct(CreateProductViewModel productDetail)
     {
@@ -64,6 +94,11 @@ public class AdminController(IProductService productService, ICategoryService ca
         return View(productDetail);
     }
 
+    public async Task<ActionResult> DeleteRole(string roleId)
+    {
+        var response = await adminService.DeleteRoleAsync(roleId);
+        return RedirectToAction(nameof(Roles));
+    }
     public async Task<ActionResult> DeleteProduct(int productId)
     {
         if (productId == 0)
@@ -74,7 +109,16 @@ public class AdminController(IProductService productService, ICategoryService ca
         return RedirectToAction(nameof(Products));
     }
 
-    [HttpGet]
+    public async Task<ActionResult> EditRole(string roleId)
+    {
+        var response = await adminService.GetRoleDetailAsync(roleId);
+        if (response is not null && response.IsSuccess)
+        {
+            var role = JsonConvert.DeserializeObject<RoleViewModel>(Convert.ToString(response.Result));
+            return View(role);
+        }
+        return RedirectToAction(nameof(Roles));
+    }
     public async Task<ActionResult> EditProduct(int productId)
     {
         CreateProductViewModel editProduct = new()
@@ -97,6 +141,16 @@ public class AdminController(IProductService productService, ICategoryService ca
         return View(editProduct);
     }
 
+    [HttpPost]
+    public async Task<ActionResult> EditRole(RoleViewModel roleModel)
+    {
+        var response = await adminService.UpdateRoleAsync(roleModel);
+        if (response is not null && response.IsSuccess)
+        {
+            return RedirectToAction(nameof(Roles));
+        }
+        return View(roleModel);
+    }
     [HttpPost]
     public async Task<ActionResult> EditProduct(CreateProductViewModel productDetail)
     {

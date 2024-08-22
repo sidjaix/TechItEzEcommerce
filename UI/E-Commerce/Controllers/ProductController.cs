@@ -35,13 +35,20 @@ namespace E_Commerce.Controllers
             {
                 product = JsonConvert.DeserializeObject<ProductViewModel>(Convert.ToString(response.Result));
             }
-            response = await _productService.GetProductsByCategoryAsync(product.CategoryId);
-            if (response != null && response.IsSuccess)
-            {
-                product.ProductsByCategory = JsonConvert.DeserializeObject<List<ProductViewModel>>(Convert.ToString(response.Result));
-                product.ProductsByCategory = product.ProductsByCategory.Where(x => x.ProductId != productId).Take(4).ToList();
-            }
+            product.ProductsByCategory = await _productService.GetProductsByCategoryAsync(product.CategoryId);
+            product.ProductsByCategory = product.ProductsByCategory.Where(x => x.ProductId != productId).Take(4).ToList();
             return View(product);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductsByCategory(int categoryId)
+        {
+            var productPageModel = new ProductPageModel
+            {
+                Products = await _productService.GetProductsByCategoryAsync(categoryId),
+                Categories = await _categoryService.GetAllCategoryAsync()
+            };
+            return View("Index", productPageModel);
         }
     }
 }

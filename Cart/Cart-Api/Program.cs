@@ -128,6 +128,7 @@ internal class Program
 
         // Register Dependency Services
         builder.Services.AddScoped<ICartRepository, CartRepository>();
+        builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
         builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
         builder.Services.AddScoped<ResponseDto>();
 

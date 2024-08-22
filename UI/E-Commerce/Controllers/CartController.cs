@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace E_Commerce.Controllers
 {
-    public class CartController(ICartService cartService) : Controller
+    public class CartController(ICartService cartService, ITokenProvider tokenProvider) : Controller
     {
         [HttpGet]
         public async Task<ActionResult> Index()
@@ -25,6 +25,7 @@ namespace E_Commerce.Controllers
                 Quantity = quantity,
                 UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
             });
+            await UpdateCartDetailCookie();
             return RedirectToAction("Index", "Product");
         }
 
@@ -33,6 +34,7 @@ namespace E_Commerce.Controllers
         {
             var cart = await cartService.DecreaseCartItem(cartItemId);
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            await UpdateCartDetailCookie();
             return RedirectToAction(nameof(Index));
         }
 
@@ -40,7 +42,17 @@ namespace E_Commerce.Controllers
         public async Task<IActionResult> RemoveItemFromCart(int cartItemId)
         {
             var cart = await cartService.RemoveItemFromCart(cartItemId);
+            await UpdateCartDetailCookie();
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task UpdateCartDetailCookie()
+        {
+            var cart = await cartService.GetCartItemsAsync(User.FindFirstValue(JwtRegisteredClaimNames.Sub));
+            var itemCount = cart.CartItems.Count;
+            var itemSum = cart.CartItems.Sum(x => x.ItemTotal);
+            var cartDetail = $"{itemCount},{itemSum}";
+            tokenProvider.SetCartItemsCountAndTotalPrice(cartDetail);
         }
     }
 }
