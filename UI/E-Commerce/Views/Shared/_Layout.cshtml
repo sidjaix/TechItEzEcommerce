@@ -126,13 +126,17 @@
                                     string.Empty)>
                                     <a asp-controller="product" asp-action="index">Product</a>
                                 </li>
-                                <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "blog" ? "active" :
+                                @* <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "blog" ? "active" :
                                     string.Empty)>
                                     <a asp-controller="blog" asp-action="index">Blog</a>
-                                </li>
+                                </li> *@
                                 <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "contact" ? "active" :
                                     string.Empty)>
                                     <a asp-controller="contact" asp-action="index">Contact</a>
+                                </li>
+                                <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "user" ? "active" :
+                                    string.Empty)>
+                                    <a asp-controller="user" asp-action="profile">User</a>
                                 </li>
                                 @if(User.IsInRole("Admin")){
                                 <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "admin" ? "active" :

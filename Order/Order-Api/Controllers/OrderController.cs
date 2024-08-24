@@ -1,3 +1,4 @@
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Order_Core.Models;
@@ -10,7 +11,7 @@ namespace Order_Api.Controllers
     [Route("api/order")]
     [ApiController]
     [Authorize]
-    public class OrderController(IOrderRepository orderRepository, ResponseDto response) : ControllerBase
+    public class OrderController(IOrderRepository orderRepository, ResponseDto response, IPublishEndpoint publishEndpoint) : ControllerBase
     {
         /// <summary>
         /// Get user's all orders
@@ -47,14 +48,16 @@ namespace Order_Api.Controllers
         [HttpPost("PlaceOrder")]
         public async Task<IActionResult> PlaceOrder(OrderModel newOrder)
         {
-            var isCreated = await orderRepository.PlaceOrder(newOrder);
-            response.Result = isCreated;
-            if (!isCreated)
-            {
-                response.IsSuccess = false;
-                response.Message = "Order has not created due to some technical error.";
-                return UnprocessableEntity();
-            }
+            // var isCreated = await orderRepository.PlaceOrder(newOrder);
+            // response.Result = isCreated;
+            // if (!isCreated)
+            // {
+            //     response.IsSuccess = false;
+            //     response.Message = "Order has not created due to some technical error.";
+            //     return UnprocessableEntity();
+            // }
+            await publishEndpoint.Publish(newOrder);
+            response.Message = "Order has been placed !!";
             return Ok(response);
         }
 
