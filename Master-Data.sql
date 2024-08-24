@@ -185,3 +185,11 @@ VALUES
 ('Cash on Delivery'),
 ('UPI');
 
+INSERT INTO OrderStatus (Status)
+VALUES 
+('Pending'),
+('Processing'),
+('Shipped'),
+('Delivered'),
+('Cancelled');
+

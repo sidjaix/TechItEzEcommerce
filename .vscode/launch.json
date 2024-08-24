@@ -60,9 +60,7 @@
       },
       "sourceFileMap": {
         "/Views": "${workspaceFolder}/Views"
-      },
-      "hotReloadEnabled": true,
-      "hotReloadProfile": "aspnetcore"
+      }
     },
     {
       "name": "Launch Cart-Api",
@@ -82,9 +80,27 @@
       },
       "sourceFileMap": {
         "/Views": "${workspaceFolder}/Views"
+      }
+    },
+    {
+      "name": "Launch Order-Api",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/Order/Order-Api/bin/Debug/net8.0/Order-Api.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/Order/Order-Api",
+      "stopAtEntry": false,
+      // "serverReadyAction": {
+      //   "action": "openExternally",
+      //   "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+      // },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "hotReloadEnabled": true,
-      "hotReloadProfile": "aspnetcore"
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      }
     },
     {
       "name": "Attach to .NET Functions",

@@ -1,4 +1,4 @@
-﻿namespace Order_Cores.Models;
+﻿namespace Order_Core.Models;
 
 public partial class PaymentModel
 {

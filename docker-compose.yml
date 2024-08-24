@@ -53,6 +53,36 @@ services:
     networks:
       - techitez_network
 
+  order_api:
+    container_name: e_commerce_order_api
+    image: sidjaix/order-api:latest
+    build:
+      context: .
+      dockerfile: ./Order/Dockerfile
+    ports:
+      - '5004:80'
+    #restart: always
+    # depends_on:
+    #   - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__OrderApi=server=techitez_sqlserver;Initial Catalog=OrderApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
+    networks:
+      - techitez_network
+
+  # rabbit_mq:
+  #   container_name: techitez_rabbitmqserver
+  #   image: rabbitmq:3.13-management
+  #   hostname: rabbitmqserver
+  #   ports:
+  #     - '5672:5672'
+  #     - '15672:15672'
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=guest
+  #     - RABBITMQ_DEFAULT_PASS=guest
+  #   networks:
+  #     - techitez_network
+
   # e-commerce-web:
   #   container_name: e_commerce_web
   #   image: sidjaix/e-commerce-web:latest

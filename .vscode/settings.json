@@ -4,5 +4,8 @@
   "azureFunctions.projectLanguage": "C#",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
-  "azureFunctions.preDeployTask": "publish (functions)"
+  "azureFunctions.preDeployTask": "publish (functions)",
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": "docker-compose.yml"
+  }
 }

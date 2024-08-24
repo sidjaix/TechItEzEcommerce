@@ -3,12 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Order_Core.Entities;
 
-[Table("Order")]
+[Table("OrderStatus")]
 public class OrderStatus
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-
-    public string Status { get; set; } = null!;
+    public int OrderStatusId { get; set; }
+    public string Status { get; set; }
 }

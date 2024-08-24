@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +16,5 @@ public class UserReview
     [StringLength(500)]
     public string Comment { get; set; }
 
-    [ForeignKey(nameof(OrderedProductId))]
-    public OrderLine OrderedProduct { get; set; }
+    public virtual OrderDetail OrderedProduct { get; set; }
 }

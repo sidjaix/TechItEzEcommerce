@@ -1,7 +1,7 @@
-﻿namespace Order_Cores.Models;
+﻿namespace Order_Core.Models;
 
 public partial class OrderStatusModel
 {
-    public int StatusId { get; set; }
-    public string StatusName { get; set; } = null!;
+    public int OrderStatusId { get; set; }
+    public string Status { get; set; }
 }
