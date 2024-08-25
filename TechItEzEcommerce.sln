@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiServices", "UI\ApiServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Order-Handler", "Order\Order-Handler\Order-Handler.csproj", "{A045DDD3-0D73-4C5F-8F85-B0373E029658}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra1", "Infra1", "{78B5F6AC-DE81-4E77-9064-D1CD0AFC8672}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
