@@ -70,6 +70,23 @@ services:
     networks:
       - techitez_network
 
+  order-handler:
+    container_name: e_commerce_order_handler
+    image: sidjaix/order-handler:latest
+    build:
+      context: .
+      dockerfile: ./Consumers/Order-Service/Dockerfile
+    ports:
+      - '5005:80'
+    #restart: always
+    # depends_on:
+    #   - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__OrderDb=server=techitez_sqlserver;Initial Catalog=OrderApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
+    networks:
+      - techitez_network
+
   rabbit_mq:
     container_name: techitez_rabbitmqserver
     image: rabbitmq:3-management
@@ -83,38 +100,23 @@ services:
     networks:
       - techitez_network
 
-  # e-commerce-web:
-  #   container_name: e_commerce_web
-  #   image: sidjaix/e-commerce-web:latest
-  #   build:
-  #     context: .
-  #     dockerfile: ./UI/Dockerfile
-  #   ports:
-  #     - '5005:80'
-  #   depends_on:
-  #     - product_api
-  #     - user_api
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Production
-  #     - ServiceUrls__AuthApi='http://e_commerce_user_api'
-  #     - ServiceUrls__ProductApi='http://e_commerce_product_api'
-  #   networks:
-  #     - techitez_network
-
-  # sqlserver:
-  #   container_name: techitez_sqlserver
-  #   hostname: sqledge
-  #   image: mcr.microsoft.com/azure-sql-edge
-  #   environment:
-  #     SA_PASSWORD: 'Admin@123'
-  #     ACCEPT_EULA: '1'
-  #   ports:
-  #     - '1433:1433'
-  #   volumes:
-  #     - techitez-sqledge:/var/opt/mssql
-  #   networks:
-  #     - techitez_network
+  sqlserver:
+    container_name: techitez_sqlserver
+    hostname: sqledge
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    environment:
+      SA_PASSWORD: 'Admin@123'
+      ACCEPT_EULA: '1'
+    ports:
+      - '1433:1433'
+    volumes:
+      - techitez-sqledge:/var/opt/mssql
+    networks:
+      - techitez_network
 
 networks:
   techitez_network:
     driver: bridge
+
+volumes:
+  techitez-sqledge:

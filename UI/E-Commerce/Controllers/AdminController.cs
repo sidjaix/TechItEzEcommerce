@@ -1,12 +1,14 @@
 using ApiServices.Models.Product;
 using ApiServices.Models.User;
 using ApiServices.Services.IService;
+using E_Commerce.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 
 namespace E_Commerce.Controllers;
 
+[Authorize]
 public class AdminController(IProductService productService, ICategoryService categoryService, IAdminService adminService) : Controller
 {
     [HttpGet]

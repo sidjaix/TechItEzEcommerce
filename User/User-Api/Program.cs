@@ -53,11 +53,17 @@ internal class Program
         // Register db context pool for sql server
         builder.Services.AddDbContextPool<UserDbContext>((serviceProvider, options) =>
         {
-            var environment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
-            var azureDB = config.GetConnectionString("UserApi");
+            var connectionString = config.GetConnectionString("UserApi");
             options
-            .UseSqlServer(azureDB)
-            .EnableSensitiveDataLogging(environment.IsDevelopment());  //should not be used in production, only for development purpose
+            .UseSqlServer(connectionString, options =>
+            {
+                options.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null
+                );
+            })
+            .EnableSensitiveDataLogging(builder.Environment.IsDevelopment());  //should not be used in production, only for development purpose
         });
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -91,7 +97,7 @@ internal class Program
             {
                 Title = "User API",
                 Version = "v1",
-                Description = "An API to perform e-commerce User Auth related operations",
+                Description = "An API to perform e-commerce User Authentication related operations",
                 TermsOfService = new Uri("https://twitter.com/sidjaix"),
                 Contact = new OpenApiContact
                 {

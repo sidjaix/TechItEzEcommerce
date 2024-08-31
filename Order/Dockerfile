@@ -12,11 +12,13 @@ COPY ["TechItEzEcommerce.sln", "/"]
 COPY ["Order/Order-Core/Order-Core.csproj", "Order/Order-Core/"]
 COPY ["Order/Order-Data/Order-Data.csproj", "Order/Order-Core/"]
 COPY ["Order/Order-Api/Order-Api.csproj", "Order/Order-Core/"]
+COPY ["Shared/App-Contracts/App-Contracts.csproj", "Shared/App-Contracts/"]
 
 # RUN dotnet restore User
 RUN dotnet restore "Order/Order-Core/Order-Core.csproj"
 RUN dotnet restore "Order/Order-Core/Order-Data.csproj"
 RUN dotnet restore "Order/Order-Core/Order-Api.csproj"
+RUN dotnet restore "Shared/App-Contracts/App-Contracts.csproj"
 
 # Copy the remaining source code and build the application
 COPY . .

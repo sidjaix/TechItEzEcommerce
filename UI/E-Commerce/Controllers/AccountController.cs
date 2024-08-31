@@ -44,7 +44,7 @@ namespace E_Commerce.Controllers
                 var loginResponseDto = JsonConvert
                 .DeserializeObject<LoginResponseModel>(Convert.ToString(responseDto.Result));
 
-                await SignInUser(loginResponseDto);
+                await SignInUser(loginResponseDto, login.RememberMe);
                 _tokenProvider.SetToken(loginResponseDto.Token);
                 TempData["RedirectedFromAccount"] = true;
                 return RedirectToAction("Index", "Home");
@@ -54,6 +54,7 @@ namespace E_Commerce.Controllers
                 TempData["error"] = responseDto.Message;
                 return View(login);
             }
+            //ModelState.AddModelError(string.Empty, "Invalid login attempt.");
         }
 
 
@@ -76,20 +77,25 @@ namespace E_Commerce.Controllers
 
             if (result != null && result.IsSuccess)
             {
+                TempData["success"] = result.Message;
                 return RedirectToAction(nameof(Login));
             }
             return View(register);
         }
 
-
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             _tokenProvider.ClearToken();
             return RedirectToAction(nameof(Login));
         }
 
-        private async Task SignInUser(LoginResponseModel loginResponse)
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        private async Task SignInUser(LoginResponseModel loginResponse, bool rememberMe)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -113,7 +119,12 @@ namespace E_Commerce.Controllers
                 }
             }
             var claimPrincipal = new ClaimsPrincipal(claimsIdentity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal);
+
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = rememberMe
+            };
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal, authProperties);
         }
     }
 }

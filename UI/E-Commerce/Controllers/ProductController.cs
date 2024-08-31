@@ -1,10 +1,13 @@
 using ApiServices.Models.Product;
 using ApiServices.Services.IService;
+using E_Commerce.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace E_Commerce.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;

@@ -45,7 +45,7 @@
     <link rel="stylesheet" href="~/css/nice-select.css" />
     <link rel="stylesheet" href="~/css/slicknav.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-
+    @RenderSection("Styles", required: false)
 </head>
 
 <body>
@@ -124,7 +124,7 @@
                                 </li>
                                 <li  class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "product" ? "active" :
                                     string.Empty)>
-                                    <a asp-controller="product" asp-action="index">Product</a>
+                                    <a asp-controller="product" asp-action="index">Shop</a>
                                 </li>
                                 @* <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "blog" ? "active" :
                                     string.Empty)>
@@ -135,8 +135,11 @@
                                     <a asp-controller="contact" asp-action="index">Contact</a>
                                 </li>
                                 <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "user" ? "active" :
-                                    string.Empty)>
-                                    <a asp-controller="user" asp-action="profile">User</a>
+                                    string.Empty)><a href="#">User</a>
+                                    <ul class="header__menu__dropdown">
+                                         <li><a asp-controller="user" asp-action="profile">Profile</a></li>
+                                        <li><a asp-controller="order" asp-action="index">Your Orders</a></li>
+                                    </ul>
                                 </li>
                                 @if(User.IsInRole("Admin")){
                                 <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "admin" ? "active" :
@@ -178,6 +181,7 @@
     <div>
         <main role="main">
             @RenderBody()
+             <partial name="_Notifications" />
         </main>
     </div>
     @if (User.Identity.IsAuthenticated)

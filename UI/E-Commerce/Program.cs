@@ -3,6 +3,8 @@ using ApiServices.Services;
 using ApiServices.Utility;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using E_Commerce.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +32,18 @@ builder.Services.AddHttpClient<IBaseService, BaseService>(c =>
     c.BaseAddress = new Uri(ApplicationData.AuthApiBaseAddress);
 });
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+.AddCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    options.SlidingExpiration = true;
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
+builder.Services.AddAuthorization();
+
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -38,15 +52,6 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
-
-
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.ExpireTimeSpan = TimeSpan.FromHours(10);
-        options.LoginPath = "/Account/Login";
-        //options.AccessDeniedPath = "/Auth/AccessDenied";
-    });
 
 var app = builder.Build();
 
@@ -64,6 +69,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+app.UseMiddleware<TokenValidationMiddleware>();
 app.UseAuthorization();
 
 app.MapControllerRoute(

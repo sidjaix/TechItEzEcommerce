@@ -1,0 +1,54 @@
+﻿@if (TempData["error"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
+    integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+    toastr.options = {
+        closeButton: true, // Show the close button
+        debug: false,
+        newestOnTop: true,
+        progressBar: true,
+        positionClass: 'toast-top-right', // Change position
+        preventDuplicates: false,
+        onclick: null,
+        showDuration: "300", // Show duration in milliseconds
+        hideDuration: "1000", // Hide duration in milliseconds
+        timeOut: "5000", // Time out duration in milliseconds
+        extendedTimeOut: "1000", // Extended time out in milliseconds
+        showEasing: "swing",
+        hideEasing: "linear",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut"
+    };
+    toastr.error('@TempData["error"]')
+</script>
+}
+@if (TempData["success"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
+    integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript">
+    toastr.options = {
+        closeButton: true, // Show the close button
+        debug: false,
+        newestOnTop: true,
+        progressBar: true,
+        positionClass: 'toast-top-right', // Change position
+        preventDuplicates: false,
+        onclick: null,
+        showDuration: "300", // Show duration in milliseconds
+        hideDuration: "10000", // Hide duration in milliseconds
+        timeOut: "10000", // Time out duration in milliseconds
+        extendedTimeOut: "10000", // Extended time out in milliseconds
+        showEasing: "swing",
+        hideEasing: "linear",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut"
+    };
+    toastr.success('@TempData["success"]')
+</script>
+}

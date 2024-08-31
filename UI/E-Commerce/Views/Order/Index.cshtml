@@ -1,31 +1,11 @@
-﻿<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Orders</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .order-card {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            text-align: center;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
+﻿@model IEnumerable<OrderViewModel>
+@{
+    ViewData["Title"] = "Order";
+}
 
-        .order-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-
-        .order-date {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: #555;
-        }
-    </style>
-</head>
+@section Styles {
+    <link href="~/css/order.css" rel="stylesheet" />
+}
 <div class="container mt-4">
     <div class="filter__item">
         <div class="row">
@@ -33,15 +13,18 @@
                 <div class="filter__sort">
                     <span>Sort By</span>
                     <select>
-                        <option value="1">2019</option>
-                        <option value="2">2020</option>
-                        <option value="3">2021</option>
+                        <option value="1">2024</option>
+                        <option value="2">2023</option>
+                        <option value="3">2022</option>
                     </select>
                 </div>
             </div>
             <div class="col-lg-4 col-md-4">
                 <div class="filter__found">
-                    <h6><span></span> Order found</h6>
+                    <h6><span></span>@{
+                            var orderCount = Model.Count();
+                            var orderMessage = orderCount > 0 ? $"{orderCount} Order(s) found" : "No order";
+                        }@orderMessage</h6>
                 </div>
             </div>
             <div class="col-lg-4 col-md-3">
@@ -53,46 +36,20 @@
         </div>
     </div>
     <div class="row g-2">
-        <!-- Card template, repeat this for each order -->
-        <div class="col-6 col-md-4 col-lg-3">
-            <div class="order-card">
-                <img src="@Url.Content("~/img/product/banana.jpg")" alt="Product Image">
-                <div class="order-ProductName">Banana</div>
-                <div class="order-date">Order Date: 2024-08-23</div>
-            </div>
-        </div>
-
-        <div class="col-6 col-md-4 col-lg-3">
-            <div class="order-card">
-                <img src="@Url.Content("~/img/product/banana.jpg")" alt="Product Image">
-                <div class="order-ProductName">Banana</div>
-                <div class="order-date">Order Date: 2024-08-23</div>
-            </div>
-        </div>
-
-        <div class="col-6 col-md-4 col-lg-3">
-            <div class="order-card">
-                <img src="@Url.Content("~/img/product/banana.jpg")" alt="Product Image">
-                <div class="order-ProductName">Banana</div>
-                <div class="order-date">Order Date: 2024-08-23</div>
-            </div>
-        </div>
-
-        <div class="col-6 col-md-4 col-lg-3">
-            <div class="order-card">
-                <img src="@Url.Content("~/img/product/banana.jpg")" alt="Product Image">
-                <div class="order-ProductName">Banana</div>
-                <div class="order-date">Order Date: 2024-08-23</div>
-            </div>
-        </div>
-
-        <div class="col-6 col-md-4 col-lg-3">
-            <div class="order-card">
-                <img src="@Url.Content("~/img/product/banana.jpg")" alt="Product Image">
-                <div class="order-ProductName">Banana</div>
-                <div class="order-date">Order Date: 2024-08-23</div>
-            </div>
-        </div>
-        <!-- Repeat similar card blocks to show more products -->
+        @foreach (var order in Model)
+        {
+            <!-- Card template, repeat this for each order -->
+            foreach (var orderDetail in order.OrderDetails)
+            {
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="order-card">
+                        <img src="@Url.Content(orderDetail.ProductImageUrl)" alt="Product Image">
+                        <div class="order-ProductName"><a asp-controller="order" asp-action="orderDetails"
+                                asp-route-orderId="@order.OrderId">@orderDetail.ProductName</a></div>
+                        <div class="order-date">Order Date: @order.OrderDate.Date</div>
+                    </div>
+                </div>
+            }
+        }
     </div>
 </div>

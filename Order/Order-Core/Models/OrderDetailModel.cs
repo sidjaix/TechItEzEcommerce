@@ -10,7 +10,7 @@ public partial class OrderDetailModel
     [Required]
     public int ProductId { get; set; }
     public string ProductName { get; set; }
-    public string ProductThumbImageUrl { get; set; }
+    public string ProductImageUrl { get; set; }
     public int Quantity { get; set; }
     public int Price { get; set; }
 }

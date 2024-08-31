@@ -31,7 +31,7 @@ public class OrderService(IBaseService baseService) : IOrderService
         ResponseDto orderResponse = new();
         var request = new RequestDto
         {
-            Url = $"{ApplicationData.CartApiBaseAddress}/api/order/PlaceOrder",
+            Url = $"{ApplicationData.OrderApiBaseAddress}/api/order/PlaceOrder",
             ApiMethod = ApiMethod.POST,
             Data = newOrder,
             ContentType = ContentType.Json
@@ -49,7 +49,7 @@ public class OrderService(IBaseService baseService) : IOrderService
         OrderViewModel orderDetail = new();
         var request = new RequestDto
         {
-            Url = $"{ApplicationData.CartApiBaseAddress}/api/order/GetOrder/{orderId}",
+            Url = $"{ApplicationData.OrderApiBaseAddress}/api/order/GetOrder/{orderId}",
             ApiMethod = ApiMethod.GET
         };
         var response = await baseService.SendAsync(request);

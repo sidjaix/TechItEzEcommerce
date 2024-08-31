@@ -28,6 +28,7 @@ public class UserDbContext : IdentityDbContext<User, Role, string>
             entity.Property(e => e.UpperName).HasMaxLength(80);
             entity.Property(e => e.ISO).HasMaxLength(2);
             entity.Property(e => e.ISO3).HasMaxLength(3);
+            entity.Property(e => e.CountryCode).IsRequired(false);
         });
 
         modelBuilder.Entity<Address>(entity =>

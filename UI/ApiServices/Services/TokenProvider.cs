@@ -29,7 +29,13 @@ public class TokenProvider : ITokenProvider
 
     public void SetToken(string jwtToken)
     {
-        _contextAccessor.HttpContext?.Response.Cookies.Append(ApplicationData.JwtTokenCookie, jwtToken);
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict
+        };
+        _contextAccessor.HttpContext?.Response.Cookies.Append(ApplicationData.JwtTokenCookie, jwtToken, cookieOptions);
     }
 
     public string GetCartItemsCountAndTotalPrice()

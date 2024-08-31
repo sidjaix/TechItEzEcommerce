@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 
 namespace Cart_Api.Utility;
 
-public class AuthenticationHandler(IHttpContextAccessor accessor) : DelegatingHandler
+public class AuthenticationDelegateHandler(IHttpContextAccessor accessor) : DelegatingHandler
 {
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

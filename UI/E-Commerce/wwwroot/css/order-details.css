@@ -1,0 +1,43 @@
+.order-section {
+  margin-bottom: 30px;
+}
+
+.order-section h5 {
+  margin-bottom: 20px;
+}
+
+.order-summary .total {
+  font-weight: bold;
+}
+
+.product-name a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.delivery-status i {
+  margin-right: 5px;
+}
+
+.btn-group-custom .btn {
+  margin-right: 10px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.info-column {
+  width: 45%;
+  display: inline-block;
+}
+
+.info-column.text-end {
+  text-align: right;
+}
+
+.order-summary {
+  margin-top: 30px;
+}

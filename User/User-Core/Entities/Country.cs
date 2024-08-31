@@ -17,7 +17,7 @@ public class Country
     public string ISO { get; set; }
     [StringLength(3)]
     public string ISO3 { get; set; }
-    public int CountryCode { get; set; }
+    public int? CountryCode { get; set; }
     public int PhoneCode { get; set; }
 
     public virtual ICollection<Address> Addresses { get; set; }

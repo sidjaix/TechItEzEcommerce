@@ -20,12 +20,12 @@ public class OrderRepository(OrderDbContext db, IProductService productService) 
                             select new Order
                             {
                                 OrderId = o.OrderId,
-                                OrderStatusId = o.OrderStatusId,
+                                // OrderStatusId = o.OrderStatusId,
                                 OrderDate = o.OrderDate,
-                                OrderTotal = o.OrderTotal,
-                                PaymentMethodId = o.PaymentMethodId,
-                                AddressId = o.AddressId,
-                                UserId = o.UserId,
+                                //OrderTotal = o.OrderTotal,
+                                //PaymentMethodId = o.PaymentMethodId,
+                                //AddressId = o.AddressId,
+                                //UserId = o.UserId,
                                 Status = s.Status,
                                 OrderDetails = o.OrderDetails
                             }).Select(x => x.MapToDto()).ToListAsync();
@@ -37,12 +37,12 @@ public class OrderRepository(OrderDbContext db, IProductService productService) 
                                   select new OrderDetailModel
                                   {
                                       OrderDetialId = od.OrderDetialId,
-                                      OrderId = od.OrderId,
-                                      Price = od.Price,
+                                      //OrderId = od.OrderId,
+                                      //Price = od.Price,
                                       ProductId = od.ProductId,
-                                      Quantity = od.Quantity,
+                                      //Quantity = od.Quantity,
                                       ProductName = p.ProductName,
-                                      ProductThumbImageUrl = p.ProductImages?.FirstOrDefault()?.ProductImageUrl
+                                      ProductImageUrl = p.ImageUrl
                                   }).ToList();
         }
         return orders;
@@ -80,7 +80,7 @@ public class OrderRepository(OrderDbContext db, IProductService productService) 
                                       ProductId = od.ProductId,
                                       Quantity = od.Quantity,
                                       ProductName = p.ProductName,
-                                      ProductThumbImageUrl = p.ProductImages?.FirstOrDefault()?.ProductImageUrl
+                                      ProductImageUrl = p.ImageUrl
                                   }).ToList();
         }
         return order;

@@ -110,7 +110,14 @@ public static class WebApplicationBuilderExtension
         builder.Services.AddDbContextPool<OrderDbContext>((serviceProvider, options) =>
         {
             options
-            .UseSqlServer(dbConnectionString)
+            .UseSqlServer(dbConnectionString, options =>
+            {
+                options.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null
+                );
+            })
             .EnableSensitiveDataLogging(builder.Environment.IsDevelopment());  //should not be used in production, only for development purpose
         });
         return builder;

@@ -1,0 +1,108 @@
+﻿@model OrderViewModel
+@{
+    ViewData["Title"] = "Order Detail";
+    var orderDetail = Model.OrderDetails.First();
+}
+@section Styles {
+    <link href="~/css/order-details.css" rel="stylesheet" />
+}
+
+
+<div class="container my-5">
+    <!-- Product Image and Delivery Status -->
+    <div class="row mb-4 align-items-center order-section">
+        <div class="col-md-6 d-flex align-items-center">
+            <img src=@Url.Content(orderDetail.ProductImageUrl) alt="Product" class="img-thumbnail me-3"
+                style="width: 100px; height: 100px;">
+            <span class="product-name"><a asp-controller="Product" asp-action="GetProductDetail"
+                    asp-route-productId="@orderDetail.ProductId">@orderDetail.ProductName</a></span>
+        </div>
+        <div class="col-md-6 text-end delivery-status">
+            <i class="bi bi-truck"></i> @Model.Status
+            <div class="btn-group-custom mt-2">
+                <a href="#" class="btn btn-primary btn-sm">Buy Again</a>
+                <a href="#" class="btn btn-secondary btn-sm">Request Cancellation</a>
+                <a href="#" class="btn btn-warning btn-sm">Update Delivery Instruction</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Shipping Address and Order Details -->
+        <div class="col-md-6">
+            <div class="card mb-4 order-section">
+                <div class="card-body">
+                    <h5 class="card-title">Shipping Address</h5>
+                    <div class="info-row">
+                        <div class="info-column">Name:</div>
+                        <div class="info-column text-end">John Doe</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-column">Address1:</div>
+                        <div class="info-column text-end">123 Main St</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-column">Address2:</div>
+                        <div class="info-column text-end">Apt 4B</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-column">City:</div>
+                        <div class="info-column text-end">Springfield</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-column">State:</div>
+                        <div class="info-column text-end">IL - 62704</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Details -->
+            <div class="card order-summary">
+                <div class="card-body">
+                    <h5 class="card-title">Order Details</h5>
+                    <div class="info-row">
+                        <div class="info-column">Order Date:</div>
+                        <div class="info-column text-end">August 29, 2024</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-column">Order Total:</div>
+                        <div class="info-column text-end">$399</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-column">Payment Method:</div>
+                        <div class="info-column text-end">Credit Card</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Information -->
+        <div class="col-md-6">
+            <div class="card mb-4 order-section">
+                <div class="card-body">
+                    <h5 class="card-title">Payment Information</h5>
+                    <div class="info-row">
+                        <div class="info-column">Payment Method:</div>
+                        <div class="info-column text-end">Credit Card ending in 1234</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-column">Billing Address:</div>
+                        <div class="info-column text-end">Same as Shipping</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-column">Order Summary:</div>
+                        <div class="info-column text-end">₹@Model.OrderTotal</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="shoping__cart__btns">
+                <a asp-controller="product" asp-action="index" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+            </div>
+        </div>
+    </div>
+</div>

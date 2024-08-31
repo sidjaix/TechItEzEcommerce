@@ -1,11 +1,13 @@
 using ApiServices.Models.Cart;
 using ApiServices.Services.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace E_Commerce.Controllers
 {
+    [Authorize]
     public class CartController(ICartService cartService, ITokenProvider tokenProvider) : Controller
     {
         [HttpGet]
@@ -26,6 +28,7 @@ namespace E_Commerce.Controllers
                 UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
             });
             await UpdateCartDetailCookie();
+            TempData["success"] = "Item added to cart";
             return RedirectToAction("Index", "Product");
         }
 

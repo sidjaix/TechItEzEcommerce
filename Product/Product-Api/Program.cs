@@ -51,9 +51,16 @@ internal class Program
         builder.Services.AddDbContextPool<ProductDbContext>((serviceProvider, options) =>
         {
             var environment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
-            var azureDB = config.GetConnectionString("ProductApi");
+            var connectionString = config.GetConnectionString("ProductApi");
             options
-            .UseSqlServer(azureDB)
+            .UseSqlServer(connectionString, options =>
+            {
+                options.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null
+                );
+            })
             .EnableSensitiveDataLogging(environment.IsDevelopment());  //should not be used in production, only for development purpose
         });
 

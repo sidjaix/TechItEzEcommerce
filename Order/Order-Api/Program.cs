@@ -24,12 +24,13 @@ internal class Program
 
         builder.Services.AddMassTransit(config =>
         {
+            config.SetKebabCaseEndpointNameFormatter();
             config.UsingRabbitMq((ctx, cfg) =>
             {
                 var host = environment.IsDevelopment()
                 ? "amqp://guest:guest@localhost:5672"
                 : builder.Configuration["RabbitMq:Host"];
-
+                Console.WriteLine("IsDevelopment: {0}", environment.IsDevelopment());
                 cfg.Host(host);
             });
         });

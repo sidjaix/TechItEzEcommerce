@@ -125,7 +125,7 @@ public class AuthService : IAuthService
             algorithm: SecurityAlgorithms.HmacSha512Signature
         );
 
-        var tokenExpiresOn = DateTime.Now.AddMinutes(_jwtOptions.ExpiresOn);
+        var tokenExpiresOn = DateTime.UtcNow.AddMinutes(_jwtOptions.ExpiresOn);
 
         SecurityToken securityToken = new JwtSecurityToken(
             issuer: _jwtOptions.Issuer,

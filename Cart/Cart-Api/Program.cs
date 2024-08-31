@@ -55,22 +55,29 @@ internal class Program
         // Register db context pool for sql server
         builder.Services.AddDbContextPool<CartDbContext>((serviceProvider, options) =>
         {
-            var azureDB = config.GetConnectionString("CartApi");
+            var connectionString = config.GetConnectionString("CartApi");
             options
-            .UseSqlServer(azureDB)
+            .UseSqlServer(connectionString, options =>
+            {
+                options.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null
+                );
+            })
             .EnableSensitiveDataLogging(environment.IsDevelopment());  //should not be used in production, only for development purpose
         });
 
         builder.Services.AddHttpContextAccessor();
 
-        builder.Services.AddScoped<AuthenticationHandler>();
+        builder.Services.AddScoped<AuthenticationDelegateHandler>();
 
         builder.Services.AddHttpClient<IProductService, ProductService>(u =>
         {
             u.BaseAddress = environment.IsDevelopment() ?
             new Uri("http://localhost:5002") :
             new Uri(builder.Configuration["ServiceUrls:ProductApi"]);
-        }).AddHttpMessageHandler<AuthenticationHandler>();
+        }).AddHttpMessageHandler<AuthenticationDelegateHandler>();
 
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
