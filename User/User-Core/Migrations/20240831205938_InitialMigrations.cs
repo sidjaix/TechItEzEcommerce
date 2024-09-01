@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace User_Core.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,6 +32,8 @@ namespace User_Core.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Gender = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -77,7 +79,7 @@ namespace User_Core.Migrations
                     UpperName = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
                     ISO = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: true),
                     ISO3 = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
-                    CountryCode = table.Column<int>(type: "int", nullable: false),
+                    CountryCode = table.Column<int>(type: "int", nullable: true),
                     PhoneCode = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

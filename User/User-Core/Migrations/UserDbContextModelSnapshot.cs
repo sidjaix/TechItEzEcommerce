@@ -208,7 +208,7 @@ namespace User_Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CountryId"));
 
-                    b.Property<int>("CountryCode")
+                    b.Property<int?>("CountryCode")
                         .HasColumnType("int");
 
                     b.Property<string>("ISO")
@@ -277,12 +277,18 @@ namespace User_Core.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
