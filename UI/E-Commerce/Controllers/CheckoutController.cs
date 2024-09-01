@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {
-    [Authorize(policy: "TokenValidation")]
+    [Authorize]
     public class CheckoutController : Controller
     {
         // GET: CheckoutController

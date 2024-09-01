@@ -1,0 +1,27 @@
+.card-action-end {
+  right: 1.25rem;
+}
+
+.card-action {
+  position: absolute;
+  top: 1.25rem;
+  z-index: 1;
+}
+
+.btn-circle.btn-xs {
+  width: calc(2.40625rem + 2px);
+}
+
+.btn-circle {
+  align-items: center;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0;
+  width: calc(3.25rem + 2px);
+}
+
+.btn-white-primary {
+  background-color: #fff;
+  color: #1f1f1f;
+}

@@ -94,11 +94,17 @@ textarea:focus {
   outline: none;
 }
 
+a {
+  color: #555;
+  outline: none;
+  text-decoration: none;
+}
+
 a:hover,
 a:focus {
   text-decoration: none;
   outline: none;
-  color: #ffffff;
+  color: #555;
 }
 
 .header__menu ul li a {
@@ -1193,7 +1199,7 @@ ol {
   background: transparent;
 }
 
-.sidebar__item__color.sidebar__item__color--gray label:after {
+.sidebar__item__color.sidebar__item__color--yellow label:after {
   background: #e9a625;
 }
 
@@ -3474,4 +3480,19 @@ ol {
   .blog__details__hero__text h2 {
     font-size: 24px;
   }
+}
+
+/*  Toaster Notification CSS  */
+.toast {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  opacity: 0.95;
+}
+
+.toast-header {
+  font-weight: bold;
+}
+
+.toast-body {
+  font-size: 0.9rem;
 }

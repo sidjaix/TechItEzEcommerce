@@ -1,4 +1,4 @@
-namespace User_Core.Enums;
+namespace ApiServices.Enums;
 
 public enum Gender
 {

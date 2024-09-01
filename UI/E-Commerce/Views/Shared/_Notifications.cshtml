@@ -1,54 +1,45 @@
-﻿@if (TempData["error"] != null)
-{
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
-    integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script type="text/javascript">
-    toastr.options = {
-        closeButton: true, // Show the close button
-        debug: false,
-        newestOnTop: true,
-        progressBar: true,
-        positionClass: 'toast-top-right', // Change position
-        preventDuplicates: false,
-        onclick: null,
-        showDuration: "300", // Show duration in milliseconds
-        hideDuration: "1000", // Hide duration in milliseconds
-        timeOut: "5000", // Time out duration in milliseconds
-        extendedTimeOut: "1000", // Extended time out in milliseconds
-        showEasing: "swing",
-        hideEasing: "linear",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut"
-    };
-    toastr.error('@TempData["error"]')
-</script>
+﻿@{
+    var message = TempData["Message"] as string;
+    var messageType = TempData["MessageType"] as string; // "success", "error", "warning", "created"
+    var alertClass = string.Empty;
+
+    switch (messageType?.ToLower())
+    {
+        case "success":
+            alertClass = "bg-success";
+            break;
+        case "error":
+            alertClass = "bg-danger";
+            break;
+        case "warning":
+            alertClass = "bg-warning";
+            break;
+        case "created":
+            alertClass = "bg-info";
+            break;
+        default:
+            alertClass = "bg-secondary";
+            break;
+    }
 }
-@if (TempData["success"] != null)
+
+@if (!string.IsNullOrEmpty(message))
 {
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
-    integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script type="text/javascript">
-    toastr.options = {
-        closeButton: true, // Show the close button
-        debug: false,
-        newestOnTop: true,
-        progressBar: true,
-        positionClass: 'toast-top-right', // Change position
-        preventDuplicates: false,
-        onclick: null,
-        showDuration: "300", // Show duration in milliseconds
-        hideDuration: "10000", // Hide duration in milliseconds
-        timeOut: "10000", // Time out duration in milliseconds
-        extendedTimeOut: "10000", // Extended time out in milliseconds
-        showEasing: "swing",
-        hideEasing: "linear",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut"
-    };
-    toastr.success('@TempData["success"]')
-</script>
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        <div class="toast @alertClass text-white" role="alert" aria-live="assertive" aria-atomic="true"
+            data-bs-delay="2000">
+            @* <div class="toast-header text-white @alertClass">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong class="me-auto">@messageType</strong>
+            <small>Just now</small>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+            </div> *@
+            <div class="toast-body">
+                @message
+            </div>
+        </div>
+    </div>
+</div>
 }

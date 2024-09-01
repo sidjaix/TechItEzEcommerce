@@ -1,10 +1,9 @@
 using ApiServices.Services.IService;
 using ApiServices.Services;
 using ApiServices.Utility;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using E_Commerce.Utility;
+using ApiServices.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +30,17 @@ builder.Services.AddHttpClient<IBaseService, BaseService>(c =>
 {
     c.BaseAddress = new Uri(ApplicationData.AuthApiBaseAddress);
 });
+
+builder.Services.AddOptions<JwtOptions>()   // returns an OptionsBuilder<TOptions> that binds to the JwtOptions class
+.BindConfiguration("JWT")   // binds the values from the configuration section
+.ValidateDataAnnotations()  //enables validation using data annotations
+.ValidateOnStart(); // When we start the application, the validation will run on GitHubSettings and an exception is thrown if validation fails. 
+
+// Or alternatively, configure it directly:
+// builder.Services
+// .Configure<JwtOptions>(builder.Configuration.GetSection("JWT"));
+
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddCookie(options =>

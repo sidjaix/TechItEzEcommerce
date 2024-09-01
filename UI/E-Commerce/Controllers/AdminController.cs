@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace E_Commerce.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class AdminController(IProductService productService, ICategoryService categoryService, IAdminService adminService) : Controller
 {
     [HttpGet]
@@ -40,6 +40,8 @@ public class AdminController(IProductService productService, ICategoryService ca
         {
             Categories = await categoryService.GetAllCategoryAsync()
         };
+        TempData["Message"] = "New product added!";
+        TempData["MessageType"] = "created";
         return View(product);
     }
 
@@ -51,9 +53,12 @@ public class AdminController(IProductService productService, ICategoryService ca
             var response = await adminService.CreateRoleAsync(roleModel);
             if (response is not null && !response.IsSuccess)
             {
+                TempData["Message"] = response.Message;
+                TempData["MessageType"] = "created";
                 return View(roleModel);
             }
         }
+
         return RedirectToAction(nameof(Roles));
     }
     [HttpPost]
@@ -69,6 +74,9 @@ public class AdminController(IProductService productService, ICategoryService ca
                 {
                     productDetail.ImageUrl = imageUrl;
                     await productService.CreateNewProductAsync(productDetail);
+
+                    TempData["Message"] = "Product created successfully!!";
+                    TempData["MessageType"] = "created";
                 }
             }
         }
@@ -105,9 +113,13 @@ public class AdminController(IProductService productService, ICategoryService ca
     {
         if (productId == 0)
         {
+            TempData["Message"] = "Invalid product!";
+            TempData["MessageType"] = "error";
             return RedirectToAction(nameof(Products));
         }
         var response = await productService.DeleteProductAsync(productId);
+        TempData["Message"] = "Product deleted";
+        TempData["MessageType"] = "success";
         return RedirectToAction(nameof(Products));
     }
 
@@ -117,6 +129,8 @@ public class AdminController(IProductService productService, ICategoryService ca
         if (response is not null && response.IsSuccess)
         {
             var role = JsonConvert.DeserializeObject<RoleViewModel>(Convert.ToString(response.Result));
+            TempData["Message"] = response.Message;
+            TempData["MessageType"] = "success";
             return View(role);
         }
         return RedirectToAction(nameof(Roles));
@@ -139,6 +153,8 @@ public class AdminController(IProductService productService, ICategoryService ca
             editProduct.SellingPrice = product.SellingPrice;
             editProduct.QuantityInStock = product.QuantityInStock;
             editProduct.ImageUrl = product.ImageUrl;
+            TempData["Message"] = response.Message;
+            TempData["MessageType"] = "success";
         }
         return View(editProduct);
     }
@@ -149,6 +165,8 @@ public class AdminController(IProductService productService, ICategoryService ca
         var response = await adminService.UpdateRoleAsync(roleModel);
         if (response is not null && response.IsSuccess)
         {
+            TempData["Message"] = response.Message;
+            TempData["MessageType"] = "success";
             return RedirectToAction(nameof(Roles));
         }
         return View(roleModel);
@@ -161,12 +179,16 @@ public class AdminController(IProductService productService, ICategoryService ca
             if (ModelState.IsValid)
             {
                 await productService.UpdateExistingProductAsync(productDetail);
+                TempData["Message"] = "Product updated successfully!!";
+                TempData["MessageType"] = "success";
             }
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, $"An error occurred while processing your request. following is the stack trace:=> {ex.Message}");
             productDetail.Categories = await categoryService.GetAllCategoryAsync();
+            TempData["Message"] = ex.Message;
+            TempData["MessageType"] = "error";
             return View(productDetail);
         }
         return RedirectToAction(nameof(Products));

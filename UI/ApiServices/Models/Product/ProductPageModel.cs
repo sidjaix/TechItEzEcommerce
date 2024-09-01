@@ -8,7 +8,7 @@ public class ProductPageModel
     public List<ProductViewModel> SaleOfProducts { get; set; }
     public List<string> Colors { get; set; } = new List<string>(){
         "White",
-        "Gray",
+        "Yellow",
         "Red",
         "Black",
         "Blue",

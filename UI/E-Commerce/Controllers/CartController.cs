@@ -28,7 +28,8 @@ namespace E_Commerce.Controllers
                 UserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
             });
             await UpdateCartDetailCookie();
-            TempData["success"] = "Item added to cart";
+            TempData["Message"] = "Item added to cart!";
+            TempData["MessageType"] = "success"; // Options: "error", "warning", "created"
             return RedirectToAction("Index", "Product");
         }
 

@@ -43,10 +43,11 @@
             {
                 <div class="col-6 col-md-4 col-lg-3">
                     <div class="order-card">
-                        <img src="@Url.Content(orderDetail.ProductImageUrl)" alt="Product Image">
-                        <div class="order-ProductName"><a asp-controller="order" asp-action="orderDetails"
-                                asp-route-orderId="@order.OrderId">@orderDetail.ProductName</a></div>
-                        <div class="order-date">Order Date: @order.OrderDate.Date</div>
+                        <a asp-controller="order" asp-action="orderDetails" asp-route-orderId="@order.OrderId">
+                            <img src="@Url.Content(orderDetail.ProductImageUrl)" alt="Product Image">
+                            <div class="order-ProductName">@orderDetail.ProductName</div>
+                        </a>
+                        <div class="order-date">Order Date: @order.OrderDate.Date.ToString("dd/MM/yyyy")</div>
                     </div>
                 </div>
             }

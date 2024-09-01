@@ -1,49 +1,40 @@
+using ApiServices.Models;
 using ApiServices.Utility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace E_Commerce.Utility;
 
-public class TokenValidationMiddleware
+public class TokenValidationMiddleware(RequestDelegate next, IOptions<JwtOptions> jwtOptions)
 {
-    private readonly RequestDelegate _next;
-    private readonly string _jwtSecretKey;
-    private readonly string _issuer;
-    private readonly string _audience;
-
-    public TokenValidationMiddleware(RequestDelegate next, IConfiguration configuration)
-    {
-        _next = next;
-        _jwtSecretKey = configuration["JWT:Secret"];
-        _audience = configuration["JWT:Audience"];
-        _issuer = configuration["JWT:Issuer"];
-    }
+    private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
     public async Task InvokeAsync(HttpContext context)
     {
         var token = context.Request.Cookies[ApplicationData.JwtTokenCookie];
         if (context.Request.Path.StartsWithSegments("/") || context.Request.Path.StartsWithSegments("/Account/Login") || context.Request.Path.StartsWithSegments("/Account/Register"))
         {
-            await _next(context);
+            await next(context);
             return;
         }
         if (!string.IsNullOrEmpty(token))
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_jwtSecretKey);
+            var key = Encoding.UTF8.GetBytes(_jwtOptions.Secret);
 
             try
             {
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
-                    ValidateLifetime = true, // Validate the token expiry
+                    //ValidateLifetime = true, // Validate the token expiry
                     ValidateIssuer = true,
-                    ValidIssuer = _issuer,
+                    ValidIssuer = _jwtOptions.Issuer,
                     ValidateAudience = true,
-                    ValidAudience = _audience,
+                    ValidAudience = _jwtOptions.Audience,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     RequireExpirationTime = true,
@@ -70,6 +61,6 @@ public class TokenValidationMiddleware
             }
         }
 
-        await _next(context);
+        await next(context);
     }
 }
