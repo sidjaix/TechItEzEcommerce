@@ -60,6 +60,8 @@ public class UserController : ControllerBase
         }
 
         existingUser.Name = userData.Name;
+        existingUser.DateOfBirth = userData.DateOfBirth;
+        existingUser.Gender = userData.Gender;
         existingUser.Email = userData.Email;
         existingUser.UserName = userData.UserName;
         existingUser.PhoneNumber = userData.PhoneNumber;
