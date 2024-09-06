@@ -18,13 +18,4 @@ $(document).ready(function () {
     $('#paymentForm').addClass('d-none');
     $('#paymentList').removeClass('d-none');
   });
-
-  // Load Personal Info on tab click
-  $('#personal-info-tab').on('click', function (e) {
-    e.preventDefault();
-    $('#personalInfoContent').load('/User/UpdateUser');
-  });
-
-  // Trigger the Personal Info tab to load on page load
-  $('#personal-info-tab').trigger('click');
 });

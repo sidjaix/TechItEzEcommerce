@@ -1,0 +1,50 @@
+﻿@model AddressViewModel
+
+<!-- Address Form -->
+<form method="post" id="addressForm" action="CreateAddress">
+    <input hidden asp-for="UserId">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="FirstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" asp-for="FirstName">
+        </div>
+        <div class="col-md-6">
+            <label asp-for="LastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" asp-for="LastName">
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="UnitNumber" class="form-label">Flat, House no., Building, Company, Apartment</label>
+        <input type="text" class="form-control" asp-for="UnitNumber">
+    </div>
+    <div class="mb-3">
+        <label asp-for="AreaOrStreet" class="form-label">Area, Street, Sector, Village</label>
+        <input type="text" class="form-control" asp-for="AreaOrStreet">
+    </div>
+    <div class="mb-3">
+        <label asp-for="Landmark" class="form-label">Landmark</label>
+        <input type="text" class="form-control" asp-for="Landmark">
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label asp-for="Pincode" class="form-label">Pincode</label>
+            <input type="text" class="form-control" asp-for="Pincode">
+        </div>
+        <div class="col-md-4">
+            <label asp-for="TownOrCity" class="form-label">Town/City</label>
+            <input type="text" class="form-control" asp-for="TownOrCity">
+        </div>
+        <div class="col-md-4">
+            <label asp-for="State" class="form-label">State</label>
+            <input type="text" class="form-control" asp-for="State">
+        </div>
+    </div>
+    <div class="form-check mb-3">
+        <input class="form-check-input site-form-check-input" type="checkbox" asp-for="IsDefaultAddress">
+        <label class="form-check-label" asp-for="IsDefaultAddress">
+            Make this my default address
+        </label>
+    </div>
+    <button type="submit" class="site-btn">Save Address</button>
+    <button type="button" class="btn btn-secondary" id="cancelAddAddress">Cancel</button>
+</form>

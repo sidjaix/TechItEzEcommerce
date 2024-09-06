@@ -44,6 +44,18 @@ namespace E_Commerce.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> ProductQuickView(int productId)
+        {
+            ProductViewModel product = new();
+            var response = await _productService.GetProductDetailAsync(productId);
+            if (response != null && response.IsSuccess)
+            {
+                product = JsonConvert.DeserializeObject<ProductViewModel>(Convert.ToString(response.Result));
+            }
+            return PartialView("_ProductModal", product);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetProductsByCategory(int categoryId)
         {
             var productPageModel = new ProductPageModel

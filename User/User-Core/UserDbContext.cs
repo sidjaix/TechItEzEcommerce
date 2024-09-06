@@ -46,15 +46,23 @@ public class UserDbContext : IdentityDbContext<User, Role, string>
                 .HasNoKey()
                 .ToTable("UserAddress");
 
-            entity.HasOne(d => d.User).WithMany()
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ProductConfiguration_User");
+            // Composite key setup for UserAddress
+            entity
+            .HasKey(ua => new { ua.UserId, ua.AddressId });
 
-            entity.HasOne(d => d.Address).WithMany()
-                .HasForeignKey(d => d.AddressId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ProductConfiguration_Address");
+            entity
+            .HasOne(d => d.User)
+            .WithMany(x => x.UserAddresses)
+            .HasForeignKey(d => d.UserId)
+            .HasConstraintName("FK_UserAddress_User")
+            .OnDelete(DeleteBehavior.Cascade);
+
+            entity
+            .HasOne(d => d.Address)
+            .WithMany(x => x.UserAddresses)
+            .HasForeignKey(d => d.AddressId)
+            .HasConstraintName("FK_UserAddress_Address")
+            .OnDelete(DeleteBehavior.Cascade);
         });
 
         base.OnModelCreating(modelBuilder);

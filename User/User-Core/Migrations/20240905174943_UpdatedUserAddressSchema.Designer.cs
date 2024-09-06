@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using User_Core;
 
@@ -11,9 +12,11 @@ using User_Core;
 namespace User_Core.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240905174943_UpdatedUserAddressSchema")]
+    partial class UpdatedUserAddressSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,44 +139,43 @@ namespace User_Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressId"));
 
-                    b.Property<string>("AreaOrStreet")
+                    b.Property<string>("Address1")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<string>("Address2")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
+                    b.Property<string>("CountryName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDefaultAddress")
+                    b.Property<bool>("IsShippingAddress")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Landmark")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Pincode")
-                        .HasMaxLength(6)
-                        .HasColumnType("nvarchar(6)");
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("State")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("TownOrCity")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("Street")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("UnitNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.HasKey("AddressId");
 
@@ -354,6 +356,9 @@ namespace User_Core.Migrations
                     b.Property<int>("AddressId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
                     b.HasKey("UserId", "AddressId");
 
                     b.HasIndex("AddressId");
@@ -427,37 +432,25 @@ namespace User_Core.Migrations
             modelBuilder.Entity("User_Core.Entities.UserAddress", b =>
                 {
                     b.HasOne("User_Core.Entities.Address", "Address")
-                        .WithMany("UserAddresses")
+                        .WithMany()
                         .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_UserAddress_Address");
+                        .HasConstraintName("FK_ProductConfiguration_Address");
 
                     b.HasOne("User_Core.Entities.User", "User")
-                        .WithMany("UserAddresses")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_UserAddress_User");
+                        .HasConstraintName("FK_ProductConfiguration_User");
 
                     b.Navigation("Address");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("User_Core.Entities.Address", b =>
-                {
-                    b.Navigation("UserAddresses");
-                });
-
             modelBuilder.Entity("User_Core.Entities.Country", b =>
                 {
                     b.Navigation("Addresses");
-                });
-
-            modelBuilder.Entity("User_Core.Entities.User", b =>
-                {
-                    b.Navigation("UserAddresses");
                 });
 #pragma warning restore 612, 618
         }

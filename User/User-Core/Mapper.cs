@@ -13,7 +13,10 @@ public static class UserMapper
             UserName = userModel.UserName,
             Email = userModel.Email,
             Name = userModel.Name,
-            // // Add other properties as needed
+            DateOfBirth = userModel.DateOfBirth,
+            Gender = userModel.Gender,
+            PhoneNumber = userModel.PhoneNumber
+            // Add other properties as needed
         };
     }
 
@@ -25,6 +28,9 @@ public static class UserMapper
             UserName = user.UserName,
             Email = user.Email,
             Name = user.Name,
+            DateOfBirth = user.DateOfBirth,
+            Gender = user.Gender,
+            PhoneNumber = user.PhoneNumber
             // Add other properties as needed
         };
     }

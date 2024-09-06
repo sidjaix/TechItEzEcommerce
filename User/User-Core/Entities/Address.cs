@@ -11,26 +11,34 @@ public partial class Address
     public int AddressId { get; set; }
     public int CountryId { get; set; }
 
-    [StringLength(25)]
-    public string UnitNumber { get; set; }
-
-    [StringLength(255)]
-    public string Street { get; set; } = null!;
+    [Required]
+    public string FirstName { get; set; }
 
     [Required]
-    public string Address1 { get; set; } = null!;
-    public string Address2 { get; set; } = null!;
+    public string LastName { get; set; }
 
     [StringLength(50)]
-    public string City { get; set; } = null!;
+    public string UnitNumber { get; set; }
+
+    [Required]
+    [StringLength(150)]
+    public string AreaOrStreet { get; set; }
+
+    [StringLength(100)]
+    public string Landmark { get; set; }
 
     [StringLength(50)]
-    public string State { get; set; } = null!;
+    public string TownOrCity { get; set; }
 
-    [StringLength(20)]
-    public string PostalCode { get; set; } = null!;
+    [StringLength(50)]
+    public string State { get; set; }
 
-    public bool IsShippingAddress { get; set; }
+    [StringLength(6)]
+    public string Pincode { get; set; }
+
+    public bool IsDefaultAddress { get; set; }
 
     public Country Country { get; set; }
+
+    public virtual ICollection<UserAddress> UserAddresses { get; set; } = [];
 }

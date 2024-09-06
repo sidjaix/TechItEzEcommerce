@@ -25,3 +25,18 @@
   background-color: #fff;
   color: #1f1f1f;
 }
+
+.user-tab .nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  color: #ffffff;
+  background-color: #7fad39;
+}
+
+.user-tab .nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #1c1c1c;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
+}

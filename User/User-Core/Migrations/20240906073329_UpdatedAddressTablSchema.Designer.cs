@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using User_Core;
 
@@ -11,9 +12,11 @@ using User_Core;
 namespace User_Core.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240906073329_UpdatedAddressTablSchema")]
+    partial class UpdatedAddressTablSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -427,16 +430,14 @@ namespace User_Core.Migrations
             modelBuilder.Entity("User_Core.Entities.UserAddress", b =>
                 {
                     b.HasOne("User_Core.Entities.Address", "Address")
-                        .WithMany("UserAddresses")
+                        .WithMany()
                         .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_UserAddress_Address");
 
                     b.HasOne("User_Core.Entities.User", "User")
-                        .WithMany("UserAddresses")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_UserAddress_User");
 
@@ -445,19 +446,9 @@ namespace User_Core.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("User_Core.Entities.Address", b =>
-                {
-                    b.Navigation("UserAddresses");
-                });
-
             modelBuilder.Entity("User_Core.Entities.Country", b =>
                 {
                     b.Navigation("Addresses");
-                });
-
-            modelBuilder.Entity("User_Core.Entities.User", b =>
-                {
-                    b.Navigation("UserAddresses");
                 });
 #pragma warning restore 612, 618
         }

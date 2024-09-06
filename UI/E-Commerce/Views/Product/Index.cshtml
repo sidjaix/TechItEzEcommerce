@@ -187,8 +187,15 @@
                             <div class="product__item">
                                 <div class="product__item__pic set-bg" data-setbg=@Url.Content(product.ImageUrl)>
                                     <ul class="product__item__pic__hover">
+                                        <li>
+                                            <a class="linkProductQuickView" data-bs-toggle="ajax-modal"
+                                                data-productid="@product.ProductId"
+                                                data-action=@Url.Action($"ProductQuickView", new
+                                                { productId = product.ProductId })>
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </li>
                                         <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        @* *@
                                         <li>
                                             <a href="@Url.Action("AddToCart", "Cart", 
                                                 new { productId= product.ProductId, quantity= 1})">
@@ -220,3 +227,11 @@
     </div>
 </section>
 <!-- Product Section End -->
+
+<!-- Start Product Modal -->
+<div id="productQuickView"></div>
+<!-- End Product Modal -->
+
+@section Scripts {
+    <script src="~/js/Product/product.js"></script>
+}

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using User_Api.Common.Filters;
+using User_Core;
 using User_Core.Entities;
 using User_Core.Models;
+using User_Data.Repository;
 using User_Data.Repository.IRepository;
 
 namespace User_Api.Controllers;
@@ -16,11 +18,11 @@ public class UserController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly ResponseDto _response;
 
-    public UserController(IUserRepository userRepository, UserManager<User> userManager)
+    public UserController(IUserRepository userRepository, UserManager<User> userManager, ResponseDto response)
     {
         _userRepository = userRepository;
         _userManager = userManager;
-        _response = new ResponseDto();
+        _response = response;
     }
 
     /// <summary>
@@ -38,7 +40,7 @@ public class UserController : ControllerBase
             _response.IsSuccess = false;
             return NotFound(_response);
         }
-        _response.Result = existingUser;
+        _response.Result = existingUser.MapToDto();
         return Ok(_response);
     }
 
@@ -68,16 +70,62 @@ public class UserController : ControllerBase
         var result = await _userManager.UpdateAsync(existingUser);
         if (!result.Succeeded)
         {
-            _response.Message = $"User has not updated.";
-            _response.IsSuccess = false;
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
             return BadRequest(ModelState);
         }
-        _response.Result = existingUser;
-        return Ok(existingUser);
+        _response.Message = "User profile updated successfully.";
+        _response.Result = existingUser.MapToDto();
+        return Ok(_response);
     }
 
+    /// <summary>
+    /// Get user addresses
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    [HttpGet("GetUserAddresses/{userid}")]
+    public async Task<IActionResult> GetUserAddresses(string userId)
+    {
+        var addresses = await _userRepository.GetuserAddressesAsync(userId);
+        _response.Result = addresses;
+        return Ok(_response);
+
+    }
+
+    [HttpPost("CreateAddress")]
+    [ValidateModel]
+    public async Task<ActionResult<ResponseDto>> CreateAddress(AddressModel addressInfo)
+    {
+        var isAddressCreated = await _userRepository.CreateAddressAsync(addressInfo);
+        if (!isAddressCreated)
+        {
+            _response.IsSuccess = false;
+            _response.Message = "Address not created, contact to admin.";
+            return BadRequest(_response);
+        }
+        _response.Result = isAddressCreated;
+        return Ok(_response);
+    }
+
+    /// <summary>
+    /// Delete address
+    /// </summary>
+    /// <param name="addressId"></param>
+    /// <returns></returns>
+    [HttpDelete("DeleteAddress/{addressId}")]
+    public async Task<ActionResult> DeleteAddress(int addressId)
+    {
+        var isAddressDeleted = await _userRepository.DeleteAddressAsync(addressId);
+        if (!isAddressDeleted)
+        {
+            _response.IsSuccess = false;
+            _response.Message = "Address not delete, contact to admin.";
+            return BadRequest(_response);
+        }
+        _response.Result = isAddressDeleted;
+        return Ok(_response);
+    }
 }

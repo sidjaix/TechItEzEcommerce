@@ -1,11 +1,13 @@
-﻿@section Styles {
+﻿@model UserPageViewModel
+
+@section Styles {
     <link href="~/css/user.css" rel="stylesheet" />
 }
 
 <div class="container my-4">
     <div class="row">
         <!-- Category Tabs -->
-        <div class="col-md-3">
+        <div class="col-md-3 user-tab">
             <ul class="nav nav-pills flex-column" id="userTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="personal-info-tab" data-bs-toggle="pill"
@@ -41,14 +43,14 @@
             <div class="tab-content" id="userTabContent">
                 <div class="tab-pane fade show active" id="personal-info" role="tabpanel"
                     aria-labelledby="personal-info-tab">
-                    <div id="personalInfoContent">
-                        <!-- Personal Info Form will be loaded here -->
-                        @Html.Partial("_PersonalInfo")
-                    </div>
+                    @* <div id="personalInfoContent"> *@
+                    <!-- Personal Info Form will be loaded here -->
+                    <Partial name="_PersonalInfo" model="@Model.PersonalInfo" />
+                    @* </div> *@
                 </div>
 
                 <!-- Address -->
-                @Html.Partial("_Address")
+                <Partial name="_Address" model="@Model" />
 
                 <!-- Orders -->
                 <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
@@ -63,7 +65,7 @@
                 </div>
 
                 <!-- Payment Method -->
-                @Html.Partial("_PaymentMethod")
+                <Partial name="_PaymentMethod" />
             </div>
         </div>
     </div>

@@ -34,7 +34,10 @@
     <script src="~/js/jquery.nice-select.min.js"></script>
     <script src="~/js/main.js"></script>
     <script src="~/js/mixitup.min.js"></script>
-    <script src="~/js/Admin/admin.js"></script>
+    
+    @if(User.IsInRole("Admin")){
+        <script src="~/js/Admin/admin.js"></script>
+    }
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="~/css/jquery-ui.min.css" />
@@ -74,7 +77,7 @@
                                     <a href="http://www.facebook.com/sidjaix"><i class="fa fa-facebook"></i></a>
                                     <a href="http://www.x.com/sidjaix"><i class="fa fa-twitter"></i></a>
                                     <a href="http://www.linkedin.com/in/sidjaix"><i class="fa fa-linkedin"></i></a>
-                                    <a href="http://www.pinterest.com/sidjaix"><i class="fa fa-pinterest-p"></i></a>
+                                    <a href="http://www.github.com/sidjaix"><i class="fa fa-github fa-lg"></i></a>
                                 </div>
                                 <div class="header__top__right__language">
                                     <img src="~/img/language.png" alt="language">
@@ -86,21 +89,7 @@
                                     </ul>
                                 </div>
                                 <div class="header__top__right__auth">
-                                    @if (!User.Identity.IsAuthenticated)
-                                    {
-                                        <a asp-controller="account" asp-action="login">
-                                            <i class="fa fa-user"></i>
-                                            Login
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a asp-controller="account" asp-action="logout">
-                                            <i>Hello, @User.Identity.Name</i>
-                                            Logout
-                                        </a>
-                                    }
-
+                                    <a asp-controller="user" asp-action="index"><i class="fa fa-user fa-lg"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -112,7 +101,7 @@
                     <div class="col-lg-3">
                         <div class="header__logo">
                             <a asp-controller="home" asp-action="index"><img src=@Url.Content("~/img/techitezlogo.png")
-                                    alt="logo"></a>
+                                    alt="Company logo"></a>
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -193,7 +182,7 @@
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="footer__about">
                             <div class="footer__about__logo">
-                                <a href="./index.html"><img src="~/img/logo.png" alt=""></a>
+                                <a href="./index.html"><img src=@Url.Content("~/img/techitezlogo.png") alt="Company logo"></a>
                             </div>
                             <ul>
                                 <li>Address: #102 Wornder Spring, Madhapur, Hyderabad - 500081</li>
@@ -265,6 +254,8 @@
     <script src="~/js/jquery.nice-select.min.js" asp-append-version="true"></script>
     <script src="~/js/jquery.slicknav.js" asp-append-version="true"></script>
     <script src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/js/Notification/notification.js" asp-append-version="true"></script>
+    
     @if (IsSectionDefined("Scripts"))
     {
         @RenderSection("Scripts", required: false)

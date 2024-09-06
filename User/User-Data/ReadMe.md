@@ -26,11 +26,11 @@ dotnet ef dbcontext scaffold "Server=localhost; Initial Catalog=TechItEzEcommerc
 ## Add Migration DbContextFolderIsRoot
 
 ```bash
-dotnet ef migrations add AddedBaseEntityProperty -c UserDbContext --output-dir .Migrations -s ../User-Api/User-Api.csproj
+dotnet ef migrations add AddedBaseEntityProperty -c UserDbContext --output-dir ./Migrations -s ../User-Api/User-Api.csproj
 
-dotnet ef migrations add InitialMigration -c ProductDbContext --output-dir .Migrations -s ../Product-Api/Product-Api.csproj
+dotnet ef migrations add InitialMigration -c ProductDbContext --output-dir ./Migrations -s ../Product-Api/Product-Api.csproj
 
-dotnet ef migrations add InitialMigration -c CartDbContext --output-dir .Migrations -s ../Cart-Api/Cart-Api.csproj
+dotnet ef migrations add InitialMigration -c CartDbContext --output-dir ./Migrations -s ../Cart-Api/Cart-Api.csproj
 
 dotnet ef migrations add InitialMigration -c OrderDbContext --output-dir ./Migrations -s ../Order-Api/Order-Api.csproj
 ```
