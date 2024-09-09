@@ -39,6 +39,43 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-6">
+                <!-- Card -->
+                <div class="card card-lg bg-light mb-4">
+                    <div class="card-body">
+                        <!-- Heading -->
+                        <h6 class="mb-4">
+                            UPI
+                        </h6>
+                        <!-- Text -->
+                        <p class="mb-4">
+                            <strong>UPI ID</strong> <br>
+                            <span class="text-muted">sidjaix@icici</span>
+                        </p>
+                        <!-- Text -->
+                        @* <p class="mb-4">
+                        <strong>Expiry Date:</strong> <br>
+                        <span class="text-muted">Feb 2022</span>
+                        </p> *@
+                        <!-- Text -->
+                        <p class="mb-0">
+                            <strong>Name:</strong> <br>
+                            <span class="text-muted">Siddharth Jaiswal</span>
+                        </p>
+                        <!-- Action -->
+                        <div class="card-action card-action-end">
+                            <!-- Edit Button -->
+                            <a class="btn btn-xs btn-circle btn-white-primary me-2" href="#">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <!-- Delete Button -->
+                            <button class="btn btn-xs btn-circle btn-white-primary">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-12">
                 <!-- Button -->
                 <button class="site-btn w-100" id="addPaymentButton">
@@ -50,40 +87,6 @@
 
     <div id="paymentForm" class="d-none">
         <!-- Payment Method Form -->
-        <h3>Add Payment Method</h3>
-        <form>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="cardNumber" class="form-label">Card Number</label>
-                    <input type="text" class="form-control" id="cardNumber" placeholder="Enter card number">
-                </div>
-                <div class="col-md-6">
-                    <label for="nameOnCard" class="form-label">Name on Card</label>
-                    <input type="text" class="form-control" id="nameOnCard" placeholder="Enter name on card">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label for="expiryMonth" class="form-label">Expiry Month</label>
-                    <input type="text" class="form-control" id="expiryMonth" placeholder="MM">
-                </div>
-                <div class="col-md-4">
-                    <label for="expiryYear" class="form-label">Expiry Year</label>
-                    <input type="text" class="form-control" id="expiryYear" placeholder="YYYY">
-                </div>
-                <div class="col-md-4">
-                    <label for="cvv" class="form-label">CVV</label>
-                    <input type="text" class="form-control" id="cvv" placeholder="Enter CVV">
-                </div>
-            </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input site-form-check-input" type="checkbox" id="defaultPayment">
-                <label class="form-check-label" for="defaultPayment">
-                    Default Payment Method
-                </label>
-            </div>
-            <button type="submit" class="site-btn">Save Payment Method</button>
-            <button type="button" class="btn btn-secondary" id="cancelAddPayment">Cancel</button>
-        </form>
+        <partial name="_PaymentMethodForm" />
     </div>
 </div>

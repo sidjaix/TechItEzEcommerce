@@ -1,50 +1,55 @@
 ﻿@model UserViewModel
+@{
+    ViewData["Title"] = "User - Profile";
+}
 
-<div id="personalInfoForm">
-    <form id="formUserPersonalInfo" method="post" asp-action="UpdateUserProfile" asp-controller="User">
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <input hidden asp-for="UserId" />
-        <input hidden asp-for="UserName" />
-        <div class="mb-3">
-            <label asp-for="Name" class="form-label">Full Name</label>
-            <input type="text" class="form-control" asp-for="Name" placeholder="Enter your full name">
-            <span asp-validation-for="Name" class="text-danger" />
-        </div>
-        <div class="row mb-3">
+<div class="tab-pane fade show active" id="personal-info" role="tabpanel" aria-labelledby="personal-info-tab">
+    <div id="personalInfoForm">
+        <form method="post" asp-action="UpdateUserProfile" asp-controller="User">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input hidden asp-for="UserId" />
+            <input hidden asp-for="UserName" />
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" asp-for="Name" placeholder="Enter your full name">
+                <span asp-validation-for="Name" class="text-danger" />
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" asp-for="Email" placeholder="Enter your email address">
+                    <span asp-validation-for="Email" class="text-danger" />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber" class="form-label">Mobile Number</label>
+                    <input type="text" class="form-control" asp-for="PhoneNumber" placeholder="Enter mobile number">
+                    <span asp-validation-for="PhoneNumber" class="text-danger" />
+                </div>
+            </div>
+            @* <div class="row mb-3">
             <div class="col-md-6">
-                <label asp-for="Email" class="form-label">Email Address</label>
-                <input type="email" class="form-control" asp-for="Email" placeholder="Enter your email address">
-                <span asp-validation-for="Email" class="text-danger" />
+            <label asp-for="CurrentPassword" class="form-label">Current Password</label>
+            <input type="password" class="form-control" asp-for="CurrentPassword"
+            placeholder="Enter your current password">
             </div>
             <div class="col-md-6">
-                <label asp-for="PhoneNumber" class="form-label">Mobile Number</label>
-                <input type="text" class="form-control" asp-for="PhoneNumber" placeholder="Enter mobile number">
-                <span asp-validation-for="PhoneNumber" class="text-danger" />
+            <label asp-for="NewPassword" class="form-label">New Password</label>
+            <input type="password" class="form-control" asp-for="NewPassword" placeholder="Enter your new password">
             </div>
-        </div>
-        @* <div class="row mb-3">
-        <div class="col-md-6">
-        <label asp-for="CurrentPassword" class="form-label">Current Password</label>
-        <input type="password" class="form-control" asp-for="CurrentPassword"
-        placeholder="Enter your current password">
-        </div>
-        <div class="col-md-6">
-        <label asp-for="NewPassword" class="form-label">New Password</label>
-        <input type="password" class="form-control" asp-for="NewPassword" placeholder="Enter your new password">
-        </div>
-        </div> *@
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
-                <input type="date" class="form-control" asp-for="DateOfBirth" placeholder="dd/mm/yyyy">
-                <span asp-validation-for="DateOfBirth" class="text-danger" />
+            </div> *@
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" asp-for="DateOfBirth" placeholder="dd/mm/yyyy">
+                    <span asp-validation-for="DateOfBirth" class="text-danger" />
+                </div>
+                <div class="col-md-6">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select class="form-select" asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()"></select>
+                    <span asp-validation-for="Gender" class="text-danger" />
+                </div>
             </div>
-            <div class="col-md-6">
-                <label for="gender" class="form-label">Gender</label>
-                <select class="form-select" asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()"></select>
-                <span asp-validation-for="Gender" class="text-danger" />
-            </div>
-        </div>
-        <button type="submit" class="site-btn">Save Changes</button>
-    </form>
+            <button type="submit" class="site-btn">Save Changes</button>
+        </form>
+    </div>
 </div>

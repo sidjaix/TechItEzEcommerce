@@ -1,8 +1,9 @@
 ﻿@model AddressViewModel
 
 <!-- Address Form -->
-<form method="post" id="addressForm" action="CreateAddress">
+<form method="post" action="SaveAddress">
     <input hidden asp-for="UserId">
+    <input hidden asp-for="AddressId">
     <div class="row mb-3">
         <div class="col-md-6">
             <label asp-for="FirstName" class="form-label">First Name</label>
@@ -46,5 +47,5 @@
         </label>
     </div>
     <button type="submit" class="site-btn">Save Address</button>
-    <button type="button" class="btn btn-secondary" id="cancelAddAddress">Cancel</button>
+    <button type="button" class="btn btn-secondary" id="btnCancelAddress">Cancel</button>
 </form>

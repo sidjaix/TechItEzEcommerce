@@ -1,4 +1,7 @@
 ﻿@model UserPageViewModel
+@{
+    ViewData["Title"] = "User";
+}
 
 @section Styles {
     <link href="~/css/user.css" rel="stylesheet" />
@@ -10,15 +13,6 @@
         <div class="col-md-3 user-tab">
             <ul class="nav nav-pills flex-column" id="userTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="personal-info-tab" data-bs-toggle="pill"
-                        data-bs-target="#personal-info" type="button" role="tab" aria-controls="personal-info"
-                        aria-selected="true">Personal Info</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="addresses-tab" data-bs-toggle="pill" data-bs-target="#addresses"
-                        type="button" role="tab" aria-controls="addresses" aria-selected="false">Addresses</button>
-                </li>
-                <li class="nav-item" role="presentation">
                     <button class="nav-link" id="orders-tab" data-bs-toggle="pill" data-bs-target="#orders"
                         type="button" role="tab" aria-controls="orders" aria-selected="false">Orders</button>
                 </li>
@@ -27,10 +21,19 @@
                         type="button" role="tab" aria-controls="wishlist" aria-selected="false">Wishlist</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="payment-methods-tab" data-bs-toggle="pill"
-                        data-bs-target="#payment-methods" type="button" role="tab" aria-controls="payment-methods"
-                        aria-selected="false">Payment Methods</button>
+                    <button class="nav-link active" id="personal-info-tab" data-bs-toggle="pill"
+                        data-bs-target="#personal-info" type="button" role="tab" aria-controls="personal-info"
+                        aria-selected="true">Personal Info</button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="addresses-tab" data-bs-toggle="pill" data-bs-target="#addresses"
+                        type="button" role="tab" aria-controls="addresses" aria-selected="false">Addresses</button>
+                </li>
+                @* <li class="nav-item" role="presentation">
+                <button class="nav-link" id="payment-methods-tab" data-bs-toggle="pill"
+                data-bs-target="#payment-methods" type="button" role="tab" aria-controls="payment-methods"
+                aria-selected="false">Payment Methods</button>
+                </li> *@
                 <li class="nav-item" role="presentation">
                     <a asp-controller="account" asp-action="logout" class="nav-link" id="logout-tab"
                         type="button">Logout</a>
@@ -41,22 +44,14 @@
         <!-- Tab Content -->
         <div class="col-md-9">
             <div class="tab-content" id="userTabContent">
-                <div class="tab-pane fade show active" id="personal-info" role="tabpanel"
-                    aria-labelledby="personal-info-tab">
-                    @* <div id="personalInfoContent"> *@
-                    <!-- Personal Info Form will be loaded here -->
-                    <Partial name="_PersonalInfo" model="@Model.PersonalInfo" />
-                    @* </div> *@
-                </div>
-
-                <!-- Address -->
-                <Partial name="_Address" model="@Model" />
 
                 <!-- Orders -->
-                <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                    <h3>Orders</h3>
-                    <p>Order details go here...</p>
-                </div>
+                @* <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                <h3>Orders</h3>
+                <p>Order details go here...</p>
+                </div> *@
+                <Partial name="_Orders" />
+
 
                 <!-- Wishlist -->
                 <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
@@ -64,8 +59,14 @@
                     <p>Wishlist details go here...</p>
                 </div>
 
+                <!-- Personal Info Form will be loaded here -->
+                <Partial name="_PersonalInfo" model="@Model.PersonalInfo" />
+
+                <!-- Address -->
+                <Partial name="_Address" model="@Model" />
+
                 <!-- Payment Method -->
-                <Partial name="_PaymentMethod" />
+                @* <Partial name="_PaymentMethod" /> *@
             </div>
         </div>
     </div>

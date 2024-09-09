@@ -5,7 +5,7 @@ namespace User_Core.Models;
 public class AddressModel
 {
     public int AddressId { get; set; }
-    [Required]
+
     public string UserId { get; set; }
 
     [Required]
