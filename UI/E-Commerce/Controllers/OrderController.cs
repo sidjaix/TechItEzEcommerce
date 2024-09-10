@@ -15,11 +15,5 @@ namespace E_Commerce.Controllers
             return View(orders);
         }
 
-        public async Task<ActionResult> OrderDetails(int orderId)
-        {
-            var order = await orderService.GetOrderDetail(orderId);
-            return View(order);
-        }
-
     }
 }

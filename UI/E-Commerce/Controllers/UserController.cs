@@ -6,8 +6,18 @@ using System.Security.Claims;
 
 namespace E_Commerce.Controllers
 {
-    public class UserController(IUserService userService) : Controller
+    public class UserController : Controller
     {
+        private readonly IUserService userService;
+        private readonly IOrderService orderService;
+        private readonly IWishlistService wishlistService;
+
+        public UserController(IUserService userService, IOrderService orderService, IWishlistService wishlistService)
+        {
+            this.userService = userService;
+            this.orderService = orderService;
+            this.wishlistService = wishlistService;
+        }
         // GET: UserController
         public async Task<ActionResult> Index()
         {
@@ -15,16 +25,27 @@ namespace E_Commerce.Controllers
             return View(user);
         }
 
+        public async Task<ActionResult> GetAddress(int addressId)
+        {
+            var address = await userService.GetAddressAsync(addressId);
+            if (address == null)
+            {
+                TempData["MessageType"] = "warning";
+                TempData["Message"] = "Address not found";
+            }
+            return Json(address);
+        }
+
         [HttpPost]
-        public async Task<ActionResult> CreateAddress(AddressViewModel addressInfo)
+        public async Task<ActionResult> SaveAddress(AddressViewModel addressInfo)
         {
             if (ModelState.IsValid)
             {
-                var isCreated = await userService.CreateAddress(addressInfo);
-                if (isCreated)
+                var isSuccess = await userService.SaveAddressAsync(addressInfo);
+                if (isSuccess)
                 {
                     TempData["MessageType"] = "success";
-                    TempData["Message"] = "Address created successfully";
+                    TempData["Message"] = "Address saved successfully";
                 }
                 else
                 {
@@ -82,12 +103,20 @@ namespace E_Commerce.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<ActionResult> GetOrderDetails(int orderId)
+        {
+            var order = await orderService.GetOrderDetail(orderId);
+            return PartialView("_OrderDetails", order);
+        }
+
         private async Task<UserPageViewModel> GetUserPageInfo(IUserService userService)
         {
             var user = new UserPageViewModel();
             var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             user.PersonalInfo = await userService.GetUserAsync(userId);
             user.Addresses = await userService.GetUserAddresses(userId);
+            user.Orders = await orderService.GetOrdersAsync();
+            user.Wishlist = await wishlistService.GetWishlistItemsAsync(userId);
             user.Address.UserId = userId;
             return user;
         }

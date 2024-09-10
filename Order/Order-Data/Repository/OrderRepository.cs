@@ -20,15 +20,17 @@ public class OrderRepository(OrderDbContext db, IProductService productService) 
                             select new Order
                             {
                                 OrderId = o.OrderId,
-                                // OrderStatusId = o.OrderStatusId,
                                 OrderDate = o.OrderDate,
-                                //OrderTotal = o.OrderTotal,
-                                //PaymentMethodId = o.PaymentMethodId,
-                                //AddressId = o.AddressId,
-                                //UserId = o.UserId,
+                                OrderTotal = o.OrderTotal,
+                                OrderStatusId = o.OrderStatusId,
                                 Status = s.Status,
                                 OrderDetails = o.OrderDetails
-                            }).Select(x => x.MapToDto()).ToListAsync();
+                                // PaymentMethodId = o.PaymentMethodId,
+                                // AddressId = o.AddressId,
+                                // UserId = o.UserId,
+                            })
+                            .Select(x => x.MapToDto())
+                            .ToListAsync();
 
         foreach (var order in orders)
         {
@@ -37,10 +39,9 @@ public class OrderRepository(OrderDbContext db, IProductService productService) 
                                   select new OrderDetailModel
                                   {
                                       OrderDetialId = od.OrderDetialId,
-                                      //OrderId = od.OrderId,
-                                      //Price = od.Price,
+                                      Price = od.Price,
                                       ProductId = od.ProductId,
-                                      //Quantity = od.Quantity,
+                                      Quantity = od.Quantity,
                                       ProductName = p.ProductName,
                                       ProductImageUrl = p.ImageUrl
                                   }).ToList();
@@ -61,11 +62,11 @@ public class OrderRepository(OrderDbContext db, IProductService productService) 
                                OrderStatusId = o.OrderStatusId,
                                OrderDate = o.OrderDate,
                                OrderTotal = o.OrderTotal,
-                               PaymentMethodId = o.PaymentMethodId,
                                AddressId = o.AddressId,
-                               UserId = o.UserId,
                                Status = s.Status,
                                OrderDetails = o.OrderDetails
+                               //PaymentMethodId = o.PaymentMethodId,
+                               //UserId = o.UserId,
                            }).Select(x => x.MapToDto()).FirstOrDefaultAsync();
 
         if (order is not null)

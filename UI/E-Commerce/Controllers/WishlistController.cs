@@ -33,7 +33,7 @@ public class WishlistController(IWishlistService wishlistService, ITokenProvider
     {
         var cart = await wishlistService.RemoveItemFromWishlist(wishlistItemId);
         await UpdatewishlistItemCookie();
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), "User");
     }
 
     private async Task UpdatewishlistItemCookie()

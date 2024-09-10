@@ -58,12 +58,28 @@ public class UserService : IUserService
         return userAddresses;
     }
 
-    public async Task<bool> CreateAddress(AddressViewModel addressInfo)
+    public async Task<AddressViewModel> GetAddressAsync(int addressId)
     {
-        var isAddressCreated = false;
+        AddressViewModel address = new();
         var req = new RequestDto
         {
-            Url = $"{ApplicationData.AuthApiBaseAddress}/api/user/CreateAddress",
+            Url = $"{ApplicationData.AuthApiBaseAddress}/api/user/GetAddress/{addressId}",
+            ApiMethod = Utility.Enums.ApiMethod.GET
+        };
+        var response = await _baseService.SendAsync(req);
+        if (response != null && response.IsSuccess)
+        {
+            address = JsonConvert.DeserializeObject<AddressViewModel>(Convert.ToString(response.Result));
+        }
+        return address;
+    }
+
+    public async Task<bool> SaveAddressAsync(AddressViewModel addressInfo)
+    {
+        var isSuccess = false;
+        var req = new RequestDto
+        {
+            Url = $"{ApplicationData.AuthApiBaseAddress}/api/user/SaveAddress",
             ApiMethod = Utility.Enums.ApiMethod.POST,
             ContentType = Utility.Enums.ContentType.Json,
             Data = addressInfo
@@ -71,9 +87,9 @@ public class UserService : IUserService
         var response = await _baseService.SendAsync(req);
         if (response is not null && response.IsSuccess)
         {
-            isAddressCreated = (bool)response.Result;
+            isSuccess = (bool)response.Result;
         }
-        return isAddressCreated;
+        return isSuccess;
     }
 
     public async Task<bool> DeleteAddressAsync(int addressId)

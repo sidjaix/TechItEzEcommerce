@@ -123,18 +123,10 @@
                                     string.Empty)>
                                     <a asp-controller="contact" asp-action="index">Contact</a>
                                 </li>
-                                <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "user" ? "active" :
-                                    string.Empty)><a href="#">User</a>
-                                    <ul class="header__menu__dropdown">
-                                         <li><a asp-controller="user" asp-action="profile">Profile</a></li>
-                                        <li><a asp-controller="order" asp-action="index">Your Orders</a></li>
-                                    </ul>
-                                </li>
                                 @if(User.IsInRole("Admin")){
                                 <li class=@(ViewContext.RouteData.Values["controller"].ToString().ToLower() == "admin" ? "active" :
                                     string.Empty)><a href="#">Admin</a>
                                     <ul class="header__menu__dropdown">
-                                        @* <li><a asp-controller="admin" asp-action="Users">User</a></li> *@
                                         <li><a asp-controller="admin" asp-action="Roles">Role</a></li>
                                         <li><a asp-controller="admin" asp-action="Products">Product</a></li>
                                         <li><a href="#">Blog Details</a></li>

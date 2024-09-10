@@ -78,7 +78,35 @@ public class UserRepository : IUserRepository
         return isAddressCreated;
     }
 
-    public async Task<List<AddressModel>> GetuserAddressesAsync(string userId)
+    public async Task<AddressModel> GetAddressAsync(int addressId)
+    {
+        var address = await db.Addresses.FirstOrDefaultAsync(x => x.AddressId == addressId);
+        return address.MapToDto();
+    }
+
+    public async Task<bool> UpdateAddressAsync(AddressModel addressInfo)
+    {
+        var address = await db.Addresses.FirstOrDefaultAsync(x => x.AddressId == addressInfo.AddressId);
+        if (address == null)
+        {
+            return false;
+        }
+        address.AddressId = addressInfo.AddressId;
+        address.FirstName = addressInfo.FirstName;
+        address.LastName = addressInfo.LastName;
+        address.UnitNumber = addressInfo.UnitNumber;
+        address.AreaOrStreet = addressInfo.AreaOrStreet;
+        address.TownOrCity = addressInfo.TownOrCity;
+        address.Landmark = addressInfo.Landmark;
+        address.State = addressInfo.State;
+        address.Pincode = addressInfo.Pincode;
+        address.IsDefaultAddress = addressInfo.IsDefaultAddress;
+
+        db.Addresses.Update(address);
+        return await db.SaveChangesAsync() > 0;
+    }
+
+    public async Task<List<AddressModel>> GetUserAddressesAsync(string userId)
     {
         var address = await db.UserAddresses.Where(x => x.UserId == userId).Select(x => x.Address.MapToDto()).ToListAsync();
         return address;

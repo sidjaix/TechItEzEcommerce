@@ -33,7 +33,7 @@ public class WishlistRepository(CartDbContext db, IProductService productService
                              ProductId = ci.ProductId,
                              ProductName = p.ProductName,
                              SellingPrice = p.SellingPrice,
-                             ImageUrl = p.ProductImages.FirstOrDefault(x => x.IsThumbnail)?.ProductImageUrl
+                             ImageUrl = p.ImageUrl
                          }).ToList();
 
         wishlist.UserId = UserId;

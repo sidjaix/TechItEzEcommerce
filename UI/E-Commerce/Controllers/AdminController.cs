@@ -40,8 +40,6 @@ public class AdminController(IProductService productService, ICategoryService ca
         {
             Categories = await categoryService.GetAllCategoryAsync()
         };
-        TempData["Message"] = "New product added!";
-        TempData["MessageType"] = "created";
         return View(product);
     }
 

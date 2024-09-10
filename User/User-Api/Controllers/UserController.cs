@@ -89,24 +89,62 @@ public class UserController : ControllerBase
     [HttpGet("GetUserAddresses/{userid}")]
     public async Task<IActionResult> GetUserAddresses(string userId)
     {
-        var addresses = await _userRepository.GetuserAddressesAsync(userId);
+        var addresses = await _userRepository.GetUserAddressesAsync(userId);
+        if (addresses is null || addresses.Count == 0)
+        {
+            _response.Message = "Address not found";
+            _response.IsSuccess = false;
+            return NotFound(_response);
+        }
         _response.Result = addresses;
         return Ok(_response);
 
     }
 
-    [HttpPost("CreateAddress")]
-    [ValidateModel]
-    public async Task<ActionResult<ResponseDto>> CreateAddress(AddressModel addressInfo)
+    [HttpGet("GetAddress/{addressId}")]
+    public async Task<ActionResult> GetAddress(int addressId)
     {
-        var isAddressCreated = await _userRepository.CreateAddressAsync(addressInfo);
-        if (!isAddressCreated)
+        var address = await _userRepository.GetAddressAsync(addressId);
+        if (address is null)
         {
+            _response.Message = "Address not found";
             _response.IsSuccess = false;
-            _response.Message = "Address not created, contact to admin.";
+            return NotFound(_response);
+        }
+        _response.Result = address;
+        return Ok(_response);
+    }
+
+    [HttpPost("SaveAddress")]
+    [ValidateModel]
+    public async Task<ActionResult<ResponseDto>> SaveAddress(AddressModel addressInfo)
+    {
+        bool isSuccess;
+        if (addressInfo.AddressId == 0)
+        {
+            isSuccess = await _userRepository.CreateAddressAsync(addressInfo);
+            if (!isSuccess)
+            {
+                _response.Message = "Address not created, contact to admin.";
+            }
+        }
+        else
+        {
+            isSuccess = await _userRepository.UpdateAddressAsync(addressInfo);
+            if (isSuccess)
+            {
+                _response.Message = "Address not updated, contact to admin.";
+            }
+        }
+
+        _response.IsSuccess = isSuccess;
+        _response.Result = isSuccess;
+
+        if (!isSuccess)
+        {
             return BadRequest(_response);
         }
-        _response.Result = isAddressCreated;
+
         return Ok(_response);
     }
 

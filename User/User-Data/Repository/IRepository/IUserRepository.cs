@@ -7,7 +7,9 @@ public interface IUserRepository
     Task<List<UserModel>> GetUsersAsync();
     Task<UserModel> GetUserByIdAsync(int userId);
     Task<bool> CreateAddressAsync(AddressModel addressInfo);
+    Task<bool> UpdateAddressAsync(AddressModel addressInfo);
     Task<UserModel> UpdateUserAsync(UserModel userData);
-    Task<List<AddressModel>> GetuserAddressesAsync(string userId);
+    Task<AddressModel> GetAddressAsync(int addressId);
+    Task<List<AddressModel>> GetUserAddressesAsync(string userId);
     Task<bool> DeleteAddressAsync(int addressId);
 }

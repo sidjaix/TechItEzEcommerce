@@ -14,7 +14,7 @@ public partial class OrderViewModel
     public int OrderTotal { get; set; }
     [Required]
     public int OrderStatusId { get; set; }
-    public OrderStatusEnum Status => (OrderStatusEnum)OrderStatusId;
+    public string Status { get; set; }
 
     public List<OrderDetailViewModel> OrderDetails { get; set; } = [];
 }

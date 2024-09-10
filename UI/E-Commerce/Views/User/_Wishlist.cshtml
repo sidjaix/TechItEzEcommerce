@@ -1,0 +1,120 @@
+﻿@model WishlistViewModel
+@{
+    ViewData["Title"] = "user - Wishlist";
+}
+<div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
+    <div class="col-12">
+        @if(Model.WishlistItems?.Count() > 0){
+        <!-- Products -->
+        <div class="row mb-3">
+            @foreach (var wishlistItem in Model.WishlistItems)
+            {
+                <!-- Item -->
+                <div class="col-6 col-md-4">
+                    <div class="card mb-7">
+
+                        <!-- Image -->
+                        <div class="card-img">
+
+                            <!-- Action -->
+                            <a
+                                class="btn btn-xs btn-circle btn-white-primary card-action card-action-end"
+                                href=@Url.Action("RemoveItemFromWishlist", "Wishlist", new
+                                {
+                                    wishlistItemId = wishlistItem.WishlistItemId
+                                })>
+                                <i class="fa fa-trash"></i>
+                            </a>
+
+                            <!-- Button -->
+                            @* <button class="btn btn-xs w-100 btn-dark card-btn" data-bs-toggle="modal"
+                        data-bs-target="#modalProduct">
+                        <i class="fa fa-eye me-2 mb-1"></i> Quick View
+                        </button> *@
+
+                            <!-- Image -->
+                            <img class="card-img-top" src=@Url.Content(wishlistItem.ImageUrl) alt="...">
+
+                        </div>
+
+                        <!-- Body -->
+                        <div class="card-body fw-bold text-center">
+                            @if (true)
+                            {
+                                <a class="text-body" href="product.html">@wishlistItem.ProductName</a> <br>
+                                <span class="text-muted"><i class="fa fa-inr"></i>@wishlistItem.SellingPrice</span>
+                            }
+                            else
+                            {
+                                <a class="text-body" href="product.html">Suede cross body Bag</a> <br>
+                                <span>
+                                    <span class="fs-xs text-gray-350 text-decoration-line-through"><i
+                                            class="fa fa-inr"></i>85.00</span>
+                                    <span class="text-primary"><i class="fa fa-inr"></i>49.00</span>
+                                </span>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        }
+        else
+        {
+            <div class="row mb-3">
+                <h6>No Wishlist Item Found</h6>
+            </div>
+        }
+        <!-- Pagination -->
+        @* <nav class="d-flex justify-content-center justify-content-md-end">
+        <ul class="pagination pagination-sm text-gray-400">
+        <li class="page-item">
+        <a class="page-link page-link-arrow" href="#">
+        <svg class="svg-inline--fa fa-caret-left" aria-hidden="true" focusable="false" data-prefix="fas"
+        data-icon="caret-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"
+        data-fa-i2svg="">
+        <path fill="currentColor"
+        d="M137.4 406.6l-128-127.1C3.125 272.4 0 264.2 0 255.1s3.125-16.38 9.375-22.63l128-127.1c9.156-9.156 22.91-11.9
+        34.88-6.943S192 115.1 192 128v255.1c0 12.94-7.781 24.62-19.75 29.58S146.5 415.8 137.4 406.6z">
+        </path>
+        </svg><!-- <i class="fa fa-caret-left"></i> Font Awesome fontawesome.com -->
+        </a>
+        </li>
+        <li class="page-item active">
+        <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item">
+        <a class="page-link" href="#">2</a>
+        </li>
+        <li class="page-item">
+        <a class="page-link" href="#">3</a>
+        </li>
+        <li class="page-item">
+        <a class="page-link" href="#">4</a>
+        </li>
+        <li class="page-item">
+        <a class="page-link" href="#">5</a>
+        </li>
+        <li class="page-item">
+        <a class="page-link" href="#">6</a>
+        </li>
+        <li class="page-item">
+        <a class="page-link page-link-arrow" href="#">
+        <svg class="svg-inline--fa fa-caret-right" aria-hidden="true" focusable="false"
+        data-prefix="fas" data-icon="caret-right" role="img" xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 256 512" data-fa-i2svg="">
+        <path fill="currentColor"
+        d="M118.6 105.4l128 127.1C252.9 239.6 256 247.8 256 255.1s-3.125 16.38-9.375 22.63l-128 127.1c-9.156 9.156-22.91
+        11.9-34.88 6.943S64 396.9 64 383.1V128c0-12.94 7.781-24.62 19.75-29.58S109.5 96.23 118.6 105.4z">
+        </path>
+        </svg><!-- <i class="fa fa-caret-right"></i> Font Awesome fontawesome.com -->
+        </a>
+        </li>
+        </ul>
+        </nav> *@
+
+    </div>
+</div>

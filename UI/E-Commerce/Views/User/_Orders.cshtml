@@ -1,0 +1,119 @@
+﻿@model IEnumerable<OrderViewModel>
+@{
+    ViewData["Title"] = "User - Orders";
+}
+
+<div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+    <div class="container">
+        <div class="row mb-3">
+            @if (Model.Count() == 0)
+            {
+                <div class="col-12">
+                    <h3>No Orders Found</h3>
+                </div>
+            }
+            else
+            {
+                <div class="col-12" id="userOrdersContent">
+                    @foreach (var order in Model)
+                    {
+                        <!-- Order 1 -->
+                        <div class="card card-lg mb-5 border">
+                            <div class="card-body pb-0">
+                                <!-- Info -->
+                                <div class="card card-sm">
+                                    <div class="card-body bg-light">
+                                        <div class="row">
+                                            <div class="col-6 col-lg-3">
+                                                <h6 class="heading-xxxs text-muted">Order No:</h6>
+                                                <p class="mb-lg-0 fs-sm fw-bold">@order.OrderId</p>
+                                            </div>
+                                            <div class="col-6 col-lg-3">
+                                                <h6 class="heading-xxxs text-muted">Shipped date:</h6>
+                                                <p class="mb-lg-0 fs-sm fw-bold">
+                                                    <time datetime="@order.OrderDate">@order.OrderDate.ToString("dd MMM, yyyy")</time>
+                                                </p>
+                                            </div>
+                                            <div class="col-6 col-lg-3">
+                                                <h6 class="heading-xxxs text-muted">Status:</h6>
+                                                <p class="mb-0 fs-sm fw-bold">@order.Status</p>
+                                            </div>
+                                            <div class="col-6 col-lg-3">
+                                                <h6 class="heading-xxxs text-muted">Order Amount:</h6>
+                                                <p class="mb-0 fs-sm fw-bold">₹@order.OrderTotal</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="row align-items-center">
+                                    <div class="col-12 col-lg-6">
+                                        <div class="row gx-5 mb-4 mb-lg-0">
+                                            @for (int i = 0; i < 3 && i < order.OrderDetails.Count; i++)
+                                            {
+                                                <div class="col-3">
+                                                    <div class="ratio ratio-1x1 bg-cover"
+                                                        style="background-image: url(@Url.Content(order.OrderDetails[i].ProductImageUrl));">
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (order.OrderDetails.Count > 3)
+                                            {
+                                                <div class="col-3">
+                                                    <div class="ratio ratio-1x1 bg-light">
+                                                        <a class="ratio-item ratio-item-text text-reset" href="#">
+                                                            @{
+                                                                var moreOrder = order.OrderDetails.Count - 3;
+                                                            }
+                                                            <div class="fs-xxs fw-bold">+ @moreOrder <br> more</div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <div class="row gx-5">
+                                            <div class="col-6">
+                                                <a class="btn btn-sm w-100 btn-outline-dark btnOrderDetails" data-url="@Url.Action("GetOrderDetails","User", new{ orderId = order.OrderId })">Order
+                                                    Details</a>
+                                            </div>
+                                            <div class="col-6">
+                                                <a class="btn btn-sm w-100 btn-outline-dark" href="#">Track Order</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Pagination -->
+                    @* <nav class="d-flex justify-content-center justify-content-md-end mt-10">
+                    <ul class="pagination pagination-sm text-gray-400">
+                    <li class="page-item">
+                    <a class="page-link page-link-arrow" href="#">
+                    <i class="fas fa-caret-left"></i>
+                    </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                    <li class="page-item"><a class="page-link" href="#">6</a></li>
+                    <li class="page-item">
+                    <a class="page-link page-link-arrow" href="#">
+                    <i class="fas fa-caret-right"></i>
+                    </a>
+                    </li>
+                    </ul>
+                    </nav> *@
+                </div>
+            }
+
+            <div id="orderDetailsContent" class="d-none"></div>
+        </div>
+    </div>
+</div>

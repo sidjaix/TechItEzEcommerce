@@ -1,0 +1,77 @@
+﻿@model ProductViewModel
+
+<div class="modal fade" id="modalProduct" tabindex="-1" aria-labelledby="productQuickViewLabel" aria-hidden="true">
+    <input hidden asp-for="ProductId">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="product__details__pic">
+                            <div class="product__details__pic__item">
+                                <img class="product__details__pic__item--large" src=@Url.Content(Model.ImageUrl) alt="">
+                            </div>
+                            <div class="product__details__pic__slider owl-carousel">
+                                @foreach (var image in Model.ProductImages)
+                                {
+                                    <img data-imgbigurl=@Url.Content(image.ThumbBigImageUrl)
+                                        src=@Url.Content(image.ProductImageUrl) alt="">
+                                }
+                            </div>
+                            <div class="row">
+                                <a class="site-btn primary-btn" asp-controller="product" asp-action="GetProductDetail"
+                                    asp-route-productId="@Model.ProductId">More Product Info <i
+                                        class="fa fa-info-circle"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="product__details__text">
+                            <h3>@Model.ProductName</h3>
+                            <div class="product__details__rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-half-o"></i>
+                                <span>(18 reviews)</span>
+                            </div>
+                            <div class="product__details__price">₹@Model.SellingPrice</div>
+                            <p>@Model.Description</p>
+                            <div class="product__details__quantity">
+                                <div class="quantity">
+                                    <div class="pro-qty">
+                                        <input type="text" value="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="btnAddToCart" class="primary-btn">ADD TO CART <i
+                                    class="fa fa-shopping-cart"></i></button>
+                            <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                            <ul>
+                                <li>
+                                    <b>Availability</b>
+                                    <span>@Model.StockAvailability</span>
+                                </li>
+                                <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span>
+                                </li>
+                                <li><b>Weight</b> <span>0.5 kg</span></li>
+                                <li><b>Share on</b>
+                                    <div class="share">
+                                        <a href="#"><i class="fa fa-facebook"></i></a>
+                                        <a href="#"><i class="fa fa-twitter"></i></a>
+                                        <a href="#"><i class="fa fa-instagram"></i></a>
+                                        <a href="#"><i class="fa fa-pinterest"></i></a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
