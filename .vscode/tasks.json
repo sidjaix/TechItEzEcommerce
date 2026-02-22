@@ -4,7 +4,7 @@
     {
       "label": "build",
       "command": "dotnet",
-      "type": "process",
+      "type": "shell",
       "args": [
         "build",
         "${workspaceFolder}/TechItEzEcommerce.sln",
@@ -16,7 +16,7 @@
     {
       "label": "publish",
       "command": "dotnet",
-      "type": "process",
+      "type": "shell",
       "args": [
         "publish",
         "${workspaceFolder}/TechItEzEcommerce.sln",
@@ -28,7 +28,7 @@
     {
       "label": "watch",
       "command": "dotnet",
-      "type": "process",
+      "type": "shell",
       "args": ["watch", "run", "--project", "${workspaceFolder}/TechItEzEcommerce.sln"],
       "problemMatcher": "$msCompile"
     },
@@ -36,7 +36,7 @@
       "label": "clean (functions)",
       "command": "dotnet",
       "args": ["clean", "/property:GenerateFullPaths=true", "/consoleloggerparameters:NoSummary"],
-      "type": "process",
+      "type": "shell",
       "problemMatcher": "$msCompile",
       "options": {
         "cwd": "${workspaceFolder}/User/User-AzureFunctions"
@@ -46,7 +46,7 @@
       "label": "build (functions)",
       "command": "dotnet",
       "args": ["build", "/property:GenerateFullPaths=true", "/consoleloggerparameters:NoSummary"],
-      "type": "process",
+      "type": "shell",
       "dependsOn": "clean (functions)",
       "group": {
         "kind": "build",
@@ -67,7 +67,7 @@
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "type": "process",
+      "type": "shell",
       "problemMatcher": "$msCompile",
       "options": {
         "cwd": "${workspaceFolder}/User/User-AzureFunctions"
@@ -83,7 +83,7 @@
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "type": "process",
+      "type": "shell",
       "dependsOn": "clean release (functions)",
       "problemMatcher": "$msCompile",
       "options": {

@@ -142,11 +142,24 @@ docker start <First 3 Letter of ContainerID>
 docker rm <First 3 Letter of ContainerID>
 ```
 
+## Create a Custom Docker Network (if you want multiple containers later)
+
+```bash
+docker network create my-sql-network
+```
+
 ## Run SQL Server individually without docker network
 
 ```bash
-docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -e 'MSSQL_PID=Express' -p 1433:1433 -d mcr.microsoft.com/azure-sql-edge
+
+   docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=YourStrongPassword123!' -e 'MSSQL_PID=Express' -p 1435:1433 --name sqlserver-container --hostname my-sql-edge-host --network my-sql-network -v sql_edge_backup:/var/opt/mssql/backup -d mcr.microsoft.com/mssql/server:2022-latest
+
+
+   docker run -e 'ACCEPT_EULA=1' -e 'MSSQL_SA_PASSWORD=YourStrong!Passw0rd' -p 1433:1433 --name my-sql-edge-container --hostname my-sql-edge-host --network my-sql-network -v sql_edge_backup:/var/opt/mssql/backup -d mcr.microsoft.com/azure-sql-edge:latest
+
 ```
+
+- Now other containers on my-sql-network can connect to this SQL Server using my-sql-edge-host,1433
 
 ## You can use environment variables to configure SQL Server on Linux Containers
 
@@ -191,3 +204,9 @@ docker pull sidjaix.azurecr.io/user-api:latest
 ```bash
 docker run -p 10001:80 sidjaix.azurecr.io/user-api:latest -e "ConnectionStrings_AzureDB=Server=tcp:techitez.database.windows.net,1433;Initial Catalog=TechItEzEcommerce;Persist Security Info=False;User ID=sidjaix;Password=admin@123; MultipleActiveResultSets=True; Encrypt=True; TrustServerCertificate=True; Connection Timeout=60;" -rm
 ```
+
+<!--
+navigate to compose file location
+docker-compose build
+docker-compose up -d
+-->

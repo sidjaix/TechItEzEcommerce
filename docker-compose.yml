@@ -1,5 +1,4 @@
 name: tie-e-commerce
-version: '3.8'
 
 services:
   user_api:
