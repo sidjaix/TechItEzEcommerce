@@ -17,12 +17,14 @@ public class UserController : ControllerBase
     private readonly IUserRepository _userRepository;
     private readonly UserManager<User> _userManager;
     private readonly ResponseDto _response;
+    private readonly ILogger<UserController> _logger;
 
-    public UserController(IUserRepository userRepository, UserManager<User> userManager, ResponseDto response)
+    public UserController(IUserRepository userRepository, UserManager<User> userManager, ResponseDto response, ILogger<UserController> logger)
     {
         _userRepository = userRepository;
         _userManager = userManager;
         _response = response;
+        _logger = logger;
     }
 
     /// <summary>
@@ -33,9 +35,11 @@ public class UserController : ControllerBase
     [HttpGet("{userId}")]
     public async Task<ActionResult<ResponseDto>> GetUserByIdAsync(string userId)
     {
+        _logger.LogInformation("Getting user by id {UserId}", userId);
         var existingUser = await _userManager.FindByIdAsync(userId);
         if (existingUser is null)
         {
+            _logger.LogWarning("User with id {UserId} not found", userId);
             _response.Message = $"user does not exist with specified Id {userId}";
             _response.IsSuccess = false;
             return NotFound(_response);

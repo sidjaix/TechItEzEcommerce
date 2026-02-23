@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet Package Settings 
+    <Version>1.0.1</Version>
+    <Authors>Seyfarth Shaw</Authors>
+    <Company>Seyfarth Shaw</Company>
+    <PackageId>Seyfarth.Logging</PackageId>
+    <Description>A centralized structured logging library for Seyfarth applications.</Description>
+    <PackageOutputPath>../Seyfarth/nupkgs</PackageOutputPath>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    -->
+  </PropertyGroup>
+
+  <ItemGroup>
+  <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.3.0" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.6.0" />
+
+    <Folder Include="Extensions/" />
+    <Folder Include="Middlewares/" />
+  </ItemGroup>
+
+</Project>

@@ -17,8 +17,10 @@ public class AuthService : IAuthService
     private readonly SignInManager<User> _signInManager;
     private readonly LoginResponseModel _response;
     private readonly JwtOptions _jwtOptions;
-    public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IOptions<JwtOptions> jwtOptions)
+    private readonly ILogger<AuthService> _logger;
+    public AuthService(ILogger<AuthService> logger, UserManager<User> userManager, SignInManager<User> signInManager, IOptions<JwtOptions> jwtOptions)
     {
+        _logger = logger;
         _userManager = userManager;
         _signInManager = signInManager;
         _jwtOptions = jwtOptions.Value;
@@ -29,7 +31,7 @@ public class AuthService : IAuthService
         var loginUser = await _userManager.FindByNameAsync(loginRequest.UserName);
 
         bool isValid = await _userManager.CheckPasswordAsync(loginUser, loginRequest.Password);
-
+        _logger.LogInformation("User has found with details {@loginRequest}", loginRequest);
         if (loginUser is null || !isValid)
         {
             _response.User = default;

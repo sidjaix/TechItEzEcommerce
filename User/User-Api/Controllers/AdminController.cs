@@ -15,17 +15,21 @@ public class AdminController : ControllerBase
     private readonly RoleManager<Role> _roleManager;
     private readonly UserManager<User> _userManager;
     private readonly ResponseDto _response;
-    public AdminController(RoleManager<Role> roleManager, UserManager<User> userManager)
+    private readonly ILogger<AdminController> _logger;
+
+    public AdminController(RoleManager<Role> roleManager, UserManager<User> userManager, ILogger<AdminController> logger)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _response = new ResponseDto();
+        _logger = logger;
     }
 
     [HttpPost("CreateRole")]
     [ValidateModel]
     public async Task<ActionResult<ResponseDto>> CreateRole([FromBody] RoleModel role)
     {
+        _logger.LogInformation("Creating a new role with name {RoleName}", role.RoleName);
         var existingRole = await _roleManager.FindByIdAsync(role.RoleId);
         if (existingRole != null)
         {
@@ -53,11 +57,13 @@ public class AdminController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("Getting all roles");
             var roles = await _roleManager.Roles.Select(x => x.MapToDto()).ToListAsync();
             _response.Result = roles;
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "An error occurred while getting all roles");
             _response.Message = ex.Message;
             _response.IsSuccess = false;
             return _response;
@@ -76,9 +82,11 @@ public class AdminController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("Getting role by id {RoleId}", roleId);
             var role = await _roleManager.FindByIdAsync(roleId);
             if (role is null)
             {
+                _logger.LogWarning("Role with id {RoleId} not found", roleId);
                 _response.Message = "Role does not exist.";
                 return NotFound(_response);
             }
@@ -91,6 +99,7 @@ public class AdminController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "An error occurred while getting role by id {RoleId}", roleId);
             _response.Message = ex.Message;
             _response.IsSuccess = false;
             return _response;

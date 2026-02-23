@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using User_Core;
+using Logging.Extensions;
 using User_Api.Extensions;
 using User_Data.Repository;
 using User_Data.Repository.IRepository;
@@ -28,6 +29,9 @@ internal class Program
         }
         var config = builder.Configuration;
 
+        // For serilog logging
+        builder.AddSeyfarthLogging("User-Api");
+
         //Add services to the container.
         builder.Services.AddControllers().AddNewtonsoftJson(o =>
         {
@@ -53,7 +57,7 @@ internal class Program
         // Register db context pool for sql server
         builder.Services.AddDbContextPool<UserDbContext>((serviceProvider, options) =>
         {
-            var connectionString = config.GetConnectionString("UserApi");
+            var connectionString = config.GetConnectionString("DefaultConnection");
             options
             .UseSqlServer(connectionString, options =>
             {
@@ -62,8 +66,8 @@ internal class Program
                     maxRetryDelay: TimeSpan.FromSeconds(30),
                     errorNumbersToAdd: null
                 );
-            })
-            .EnableSensitiveDataLogging(builder.Environment.IsDevelopment());  //should not be used in production, only for development purpose
+            });
+            //.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());  //should not be used in production, only for development purpose
         });
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -129,6 +133,9 @@ internal class Program
 
         // Configure the HTTP request pipeline.
         app.UseCors("default");
+
+        // For serilog logging
+        app.UseCorrelationId();
 
         // if (app.Environment.IsDevelopment())
         // {
