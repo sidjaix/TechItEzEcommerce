@@ -20,7 +20,7 @@ public static class LoggingExtensions
             loggerConfiguration
                 .ReadFrom.Configuration(builder.Configuration)
                 .Enrich.FromLogContext()
-                .Enrich.WithProperty("ApplicationId", applicationName)
+                .Enrich.WithProperty("ApplicationID", applicationName)
                 .Enrich.WithEnvironmentName()
                 .Enrich.WithMachineName()
                 .Enrich.With<ExceptionEnricher>()

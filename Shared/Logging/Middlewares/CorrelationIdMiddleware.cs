@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Serilog.Context;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Logging.Middlewares;
@@ -22,8 +23,9 @@ public class CorrelationIdMiddleware
     public async Task InvokeAsync(HttpContext httpContext)
     {
         var correlationId = GetOrSetCorrelationId(httpContext);
+        var userId = httpContext.User?.FindFirst(JwtRegisteredClaimNames.Sub)?.Value ?? "anonymous";
 
-        using (LogContext.PushProperty("UserTKID", "24200"))
+        using (LogContext.PushProperty("UserTKID", userId))
         using (LogContext.PushProperty(CorrelationIdOptions.CorrelationId, correlationId))
         {
             await _next(httpContext);
