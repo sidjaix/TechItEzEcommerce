@@ -3,6 +3,7 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using User_Core;
 using Logging.Extensions;
+using User_Api.Common.Middlewares;
 using User_Api.Extensions;
 using User_Data.Repository;
 using User_Data.Repository.IRepository;
@@ -13,6 +14,11 @@ using Microsoft.AspNetCore.Identity;
 using User_Core.Models;
 using User_Api.Services;
 using User_Api.Services.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 internal class Program
 {
@@ -76,27 +82,27 @@ internal class Program
         // Register the Swagger generator, defining 1 or more Swagger documents
         builder.Services.AddSwaggerGen(c =>
         {
-            // c.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme()
-            // {
-            //     Name = "Authorization",
-            //     Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
-            //     In = ParameterLocation.Header,
-            //     Type = SecuritySchemeType.ApiKey,
-            //     Scheme = "Bearer"
-            // });
-            // c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-            // {
-            //     {
-            //         new OpenApiSecurityScheme
-            //         {
-            //             Reference=new OpenApiReference()
-            //             {
-            //                 Type = ReferenceType.Schema,
-            //                 Id = "Bearer"
-            //             }
-            //         }, Array.Empty<string>()
-            //     }
-            // });
+            c.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer"
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference=new OpenApiReference()
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    }, Array.Empty<string>()
+                }
+            });
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "User API",
@@ -124,18 +130,51 @@ internal class Program
         // Configure options
         builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWT"));
 
+        var jwtSettings = builder.Configuration.GetSection("JWT");
+        var secret = jwtSettings.GetValue<string>("Secret");
+        var issuer = jwtSettings.GetValue<string>("Issuer");
+        var audience = jwtSettings.GetValue<string>("Audience");
+        var key = Encoding.ASCII.GetBytes(secret);
+
+        // By default, the JWT handler maps certain claim types to Microsoft's proprietary ones.
+        // This line prevents that mapping, ensuring that the original claim types from the token are preserved.
+        // For example, 'sub' remains 'sub' and is not mapped to 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'.
+        JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+        builder.Services.AddAuthentication(x =>
+        {
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(x =>
+        {
+            x.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = true,
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                ValidateAudience = true
+            };
+        });
+        builder.Services.AddAuthorization();
+
         // Register Dependency Services
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<ResponseDto>();
+
+        // Register Problem Details service and Exception Handler
+        builder.Services.AddProblemDetails();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
         app.UseCors("default");
 
-        // For serilog logging
-        app.UseCorrelationId();
+        // Use Global Exception Handler
+        app.UseExceptionHandler();
 
         // if (app.Environment.IsDevelopment())
         // {
@@ -149,6 +188,12 @@ internal class Program
 
         //app.UseHttpsRedirection();
         app.UseRouting();
+
+        app.UseAuthentication();
+        // For serilog logging
+        app.UseCorrelationId();
+        app.UseAuthorization();
+
         app.MapControllers();
 
         // Apply Pending Migration

@@ -34,7 +34,7 @@ builder.Services.AddHttpClient<IBaseService, BaseService>(c =>
 builder.Services.AddOptions<JwtOptions>()   // returns an OptionsBuilder<TOptions> that binds to the JwtOptions class
 .BindConfiguration("JWT")   // binds the values from the configuration section
 .ValidateDataAnnotations()  //enables validation using data annotations
-.ValidateOnStart(); // When we start the application, the validation will run on GitHubSettings and an exception is thrown if validation fails. 
+.ValidateOnStart(); // When we start the application, the validation will run on JWT settings and an exception is thrown if validation fails. 
 
 // Or alternatively, configure it directly:
 // builder.Services

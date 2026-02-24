@@ -13,7 +13,6 @@ namespace User_Api.Controllers
         [ValidateModel]
         public async Task<ActionResult<ResponseDto>> LoginAsync([FromBody] LoginModel loginModel)
         {
-            logger.LogInformation("User with email {UserName} is attempting to login", loginModel.UserName);
             var loginResponse = await authService.LoginAsync(loginModel);
             if (loginResponse.User is null || string.IsNullOrEmpty(loginResponse.Token))
             {
@@ -23,7 +22,6 @@ namespace User_Api.Controllers
                 response.Result = default;
                 return BadRequest(response);
             }
-            logger.LogInformation("User with email {UserName} has logged in successfully", loginModel.UserName);
             response.Result = loginResponse;
             response.Message = "User has logged in successfully";
             return Ok(response);
@@ -50,4 +48,3 @@ namespace User_Api.Controllers
 
     }
 }
-

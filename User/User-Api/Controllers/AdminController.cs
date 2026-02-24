@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using User_Api.Common.Filters;
@@ -10,6 +11,7 @@ namespace User_Api.Controllers;
 
 [ApiController]
 [Route("api/admin")]
+[Authorize(Roles = "Admin")]
 public class AdminController : ControllerBase
 {
     private readonly RoleManager<Role> _roleManager;
@@ -33,6 +35,7 @@ public class AdminController : ControllerBase
         var existingRole = await _roleManager.FindByIdAsync(role.RoleId);
         if (existingRole != null)
         {
+            _logger.LogWarning("Role {RoleName} Already exists", role.RoleName);
             _response.Message = "Role already exist";
             _response.IsSuccess = false;
             return BadRequest(_response);
@@ -41,6 +44,7 @@ public class AdminController : ControllerBase
         var result = await _roleManager.CreateAsync(role.MapToEntity());
         if (!result.Succeeded)
         {
+            _logger.LogWarning("Role has not created {@Errors}", result.Errors);
             _response.Message = "Role has not created.";
             _response.IsSuccess = false;
             return BadRequest(_response);
