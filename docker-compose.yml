@@ -6,7 +6,7 @@ services:
     image: sidjaix/user-api:latest
     build:
       context: .
-      dockerfile: ./User/Dockerfile
+      dockerfile: ./UserAccess/Dockerfile
     ports:
       - '5001:80'
     #restart: always
@@ -14,7 +14,7 @@ services:
     #   - sqlserver
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__UserApi=server=techitez_sqlserver;Initial Catalog=UserApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
+      - ConnectionStrings__DefaultConnection=server=techitez_sqlserver;Initial Catalog=UserApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
     networks:
       - techitez_network
 
