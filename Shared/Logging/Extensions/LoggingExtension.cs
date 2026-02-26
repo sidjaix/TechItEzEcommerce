@@ -59,8 +59,6 @@ public static class LoggingExtensions
             new SqlColumn("EnvironmentName", System.Data.SqlDbType.NVarChar, dataLength: 100),
             new SqlColumn("MachineName", System.Data.SqlDbType.NVarChar, dataLength: 100),
         ];
-
-
         return options;
     }
 }
