@@ -175,6 +175,8 @@ internal class Program
         builder.Services.AddProblemDetails();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+        // Add health check
+        builder.Services.AddHealthChecks();
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -201,6 +203,7 @@ internal class Program
         app.UseCorrelationId();
         app.UseAuthorization();
 
+        app.MapHealthChecks("/health");
         app.MapControllers();
 
         // Apply Pending Migration

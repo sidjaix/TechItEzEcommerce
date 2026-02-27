@@ -9,14 +9,21 @@ services:
       dockerfile: ./UserAccess/Dockerfile
     ports:
       - '5001:80'
-    #restart: always
-    # depends_on:
-    #   - sqlserver
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - sqlserver
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=server=techitez_sqlserver;Initial Catalog=UserApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
+      - ConnectionStrings__DefaultConnection=${USER_API_CONNECTION_STRING}
     networks:
       - techitez_network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   product_api:
     container_name: e_commerce_product_api
@@ -60,14 +67,19 @@ services:
       dockerfile: ./Order/Dockerfile
     ports:
       - '5004:80'
-    #restart: always
-    # depends_on:
-    #   - sqlserver
+    restart: always
+    depends_on:
+      - sqlserver
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__OrderApi=server=techitez_sqlserver;Initial Catalog=OrderApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
     networks:
       - techitez_network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   order-handler:
     container_name: e_commerce_order_handler

@@ -4,6 +4,15 @@ WORKDIR /app
 EXPOSE 80
 ENV ASPNETCORE_URLS=http://+:80
 
+
+# Why?
+# Answer: Running applications as root inside a container can lead to security vulnerabilities. 
+# If an attacker exploits a vulnerability in the application, they could potentially gain root access to the container and, by extension, the host system. 
+# By creating a non-root user and group, we limit the potential damage that can be done if the application is compromised. 
+# This is a best practice for container security, as it reduces the attack surface and helps to contain any potential breaches within the confines of the container. 
+# Hence create a non-root user and group
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+
 # Build stage with the full .NET SDK
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
@@ -38,4 +47,14 @@ RUN dotnet publish "User-Api.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Set ownership of the app directory to the non-root user
+RUN chown -R appuser:appgroup /app
+
+# Switch to the non-root user
+USER appuser
+
+# Healthcheck instruction
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "curl", "-f", "http://localhost/health" ]
+
 ENTRYPOINT ["dotnet", "User-Api.dll"]
