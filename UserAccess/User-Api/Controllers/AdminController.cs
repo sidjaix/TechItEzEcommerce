@@ -11,6 +11,7 @@ namespace UserAccess.API.Controllers;
 
 [ApiController]
 [Route("api/admin")]
+[Produces("application/json")]
 [Authorize(Roles = "Admin")]
 public class AdminController : ControllerBase
 {
@@ -103,10 +104,10 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("AssignAdminRole")]
-    public async Task<IActionResult> AssignAdminRole(UserModel userData)
+    public async Task<IActionResult> AssignAdminRole(AssignAdminRoleCommand user)
     {
-        _logger.LogInformation("API Call to assign admin role to user {UserId}", userData.UserId);
-        var response = await _mediator.Send(new AssignAdminRoleCommand { UserId = userData.UserId });
+        _logger.LogInformation("API Call to assign admin role to user {UserId}", user.UserId);
+        var response = await _mediator.Send(user);
 
         if (!response.IsSuccess)
         {

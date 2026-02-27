@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using User_Api.Common.Filters;
 using UserAccess.Application.Dtos;
@@ -11,6 +12,8 @@ namespace UserAccess.API.Controllers;
 
 [ApiController]
 [Route("api/user")]
+[Authorize(Roles = "Admin")]
+[Produces("application/json")]
 public class UserController : ControllerBase
 {
     private readonly IMediator _mediator;

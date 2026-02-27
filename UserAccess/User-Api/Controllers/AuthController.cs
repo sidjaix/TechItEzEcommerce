@@ -8,6 +8,7 @@ namespace UserAccess.API.Controllers
 {
     [Route("api/auth")]
     [ApiController]
+    [Produces("application/json")]
     public class AuthController(IMediator mediator, ILogger<AuthController> logger) : ControllerBase
     {
         [HttpPost("login")]

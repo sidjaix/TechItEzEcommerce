@@ -31,6 +31,13 @@ namespace UserAccess.Application.Features.Admin.Commands
                 response.IsSuccess = false;
                 return response;
             }
+            var isAdmin = await _userManager.IsInRoleAsync(existingUser, RoleStore.ADMIN);
+            if (isAdmin)
+            {
+                response.Message = "User is already an admin.";
+                response.IsSuccess = false;
+                return response;
+            }
             var result = await _userManager.AddToRoleAsync(existingUser, RoleStore.ADMIN);
             if (!result.Succeeded)
             {
