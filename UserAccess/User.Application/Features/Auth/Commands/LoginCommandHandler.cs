@@ -6,80 +6,63 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using UserAccess.Application.Dtos;
-using UserAccess.Core.Entities;
+using Entity = UserAccess.Core.Entities;
 using UserAccess.Application.Mappers;
+using User.Application.Interfaces;
+using UserAccess.Application.Interfaces;
 
 namespace UserAccess.Application.Features.Auth.Commands;
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseModel>
+public class LoginCommandHandler(IIdentityRepository identityRepository, IOptions<JwtOptions> jwtOptions) : IRequestHandler<LoginCommand, LoginResponseModel>
 {
-    private readonly UserManager<User> _userManager;
-    private readonly JwtOptions _jwtOptions;
-
-    public LoginCommandHandler(UserManager<User> userManager, IOptions<JwtOptions> jwtOptions)
-    {
-        _userManager = userManager;
-        _jwtOptions = jwtOptions.Value;
-    }
-
     public async Task<LoginResponseModel> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var response = new LoginResponseModel();
-        var loginUser = await _userManager.FindByNameAsync(request.UserName);
-
-        if (loginUser is null)
-        {
-            response.User = null;
-            response.Token = string.Empty;
-            return response;
-        }
-
-        bool isValid = await _userManager.CheckPasswordAsync(loginUser, request.Password);
-
+        bool isValid = await identityRepository.ValidateUserPasswordAsync(request.UserName, request.Password);
         if (!isValid)
         {
-            response.User = null;
+            response.User = default;
             response.Token = string.Empty;
             return response;
         }
 
-        var roles = await _userManager.GetRolesAsync(loginUser);
-        var token = GenerateToken(loginUser, roles);
+        var user = await identityRepository.GetUserRolesAsync(request.UserName);
+        var token = GenerateToken(user);
 
-        response.User = loginUser.MapToDto();
+        response.User = user;
         response.Token = token;
         return response;
     }
 
-    private string GenerateToken(User user, IEnumerable<string> roles)
+    private string GenerateToken(UserModel user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+        var key = Encoding.ASCII.GetBytes(jwtOptions.Value.Secret);
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
             new Claim(JwtRegisteredClaimNames.NameId, user.UserName!),
             new Claim(JwtRegisteredClaimNames.Email, user.Email!),
             new Claim(JwtRegisteredClaimNames.Name, user.Name!)
         };
 
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var securityKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_jwtOptions.Secret));
+            Encoding.UTF8.GetBytes(jwtOptions.Value.Secret));
 
         SigningCredentials signingCred = new SigningCredentials(
             key: securityKey,
             algorithm: SecurityAlgorithms.HmacSha512Signature
         );
 
-        var tokenExpiresOn = DateTime.UtcNow.AddMinutes(_jwtOptions.ExpiresOn);
+        var tokenExpiresOn = DateTime.UtcNow.AddMinutes(jwtOptions.Value.ExpiresOn);
 
         SecurityToken securityToken = new JwtSecurityToken(
-            issuer: _jwtOptions.Issuer,
-            audience: _jwtOptions.Audience,
+            issuer: jwtOptions.Value.Issuer,
+            audience: jwtOptions.Value.Audience,
             claims: claims,
             expires: tokenExpiresOn,
             signingCredentials: signingCred

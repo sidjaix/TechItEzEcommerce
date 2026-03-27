@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Dtos;
 using UserAccess.Application.Mappers;
-using UserAccess.Core.Entities;
+using Entity = UserAccess.Core.Entities;
 
 namespace UserAccess.Application.Features.Users.Commands
 {
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, ResponseDto>
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<Entity.User> _userManager;
         private readonly ILogger<UpdateUserCommandHandler> _logger;
 
-        public UpdateUserCommandHandler(UserManager<User> userManager, ILogger<UpdateUserCommandHandler> logger)
+        public UpdateUserCommandHandler(UserManager<Entity.User> userManager, ILogger<UpdateUserCommandHandler> logger)
         {
             _userManager = userManager;
             _logger = logger;

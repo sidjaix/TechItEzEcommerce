@@ -3,37 +3,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Entities = UserAccess.Core.Entities;
 using UserAccess.Application.Dtos;
+using User.Application.Interfaces;
 
 namespace UserAccess.Application.Features.Admin.Commands
 {
-    public class AssignRoleCommandHandler : IRequestHandler<AssignRoleCommand, ResponseDto>
+    public class AssignRoleCommandHandler(IIdentityRepository identityRepository) : IRequestHandler<AssignRoleCommand, ResponseDto>
     {
-        private readonly UserManager<Entities.User> _userManager;
-        private readonly ILogger<AssignRoleCommandHandler> _logger;
-
-        public AssignRoleCommandHandler(UserManager<Entities.User> userManager, ILogger<AssignRoleCommandHandler> logger)
-        {
-            _userManager = userManager;
-            _logger = logger;
-        }
-
         public async Task<ResponseDto> Handle(AssignRoleCommand request, CancellationToken cancellationToken)
         {
             var response = new ResponseDto();
-            _logger.LogInformation("Assigning role {RoleName} to user {Email}", request.RoleName, request.Email);
-
-            var existingUser = await _userManager.FindByEmailAsync(request.Email);
-            if (existingUser is null)
+            var hasAssigned = await identityRepository.AssignRoleAsync(request.Email, request.RoleName);
+            if (!hasAssigned)
             {
-                _logger.LogWarning("User with email {Email} not found", request.Email);
-                response.Message = "User does not exist.";
-                response.IsSuccess = false;
-                return response;
-            }
-            var result = await _userManager.AddToRoleAsync(existingUser, request.RoleName);
-            if (!result.Succeeded)
-            {
-                _logger.LogError("Failed to assign role {RoleName} to user {Email}: {Errors}", request.RoleName, request.Email, result.Errors);
                 response.IsSuccess = false;
                 response.Message = "Failed to assign role.";
                 return response;

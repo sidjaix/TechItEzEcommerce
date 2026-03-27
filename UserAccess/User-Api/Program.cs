@@ -17,6 +17,8 @@ using FluentValidation.AspNetCore;
 using User_Api.Common.Filters;
 using UserAccess.Core.Entities;
 using UserAccess.Application.Interfaces;
+using User.Application.Interfaces;
+using User.Infrastructure.Persistence.Repositories;
 
 internal class Program
 {
@@ -163,9 +165,10 @@ internal class Program
 
         // Register Dependency Services
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
         builder.Services.AddScoped<ResponseDto>();
 
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(UserAccess.Application.Dtos.ResponseDto).Assembly));
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ResponseDto).Assembly));
         builder.Services.AddFluentValidationAutoValidation();
 
         // Register Problem Details service and Exception Handler

@@ -3,17 +3,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Dtos;
-using UserAccess.Core.Entities;
+using Entity = UserAccess.Core.Entities;
 using UserAccess.Application.Mappers;
 
 namespace UserAccess.Application.Features.Users.Queries
 {
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, ResponseDto>
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<Entity.User> _userManager;
         private readonly ILogger<GetUserByIdQueryHandler> _logger;
 
-        public GetUserByIdQueryHandler(UserManager<User> userManager, ILogger<GetUserByIdQueryHandler> logger)
+        public GetUserByIdQueryHandler(UserManager<Entity.User> userManager, ILogger<GetUserByIdQueryHandler> logger)
         {
             _userManager = userManager;
             _logger = logger;

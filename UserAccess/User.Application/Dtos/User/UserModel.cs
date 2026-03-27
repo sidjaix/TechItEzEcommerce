@@ -11,4 +11,5 @@ public class UserModel
     public string PhoneNumber { get; set; } = string.Empty;
     public DateTime? DateOfBirth { get; set; }
     public Gender? Gender { get; set; }
+    public List<string> Roles { get; set; } = [];
 }
