@@ -3,23 +3,20 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Logging.Extensions;
 using UserAccess.API.Common.Middlewares;
-using UserAccess.API.Extensions;
 using UserAccess.Infrastructure.Persistence.Repositories;
-using User_Core.Interfaces;
 using UserAccess.Infrastructure.Persistence;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using User_Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using UserAccess.Application.Dtos;
-using UserAccess.Application.Dtos.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.JsonWebTokens;
 using FluentValidation.AspNetCore;
 using User_Api.Common.Filters;
+using UserAccess.Core.Entities;
+using UserAccess.Application.Interfaces;
 
 internal class Program
 {
@@ -37,7 +34,7 @@ internal class Program
         var config = builder.Configuration;
 
         // For serilog logging
-        builder.AddSeyfarthLogging("User-Api");
+        builder.Host.AddLogging("User-Api");
 
         //Add services to the container.
         builder.Services.AddControllers(options =>
@@ -60,7 +57,7 @@ internal class Program
 
         //Register Identity
         builder.Services
-        .AddIdentity<User_Core.Entities.User, Role>()
+        .AddIdentity<UserAccess.Core.Entities.User, Role>()
         .AddEntityFrameworkStores<UserDbContext>()
         .AddDefaultTokenProviders();
 

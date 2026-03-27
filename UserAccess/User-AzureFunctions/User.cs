@@ -1,28 +1,34 @@
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using User_Core.Interfaces;
+using UserAccess.Application.Features.Admin.Queries;
+using UserAccess.Application.Features.Users.Queries;
 
 namespace User_AzureFunctions
 {
     public class User
     {
         private readonly ILogger<User> _logger;
-        private readonly IUserRepository _customerRepository;
+        private readonly IMediator _mediator;
 
-        public User(ILogger<User> logger, IUserRepository customerRepository)
+        public User(ILogger<User> logger, IMediator mediator)
         {
             _logger = logger;
-            _customerRepository = customerRepository;
+            _mediator = mediator;
         }
 
         [Function("GetUsers")]
         public async Task<IActionResult> GetUsers([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-            var users = await _customerRepository.GetUsersAsync();
-            return new OkObjectResult(users);
+            var response = await _mediator.Send(new GetUsersQuery());
+            if (response.IsSuccess)
+            {
+                return new OkObjectResult(response.Result);
+            }
+            return new BadRequestObjectResult(response.Message);
         }
 
         [Function("GetUser")]
@@ -35,8 +41,12 @@ namespace User_AzureFunctions
                 return new BadRequestObjectResult("Please provide a userId in the query string.");
             }
 
-            var user = await _customerRepository.GetUserByIdAsync(userIdQuery!);
-            return new OkObjectResult(user);
+            var response = await _mediator.Send(new GetUserByIdQuery { UserId = userIdQuery! });
+            if (response.IsSuccess)
+            {
+                return new OkObjectResult(response.Result);
+            }
+            return new BadRequestObjectResult(response.Message);
         }
     }
 }

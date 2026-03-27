@@ -1,8 +1,7 @@
 using MediatR;
 using UserAccess.Application.Dtos;
-using UserAccess.Application.Dtos.User;
 
-namespace UserAccess.Application.Features.User.Commands
+namespace UserAccess.Application.Features.Users.Commands
 {
     public class UpdateUserCommand : IRequest<ResponseDto>
     {

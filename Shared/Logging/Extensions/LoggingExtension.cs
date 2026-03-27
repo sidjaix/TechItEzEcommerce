@@ -2,10 +2,9 @@ using Logging.Enrichers;
 using Logging.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Logging.Extensions;
@@ -13,19 +12,27 @@ namespace Logging.Extensions;
 [ExcludeFromCodeCoverage]
 public static class LoggingExtensions
 {
-    public static WebApplicationBuilder AddSeyfarthLogging(this WebApplicationBuilder builder, string applicationName)
+    public static IHostBuilder AddLogging(this IHostBuilder hostBuilder, string applicationName)
     {
-        builder.Host.UseSerilog((context, services, loggerConfiguration) =>
+        hostBuilder.UseSerilog((context, services, loggerConfiguration) =>
         {
-            loggerConfiguration
-                .ReadFrom.Configuration(builder.Configuration)
+            Configure(loggerConfiguration, context.Configuration, applicationName);
+        });
+
+        return hostBuilder;
+    }
+
+    public static void Configure(LoggerConfiguration loggerConfiguration, IConfiguration configuration, string applicationName)
+    {
+        loggerConfiguration
+                .ReadFrom.Configuration(configuration)
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("ApplicationID", applicationName)
                 .Enrich.WithEnvironmentName()
                 .Enrich.WithMachineName()
                 .Enrich.With<ExceptionEnricher>()
                 .WriteTo.Async(a => a.MSSqlServer(
-                    connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+                    connectionString: configuration.GetConnectionString("DefaultConnection"),
                     sinkOptions: new MSSqlServerSinkOptions
                     {
                         TableName = "ErrorLog",
@@ -33,9 +40,6 @@ public static class LoggingExtensions
                     },
                     columnOptions: GetSqlColumnOptions()
                 ));
-        });
-
-        return builder;
     }
 
     public static IApplicationBuilder UseCorrelationId(this IApplicationBuilder app)

@@ -1,0 +1,8 @@
+SELECT *
+FROM [UserApiDb].[dbo].[ErrorLog]
+
+select *
+from AspNetUsers
+select *
+from AspNetUserRoles
+

@@ -1,10 +1,9 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using User_Core.Interfaces;
+using UserAccess.Application.Interfaces;
 using UserAccess.Application.Dtos;
-using UserAccess.Application.Mappers;
 
-namespace UserAccess.Application.Features.User.Commands
+namespace UserAccess.Application.Features.Users.Commands
 {
     public class SaveAddressCommandHandler : IRequestHandler<SaveAddressCommand, ResponseDto>
     {
@@ -26,7 +25,7 @@ namespace UserAccess.Application.Features.User.Commands
             if (addressInfo.AddressId == 0)
             {
                 _logger.LogInformation("Attempting to create a new address");
-                isSuccess = await _userRepository.CreateAddressAsync(addressInfo.MapToEntity());
+                isSuccess = await _userRepository.CreateAddressAsync(addressInfo);
                 if (!isSuccess)
                 {
                     _logger.LogError("Failed to create address");
@@ -36,7 +35,7 @@ namespace UserAccess.Application.Features.User.Commands
             else
             {
                 _logger.LogInformation("Attempting to update address {AddressId}", addressInfo.AddressId);
-                isSuccess = await _userRepository.UpdateAddressAsync(addressInfo.MapToEntity());
+                isSuccess = await _userRepository.UpdateAddressAsync(addressInfo);
                 if (isSuccess)
                 {
                     _logger.LogInformation("Address {AddressId} updated successfully", addressInfo.AddressId);

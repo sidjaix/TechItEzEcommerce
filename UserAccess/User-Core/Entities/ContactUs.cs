@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace User_Core.Entities;
+namespace UserAccess.Core.Entities;
 
 [Table("ContactUs")]
 public partial class ContactUs

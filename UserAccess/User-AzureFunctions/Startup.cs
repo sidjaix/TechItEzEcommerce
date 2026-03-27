@@ -1,26 +1,14 @@
+using MediatR;
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using User_Core.Interfaces;
-using UserAccess.Infrastructure.Persistence;
-using UserAccess.Infrastructure.Persistence.Repositories;
 using Microsoft.Extensions.DependencyInjection;
+using UserAccess.Application.Dtos;
 
 namespace UserAccess.AzureFunctions;
 
 public static class Startup
 {
-    public static void RegisterService(this IServiceCollection services)
+    public static void RegisterService(this IServiceCollection services, IConfiguration configuration)
     {
-        // Set up configuration
-        var config = new ConfigurationBuilder()
-            .SetBasePath(Environment.CurrentDirectory)
-            .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
-            .AddEnvironmentVariables() // This line adds environment variables to the configuration
-            .Build();
-
-        // Register DbContext with dependency injection
-        services.AddDbContext<UserDbContext>(options =>
-            options.UseSqlServer(config.GetConnectionString("AzureDB")));
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ResponseDto).Assembly));
     }
 }

@@ -1,6 +1,6 @@
-﻿using User_Core.Enums;
+﻿using UserAccess.Core.Enums;
 
-namespace UserAccess.Application.Dtos.User;
+namespace UserAccess.Application.Dtos;
 
 public class UserModel
 {

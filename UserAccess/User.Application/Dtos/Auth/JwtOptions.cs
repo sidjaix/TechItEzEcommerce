@@ -1,4 +1,4 @@
-namespace UserAccess.Application.Dtos.Auth;
+namespace UserAccess.Application.Dtos;
 
 public class JwtOptions
 {

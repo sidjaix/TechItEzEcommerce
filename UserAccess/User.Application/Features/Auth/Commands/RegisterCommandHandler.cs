@@ -1,18 +1,17 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using User_Core.Entities;
 using UserAccess.Application.Dtos;
-using UserAccess.Application.Dtos.User;
+using UserAccess.Core.Entities;
 
 namespace UserAccess.Application.Features.Auth.Commands;
 
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ResponseDto>
 {
-    private readonly UserManager<User_Core.Entities.User> _userManager;
+    private readonly UserManager<User> _userManager;
     private readonly ILogger<RegisterCommandHandler> _logger;
 
-    public RegisterCommandHandler(ILogger<RegisterCommandHandler> logger, UserManager<User_Core.Entities.User> userManager)
+    public RegisterCommandHandler(ILogger<RegisterCommandHandler> logger, UserManager<User> userManager)
     {
         _logger = logger;
         _userManager = userManager;
@@ -33,7 +32,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ResponseD
             };
         }
 
-        var user = new User_Core.Entities.User
+        var user = new User
         {
             Name = model.Name,
             UserName = model.Email,

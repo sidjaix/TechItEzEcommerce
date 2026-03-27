@@ -1,11 +1,11 @@
-using User_Core.Entities;
-using UserAccess.Application.Dtos.Address;
+using UserAccess.Core.Entities;
+using UserAccess.Application.Dtos;
 
 namespace UserAccess.Application.Mappers;
 
 public static class AddressMapper
 {
-    public static Address MapToEntity(this Dtos.Address.AddressModel addressModel)
+    public static Address MapToEntity(this AddressModel addressModel)
     {
         return new Address
         {
@@ -23,9 +23,9 @@ public static class AddressMapper
         };
     }
 
-    public static Dtos.Address.AddressModel MapToDto(this Address address)
+    public static AddressModel MapToDto(this Address address)
     {
-        return new Dtos.Address.AddressModel
+        return new AddressModel
         {
             AddressId = address.AddressId,
             FirstName = address.FirstName,

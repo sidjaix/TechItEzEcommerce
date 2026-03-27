@@ -1,9 +1,9 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using User_Core.Interfaces;
 using UserAccess.Application.Dtos;
+using UserAccess.Application.Interfaces;
 
-namespace UserAccess.Application.Features.User.Commands
+namespace UserAccess.Application.Features.Users.Commands
 {
     public class DeleteAddressCommandHandler : IRequestHandler<DeleteAddressCommand, ResponseDto>
     {

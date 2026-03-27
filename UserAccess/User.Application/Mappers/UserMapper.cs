@@ -1,13 +1,13 @@
-﻿using User_Core.Entities;
-using UserAccess.Application.Dtos.User;
+﻿using Entity = UserAccess.Core.Entities;
+using UserAccess.Application.Dtos;
 
 namespace UserAccess.Application.Mappers;
 
 public static class UserMapper
 {
-    public static User_Core.Entities.User MapToEntity(this Dtos.User.UserModel userModel)
+    public static Entity.User MapToEntity(this UserModel userModel)
     {
-        return new User_Core.Entities.User
+        return new Entity.User
         {
             Id = userModel.UserId,
             UserName = userModel.UserName,
@@ -20,9 +20,9 @@ public static class UserMapper
         };
     }
 
-    public static Dtos.User.UserModel MapToDto(this User_Core.Entities.User user)
+    public static UserModel MapToDto(this Entity.User user)
     {
-        return new Dtos.User.UserModel
+        return new UserModel
         {
             UserId = user.Id,
             UserName = user.UserName!,
@@ -38,9 +38,9 @@ public static class UserMapper
 
 public static class RoleMapper
 {
-    public static Role MapToEntity(this Dtos.User.RoleModel roleModel)
+    public static Entity.Role MapToEntity(this RoleModel roleModel)
     {
-        return new Role
+        return new Entity.Role
         {
             //Id = roleModel.RoleId,
             Name = roleModel.RoleName,
@@ -48,9 +48,9 @@ public static class RoleMapper
         };
     }
 
-    public static Dtos.User.RoleModel MapToDto(this Role role)
+    public static RoleModel MapToDto(this Entity.Role role)
     {
-        return new Dtos.User.RoleModel
+        return new RoleModel
         {
             RoleId = role.Id,
             RoleName = role.Name!,

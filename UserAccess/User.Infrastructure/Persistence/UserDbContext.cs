@@ -1,16 +1,17 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using User_Core.Entities;
+using Entity = UserAccess.Core.Entities;
+using UserAccess.Core.Entities;
 
 namespace UserAccess.Infrastructure.Persistence;
 
-public class UserDbContext : IdentityDbContext<User_Core.Entities.User, Role, string>
+public class UserDbContext : IdentityDbContext<Entity.User, Role, string>
 {
     public UserDbContext(DbContextOptions<UserDbContext> options)
           : base(options)
     {
     }
-    public override DbSet<User_Core.Entities.User> Users { get; set; }
+    public override DbSet<Entity.User> Users { get; set; }
     public override DbSet<Role> Roles { get; set; }
 
     public DbSet<Country> Countries { get; set; }

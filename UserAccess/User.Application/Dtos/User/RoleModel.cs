@@ -1,4 +1,4 @@
-﻿namespace UserAccess.Application.Dtos.User;
+﻿namespace UserAccess.Application.Dtos;
 
 public class RoleModel
 {

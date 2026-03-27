@@ -1,9 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using User_Core.Entities;
+using UserAccess.Core.Entities;
 using UserAccess.Application.Dtos;
-using UserAccess.Application.Dtos.User;
 
 namespace UserAccess.Application.Features.Admin.Queries
 {

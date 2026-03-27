@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserAccess.Application.Dtos.Address;
+namespace UserAccess.Application.Dtos;
 
 public class AddressModel
 {

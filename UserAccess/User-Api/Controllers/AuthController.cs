@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UserAccess.Application.Dtos;
-using UserAccess.Application.Dtos.Auth;
 using UserAccess.Application.Features.Auth.Commands;
 
 namespace UserAccess.API.Controllers

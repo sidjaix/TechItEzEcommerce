@@ -5,27 +5,26 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using User_Core;
-using User_Core.Entities;
-using UserAccess.Application.Dtos.Auth;
+using UserAccess.Application.Dtos;
+using UserAccess.Core.Entities;
 using UserAccess.Application.Mappers;
 
 namespace UserAccess.Application.Features.Auth.Commands;
 
-public class LoginCommandHandler : IRequestHandler<Commands.LoginCommand, Dtos.Auth.LoginResponseModel>
+public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponseModel>
 {
-    private readonly UserManager<User_Core.Entities.User> _userManager;
-    private readonly Dtos.Auth.JwtOptions _jwtOptions;
+    private readonly UserManager<User> _userManager;
+    private readonly JwtOptions _jwtOptions;
 
-    public LoginCommandHandler(UserManager<User_Core.Entities.User> userManager, IOptions<Dtos.Auth.JwtOptions> jwtOptions)
+    public LoginCommandHandler(UserManager<User> userManager, IOptions<JwtOptions> jwtOptions)
     {
         _userManager = userManager;
         _jwtOptions = jwtOptions.Value;
     }
 
-    public async Task<Dtos.Auth.LoginResponseModel> Handle(Commands.LoginCommand request, CancellationToken cancellationToken)
+    public async Task<LoginResponseModel> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var response = new Dtos.Auth.LoginResponseModel();
+        var response = new LoginResponseModel();
         var loginUser = await _userManager.FindByNameAsync(request.UserName);
 
         if (loginUser is null)
@@ -52,7 +51,7 @@ public class LoginCommandHandler : IRequestHandler<Commands.LoginCommand, Dtos.A
         return response;
     }
 
-    private string GenerateToken(User_Core.Entities.User user, IEnumerable<string> roles)
+    private string GenerateToken(User user, IEnumerable<string> roles)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 

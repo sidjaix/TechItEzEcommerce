@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace User_Core;
+namespace UserAccess.Core.Entities;
 
 public class BaseEntity
 {

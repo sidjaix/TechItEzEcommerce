@@ -1,6 +1,5 @@
 using MediatR;
 using UserAccess.Application.Dtos;
-using UserAccess.Application.Dtos.Auth;
 
 namespace UserAccess.Application.Features.Auth.Commands;
 

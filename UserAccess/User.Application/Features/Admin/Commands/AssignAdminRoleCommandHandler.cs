@@ -1,18 +1,17 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using User_Core.Entities;
+using UserAccess.Core.Entities;
 using UserAccess.Application.Dtos;
-using UserAccess.Application.Dtos.User;
 
 namespace UserAccess.Application.Features.Admin.Commands
 {
     public class AssignAdminRoleCommandHandler : IRequestHandler<AssignAdminRoleCommand, ResponseDto>
     {
-        private readonly UserManager<User_Core.Entities.User> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<AssignAdminRoleCommandHandler> _logger;
 
-        public AssignAdminRoleCommandHandler(UserManager<User_Core.Entities.User> userManager, ILogger<AssignAdminRoleCommandHandler> logger)
+        public AssignAdminRoleCommandHandler(UserManager<User> userManager, ILogger<AssignAdminRoleCommandHandler> logger)
         {
             _userManager = userManager;
             _logger = logger;

@@ -1,7 +1,7 @@
 using MediatR;
 using UserAccess.Application.Dtos;
 
-namespace UserAccess.Application.Features.User.Commands
+namespace UserAccess.Application.Features.Users.Commands
 {
     public class DeleteAddressCommand : IRequest<ResponseDto>
     {

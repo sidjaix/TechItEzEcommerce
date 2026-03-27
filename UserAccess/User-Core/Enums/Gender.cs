@@ -1,4 +1,4 @@
-namespace User_Core.Enums;
+namespace UserAccess.Core.Enums;
 
 public enum Gender
 {

@@ -2,18 +2,18 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using User_Core.Entities;
 using UserAccess.Application.Dtos;
 using UserAccess.Application.Mappers;
+using UserAccess.Core.Entities;
 
 namespace UserAccess.Application.Features.Admin.Queries
 {
     public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, ResponseDto>
     {
-        private readonly UserManager<User_Core.Entities.User> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly ILogger<GetUsersQueryHandler> _logger;
 
-        public GetUsersQueryHandler(UserManager<User_Core.Entities.User> userManager, ILogger<GetUsersQueryHandler> logger)
+        public GetUsersQueryHandler(UserManager<User> userManager, ILogger<GetUsersQueryHandler> logger)
         {
             _userManager = userManager;
             _logger = logger;

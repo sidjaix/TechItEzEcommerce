@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using User_Core.Enums;
+using UserAccess.Core.Enums;
 
-namespace User_Core.Entities;
+namespace UserAccess.Core.Entities;
 
 public partial class User : IdentityUser
 {

@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using User_Core.Enums;
 
-namespace UserAccess.Application.Dtos.Auth;
+namespace UserAccess.Application.Dtos;
 
 public class RegisterModel
 {

@@ -1,12 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using User_Api.Common.Filters;
 using UserAccess.Application.Dtos;
-using UserAccess.Application.Dtos.Address;
-using UserAccess.Application.Dtos.User;
-using UserAccess.Application.Features.User.Commands;
-using UserAccess.Application.Features.User.Queries;
+using UserAccess.Application.Features.Users.Commands;
+using UserAccess.Application.Features.Users.Queries;
 
 namespace UserAccess.API.Controllers;
 

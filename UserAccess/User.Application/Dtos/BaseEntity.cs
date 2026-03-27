@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace UserAccess.Application.Dtos;
+﻿namespace UserAccess.Application.Dtos;
 
 public class BaseEntity
 {

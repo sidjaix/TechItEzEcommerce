@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using User_Core.Entities;
-using User_Core.Interfaces;
+using UserAccess.Application.Dtos;
+using UserAccess.Application.Interfaces;
 using UserAccess.Application.Mappers;
-using UserAccess.Infrastructure.Persistence;
 
 namespace UserAccess.Infrastructure.Persistence.Repositories;
 
@@ -17,13 +16,13 @@ public class UserRepository : IUserRepository
         this.logger = logger;
     }
 
-    public async Task<List<User_Core.Entities.User>> GetUsersAsync()
+    public async Task<List<UserModel>> GetUsersAsync()
     {
         logger.LogInformation("Getting all users from the database.");
-        return await db.Users.ToListAsync();
+        return await db.Users.Select(u => u.MapToDto()).ToListAsync();
     }
 
-    public async Task<User_Core.Entities.User> GetUserByIdAsync(string userId)
+    public async Task<UserModel> GetUserByIdAsync(string userId)
     {
         logger.LogInformation("Getting user by id {UserId}", userId);
         var user = await db.Users.FindAsync(userId);
@@ -31,10 +30,10 @@ public class UserRepository : IUserRepository
         {
             logger.LogWarning("User with id {UserId} not found", userId);
         }
-        return user!;
+        return user?.MapToDto()!;
     }
 
-    public async Task<bool> CreateAddressAsync(Address addressInfo)
+    public async Task<bool> CreateAddressAsync(AddressModel addressInfo)
     {
         logger.LogInformation("Creating a new address for user.");
         var isAddressCreated = false;
@@ -46,7 +45,8 @@ public class UserRepository : IUserRepository
             {
                 try
                 {
-                    db.Addresses.Add(addressInfo);
+
+                    db.Addresses.Add(addressInfo.MapToEntity());
                     await db.SaveChangesAsync();
 
                     // This linking should be handled at the Application layer
@@ -73,13 +73,14 @@ public class UserRepository : IUserRepository
         return isAddressCreated;
     }
 
-    public async Task<Address?> GetAddressAsync(int addressId)
+    public async Task<AddressModel> GetAddressAsync(int addressId)
     {
         logger.LogInformation("Getting address by id {AddressId}", addressId);
-        return await db.Addresses.FirstOrDefaultAsync(x => x.AddressId == addressId);
+        var address = await db.Addresses.FirstOrDefaultAsync(x => x.AddressId == addressId);
+        return address.MapToDto();
     }
 
-    public async Task<bool> UpdateAddressAsync(Address addressInfo)
+    public async Task<bool> UpdateAddressAsync(AddressModel addressInfo)
     {
         logger.LogInformation("Updating address with id {AddressId}", addressInfo.AddressId);
         var address = await db.Addresses.FindAsync(addressInfo.AddressId);
@@ -91,32 +92,32 @@ public class UserRepository : IUserRepository
 
         // The mapping from DTO to Entity should happen in the Application layer before calling this method.
         // This repository method should only be responsible for persisting the updated entity.
-        db.Entry(address).CurrentValues.SetValues(addressInfo);
+        db.Entry(address).CurrentValues.SetValues(addressInfo.MapToEntity());
         return await db.SaveChangesAsync() > 0;
     }
 
-    public async Task<List<Address>> GetUserAddressesAsync(string userId)
+    public async Task<List<AddressModel>> GetUserAddressesAsync(string userId)
     {
         logger.LogInformation("Getting all addresses for user {UserId}", userId);
         return await db.UserAddresses
                        .Where(x => x.UserId == userId)
-                       .Select(x => x.Address)
+                       .Select(x => x.Address.MapToDto())
                        .ToListAsync();
     }
 
-    public async Task<User_Core.Entities.User?> UpdateUserAsync(User_Core.Entities.User userData)
+    public async Task<UserModel> UpdateUserAsync(UserModel userData)
     {
-        logger.LogInformation("Updating user with ID {UserId}", userData.Id);
-        var user = await db.Users.FindAsync(userData.Id);
+        logger.LogInformation("Updating user with ID {UserId}", userData.UserId);
+        var user = await db.Users.FindAsync(userData.UserId);
         if (user == null)
         {
-            logger.LogWarning("User with ID {UserId} not found for update.", userData.Id);
+            logger.LogWarning("User with ID {UserId} not found for update.", userData.UserId);
             return null;
         }
 
-        db.Entry(user).CurrentValues.SetValues(userData);
+        db.Entry(user).CurrentValues.SetValues(userData.MapToEntity());
         await db.SaveChangesAsync();
-        return user;
+        return user.MapToDto();
     }
 
     public Task<bool> IsEmailTakenAsync(string email)

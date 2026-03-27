@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using User_Api.Common.Filters;
 using UserAccess.Application.Dtos;
-using UserAccess.Application.Dtos.User;
 using UserAccess.Application.Features.Admin.Commands;
 using UserAccess.Application.Features.Admin.Queries;
 
