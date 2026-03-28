@@ -4,65 +4,52 @@ using Microsoft.Extensions.Logging;
 using User.Application.Interfaces;
 using UserAccess.Application.Dtos;
 using UserAccess.Application.Mappers;
-using UserAccess.Infrastructure.Persistence;
-using Entity = UserAccess.Core.Entities;
+using UserAccess.Infrastructure.Identity;
 
 namespace User.Infrastructure.Persistence.Repositories;
 
-public class IdentityRepository : IIdentityRepository
+public class IdentityRepository(ILogger<IdentityRepository> logger, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager) : IIdentityRepository
 {
-    private readonly UserDbContext db;
-    private readonly ILogger<IdentityRepository> _logger;
-    private readonly UserManager<Entity.User> _userManager;
-    private readonly RoleManager<Entity.Role> _roleManager;
-    public IdentityRepository(ILogger<IdentityRepository> logger, UserManager<Entity.User> userManager, RoleManager<Entity.Role> roleManager, UserDbContext dbContext)
-    {
-        db = dbContext;
-        _logger = logger;
-        _userManager = userManager;
-        _roleManager = roleManager;
-    }
-
-    public async Task<bool> AssignAdminRoleAsync(string userId)
+    public async Task<bool> AssignAdminRoleAsync(string username)
     {
 
-        _logger.LogInformation("Assigning admin role to user {UserId}", userId);
-        var existingUser = await _userManager.FindByIdAsync(userId);
+        logger.LogInformation("Assigning admin role to user {username}", username);
+        var existingUser = await userManager.FindByIdAsync(username);
         if (existingUser is null)
         {
-            _logger.LogWarning("User {UserId} not found", userId);
+            logger.LogWarning("User {username} not found", username);
             return false;
         }
-        var isAdmin = await _userManager.IsInRoleAsync(existingUser, RoleStore.ADMIN);
+        var isAdmin = await userManager.IsInRoleAsync(existingUser, RoleStore.ADMIN);
         if (isAdmin)
         {
-            _logger.LogWarning("User {UserId} is already an admin", userId);
+            logger.LogWarning("User {username} is already an admin", username);
             return false;
         }
-        var result = await _userManager.AddToRoleAsync(existingUser, RoleStore.ADMIN);
+        var result = await userManager.AddToRoleAsync(existingUser, RoleStore.ADMIN);
         if (!result.Succeeded)
         {
-            _logger.LogError("Failed to assign admin role to user {UserId}: {Errors}", userId, result.Errors);
+            logger.LogError("Failed to assign admin role to user {username}: {Errors}", username, result.Errors);
             return false;
         }
-        _logger.LogInformation("Admin role assigned to user {UserId}", userId);
+        logger.LogInformation("Admin role assigned to user {username}", username);
         return true;
     }
 
-    public async Task<bool> AssignRoleAsync(string userId, string roleName)
+    public async Task<bool> AssignRoleAsync(string username, string roleName)
     {
-        _logger.LogInformation("Assigning role {RoleName} to user {UserId}", roleName, userId);
+        logger.LogInformation("Assigning role {RoleName} to user {username}", roleName, username);
 
-        var existingUser = await _userManager.FindByIdAsync(userId);
+        var existingUser = await userManager.FindByEmailAsync(username);
         if (existingUser is null)
         {
-            _logger.LogWarning("User {UserId} not found", userId);
+            logger.LogWarning("User {username} not found", username);
             return false;
         }
-        var result = await _userManager.AddToRoleAsync(existingUser, roleName);
+        var result = await userManager.AddToRoleAsync(existingUser, roleName);
         if (!result.Succeeded)
         {
-            _logger.LogError("Failed to assign role {RoleName} to user {UserId}: {Errors}", roleName, userId, result.Errors);
+            logger.LogError("Failed to assign role {RoleName} to user {username}: {Errors}", roleName, username, result.Errors);
             return false;
         }
         return true;
@@ -70,18 +57,18 @@ public class IdentityRepository : IIdentityRepository
 
     public async Task<bool> CreateRoleAsync(RoleModel role)
     {
-        _logger.LogInformation("Creating a new role with name {RoleName}", role.RoleName);
-        var existingRole = await _roleManager.FindByNameAsync(role.RoleName);
+        logger.LogInformation("Creating a new role with name {RoleName}", role.RoleName);
+        var existingRole = await roleManager.FindByNameAsync(role.RoleName);
         if (existingRole != null)
         {
-            _logger.LogWarning("Role {RoleName} Already exists", role.RoleName);
+            logger.LogWarning("Role {RoleName} Already exists", role.RoleName);
             return false;
         }
 
-        var result = await _roleManager.CreateAsync(role.MapToEntity());
+        var result = await roleManager.CreateAsync(role.MapToEntity());
         if (!result.Succeeded)
         {
-            _logger.LogWarning("Role has not created {@Errors}", result.Errors);
+            logger.LogWarning("Role has not created {@Errors}", result.Errors);
             return false;
         }
         return true;
@@ -89,18 +76,18 @@ public class IdentityRepository : IIdentityRepository
 
     public async Task<bool> DeleteRoleAsync(string roleId)
     {
-        _logger.LogInformation("Deleting role {RoleId}", roleId);
+        logger.LogInformation("Deleting role {RoleId}", roleId);
 
-        var role = await _roleManager.FindByIdAsync(roleId);
+        var role = await roleManager.FindByIdAsync(roleId);
         if (role is null)
         {
-            _logger.LogWarning("Role {RoleId} not found", roleId);
+            logger.LogWarning("Role {RoleId} not found", roleId);
             return false;
         }
-        var result = await _roleManager.DeleteAsync(role);
+        var result = await roleManager.DeleteAsync(role);
         if (!result.Succeeded)
         {
-            _logger.LogError("Failed to delete role {RoleId}: {Errors}", roleId, result.Errors);
+            logger.LogError("Failed to delete role {RoleId}: {Errors}", roleId, result.Errors);
             return false;
         }
         return true;
@@ -108,11 +95,11 @@ public class IdentityRepository : IIdentityRepository
 
     public async Task<bool> UpdateRoleAsync(RoleModel roleModel)
     {
-        _logger.LogInformation("Updating role {RoleId}", roleModel.RoleId);
-        var role = await _roleManager.FindByIdAsync(roleModel.RoleId);
+        logger.LogInformation("Updating role {RoleId}", roleModel.RoleId);
+        var role = await roleManager.FindByIdAsync(roleModel.RoleId);
         if (role == null)
         {
-            _logger.LogWarning("Role {RoleId} not found", roleModel.RoleId);
+            logger.LogWarning("Role {RoleId} not found", roleModel.RoleId);
             return false;
         }
 
@@ -120,11 +107,11 @@ public class IdentityRepository : IIdentityRepository
         role.NormalizedName = roleModel.RoleName.ToUpper();
         role.Description = roleModel.Description;
 
-        var result = await _roleManager.UpdateAsync(role);
+        var result = await roleManager.UpdateAsync(role);
 
         if (!result.Succeeded)
         {
-            _logger.LogError("Failed to update role {RoleId}: {Errors}", roleModel.RoleId, result.Errors);
+            logger.LogError("Failed to update role {RoleId}: {Errors}", roleModel.RoleId, result.Errors);
             return false;
         }
         return true;
@@ -132,11 +119,11 @@ public class IdentityRepository : IIdentityRepository
 
     public async Task<RoleModel> GetRoleByIdAsync(string roleId)
     {
-        _logger.LogInformation("Getting role by id {RoleId}", roleId);
-        var role = await _roleManager.FindByIdAsync(roleId);
+        logger.LogInformation("Getting role by id {RoleId}", roleId);
+        var role = await roleManager.FindByIdAsync(roleId);
         if (role is null)
         {
-            _logger.LogWarning("Role with id {RoleId} not found", roleId);
+            logger.LogWarning("Role with id {RoleId} not found", roleId);
             return default;
         }
         return role.MapToDto();
@@ -144,8 +131,8 @@ public class IdentityRepository : IIdentityRepository
 
     public async Task<IEnumerable<RoleModel>> GetRolesAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Getting all roles");
-        var roles = await _roleManager.Roles
+        logger.LogInformation("Getting all roles");
+        var roles = await roleManager.Roles
         .AsNoTracking()
         .Select(x => x.MapToDto())
         .ToListAsync(cancellationToken);
@@ -154,17 +141,17 @@ public class IdentityRepository : IIdentityRepository
 
     public async Task<bool> ValidateUserPasswordAsync(string userName, string password)
     {
-        _logger.LogInformation("Validating password for user {UserName}", userName);
-        var user = await _userManager.FindByNameAsync(userName);
+        logger.LogInformation("Validating password for user {UserName}", userName);
+        var user = await userManager.FindByNameAsync(userName);
         if (user is null)
         {
-            _logger.LogWarning("User {UserName} not found", userName);
+            logger.LogWarning("User {UserName} not found", userName);
             return false;
         }
-        var isValid = await _userManager.CheckPasswordAsync(user, password);
+        var isValid = await userManager.CheckPasswordAsync(user, password);
         if (!isValid)
         {
-            _logger.LogWarning("Invalid password for user {UserName}", userName);
+            logger.LogWarning("Invalid password for user {UserName}", userName);
             return false;
         }
         return true;
@@ -172,7 +159,7 @@ public class IdentityRepository : IIdentityRepository
 
     public async Task<ResponseDto> CreateUserAsync(RegisterModel register)
     {
-        var newUser = new Entity.User
+        var newUser = new ApplicationUser
         {
             Name = register.Name,
             UserName = register.Email,
@@ -180,11 +167,11 @@ public class IdentityRepository : IIdentityRepository
             PhoneNumber = register.PhoneNumber
         };
 
-        _logger.LogInformation("Creating a new user with username {UserName}", newUser.UserName);
-        var existingUser = await _userManager.FindByNameAsync(newUser.UserName ?? string.Empty);
+        logger.LogInformation("Creating a new user with username {UserName}", newUser.UserName);
+        var existingUser = await userManager.FindByNameAsync(newUser.UserName ?? string.Empty);
         if (existingUser != null)
         {
-            _logger.LogWarning(" Registration failed: Username {UserName} already exists.", newUser.UserName);
+            logger.LogWarning(" Registration failed: Username {UserName} already exists.", newUser.UserName);
             return new ResponseDto()
             {
                 IsSuccess = false,
@@ -192,19 +179,19 @@ public class IdentityRepository : IIdentityRepository
             };
         }
 
-        var result = await _userManager.CreateAsync(newUser, register.Password);
+        var result = await userManager.CreateAsync(newUser, register.Password);
 
         if (!result.Succeeded)
         {
             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            _logger.LogError("Failed to create user {UserName}: {Errors}", newUser.UserName, result.Errors);
+            logger.LogError("Failed to create user {UserName}: {Errors}", newUser.UserName, result.Errors);
             return new ResponseDto()
             {
                 IsSuccess = false,
                 Message = errors
             };
         }
-        _logger.LogInformation("User {UserName} created successfully.", newUser.UserName);
+        logger.LogInformation("User {UserName} created successfully.", newUser.UserName);
 
         return new ResponseDto()
         {
@@ -214,15 +201,65 @@ public class IdentityRepository : IIdentityRepository
     }
     public async Task<UserModel?> GetUserRolesAsync(string userName)
     {
-        var loggedinUser = await _userManager.FindByNameAsync(userName);
+        var loggedinUser = await userManager.FindByNameAsync(userName);
         if (loggedinUser is null)
         {
-            _logger.LogWarning("User {UserName} not found", userName);
+            logger.LogWarning("User {UserName} not found", userName);
             return default;
         }
         var user = loggedinUser.MapToDto();
-        var roles = await _userManager.GetRolesAsync(loggedinUser);
+        var roles = await userManager.GetRolesAsync(loggedinUser);
         user.Roles = [.. roles];
         return user;
     }
+
+    public async Task<ResponseDto> UpdateUserAsync(UserModel userModel)
+    {
+        logger.LogInformation("Attempting to update user {username}", userModel.UserName);
+        var user = await userManager.FindByIdAsync(userModel.UserName);
+        if (user is null)
+        {
+            logger.LogWarning("User {UserName} not found", userModel.UserName);
+            return new ResponseDto()
+            {
+                Result = userModel,
+                IsSuccess = false,
+                Message = "User does not exist."
+            };
+        }
+        user.Name = userModel.Name;
+        user.DateOfBirth = userModel.DateOfBirth;
+        user.Gender = userModel.Gender;
+        user.Email = userModel.Email;
+        user.UserName = userModel.UserName;
+        user.PhoneNumber = userModel.PhoneNumber;
+
+        var result = await userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            return new ResponseDto()
+            {
+                IsSuccess = false,
+                Message = "Failed to update user.",
+                Result = result.Errors
+            };
+        }
+
+        return new ResponseDto()
+        {
+            Result = user.MapToDto(),
+            IsSuccess = true,
+            Message = "User profile updated successfully."
+        };
+    }
+
+    public async Task<UserModel?> GetUserByIdAsync(string username, CancellationToken cancellationToken)
+    {
+        var existingUser = await userManager.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == username, cancellationToken);
+        return existingUser?.MapToDto();
+    }
+
+
 }

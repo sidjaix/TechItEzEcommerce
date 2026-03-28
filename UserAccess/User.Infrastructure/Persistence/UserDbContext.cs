@@ -1,18 +1,19 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Entity = UserAccess.Core.Entities;
+using UserAccess.Infrastructure.Identity;
 using UserAccess.Core.Entities;
+using Entity = UserAccess.Infrastructure.Identity;
 
 namespace UserAccess.Infrastructure.Persistence;
 
-public class UserDbContext : IdentityDbContext<Entity.User, Role, string>
+public class UserDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
 {
     public UserDbContext(DbContextOptions<UserDbContext> options)
           : base(options)
     {
     }
-    public override DbSet<Entity.User> Users { get; set; }
-    public override DbSet<Role> Roles { get; set; }
+    public override DbSet<ApplicationUser> Users { get; set; }
+    public override DbSet<ApplicationRole> Roles { get; set; }
 
     public DbSet<Country> Countries { get; set; }
     public DbSet<Address> Addresses { get; set; }
@@ -50,13 +51,6 @@ public class UserDbContext : IdentityDbContext<Entity.User, Role, string>
             // Composite key setup for UserAddress
             entity
             .HasKey(ua => new { ua.UserId, ua.AddressId });
-
-            entity
-            .HasOne(d => d.User)
-            .WithMany(x => x.UserAddresses)
-            .HasForeignKey(d => d.UserId)
-            .HasConstraintName("FK_UserAddress_User")
-            .OnDelete(DeleteBehavior.Cascade);
 
             entity
             .HasOne(d => d.Address)

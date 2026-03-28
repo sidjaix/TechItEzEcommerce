@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using UserAccess.Application.Dtos;
 using UserAccess.Application.Interfaces;
 using UserAccess.Application.Mappers;
+using UserAccess.Infrastructure.Identity;
 
 namespace UserAccess.Infrastructure.Persistence.Repositories;
 

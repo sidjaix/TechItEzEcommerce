@@ -10,7 +10,5 @@ public class UserAddress
     public string UserId { get; set; }
     [Required]
     public int AddressId { get; set; }
-
-    public virtual User User { get; set; }
     public virtual Address Address { get; set; }
 }

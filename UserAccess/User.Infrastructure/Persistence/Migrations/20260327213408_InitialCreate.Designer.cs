@@ -9,11 +9,11 @@ using UserAccess.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace User.Infrastructure.Migrations
+namespace User.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20260226050525_InitialUserAccessMigration")]
-    partial class InitialUserAccessMigration
+    [Migration("20260327213408_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -131,7 +131,7 @@ namespace User.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("User_Core.Entities.Address", b =>
+            modelBuilder.Entity("UserAccess.Core.Entities.Address", b =>
                 {
                     b.Property<int>("AddressId")
                         .ValueGeneratedOnAdd()
@@ -185,7 +185,7 @@ namespace User.Infrastructure.Migrations
                     b.ToTable("Address", (string)null);
                 });
 
-            modelBuilder.Entity("User_Core.Entities.ContactUs", b =>
+            modelBuilder.Entity("UserAccess.Core.Entities.ContactUs", b =>
                 {
                     b.Property<int>("ContactUsId")
                         .ValueGeneratedOnAdd()
@@ -209,7 +209,7 @@ namespace User.Infrastructure.Migrations
                     b.ToTable("ContactUs");
                 });
 
-            modelBuilder.Entity("User_Core.Entities.Country", b =>
+            modelBuilder.Entity("UserAccess.Core.Entities.Country", b =>
                 {
                     b.Property<int>("CountryId")
                         .ValueGeneratedOnAdd()
@@ -244,7 +244,22 @@ namespace User.Infrastructure.Migrations
                     b.ToTable("Country", (string)null);
                 });
 
-            modelBuilder.Entity("User_Core.Entities.Role", b =>
+            modelBuilder.Entity("UserAccess.Core.Entities.UserAddress", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "AddressId");
+
+                    b.HasIndex("AddressId");
+
+                    b.ToTable("UserAddress", (string)null);
+                });
+
+            modelBuilder.Entity("UserAccess.Infrastructure.Identity.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -274,7 +289,7 @@ namespace User.Infrastructure.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("User_Core.Entities.User", b =>
+            modelBuilder.Entity("UserAccess.Infrastructure.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -349,24 +364,9 @@ namespace User.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("User_Core.Entities.UserAddress", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "AddressId");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("UserAddress", (string)null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("User_Core.Entities.Role", null)
+                    b.HasOne("UserAccess.Infrastructure.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -375,7 +375,7 @@ namespace User.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("User_Core.Entities.User", null)
+                    b.HasOne("UserAccess.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -384,7 +384,7 @@ namespace User.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("User_Core.Entities.User", null)
+                    b.HasOne("UserAccess.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -393,13 +393,13 @@ namespace User.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("User_Core.Entities.Role", null)
+                    b.HasOne("UserAccess.Infrastructure.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("User_Core.Entities.User", null)
+                    b.HasOne("UserAccess.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -408,16 +408,16 @@ namespace User.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("User_Core.Entities.User", null)
+                    b.HasOne("UserAccess.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("User_Core.Entities.Address", b =>
+            modelBuilder.Entity("UserAccess.Core.Entities.Address", b =>
                 {
-                    b.HasOne("User_Core.Entities.Country", "Country")
+                    b.HasOne("UserAccess.Core.Entities.Country", "Country")
                         .WithMany("Addresses")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -427,40 +427,26 @@ namespace User.Infrastructure.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("User_Core.Entities.UserAddress", b =>
+            modelBuilder.Entity("UserAccess.Core.Entities.UserAddress", b =>
                 {
-                    b.HasOne("User_Core.Entities.Address", "Address")
+                    b.HasOne("UserAccess.Core.Entities.Address", "Address")
                         .WithMany("UserAddresses")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_UserAddress_Address");
 
-                    b.HasOne("User_Core.Entities.User", "User")
-                        .WithMany("UserAddresses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_UserAddress_User");
-
                     b.Navigation("Address");
-
-                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("User_Core.Entities.Address", b =>
+            modelBuilder.Entity("UserAccess.Core.Entities.Address", b =>
                 {
                     b.Navigation("UserAddresses");
                 });
 
-            modelBuilder.Entity("User_Core.Entities.Country", b =>
+            modelBuilder.Entity("UserAccess.Core.Entities.Country", b =>
                 {
                     b.Navigation("Addresses");
-                });
-
-            modelBuilder.Entity("User_Core.Entities.User", b =>
-                {
-                    b.Navigation("UserAddresses");
                 });
 #pragma warning restore 612, 618
         }

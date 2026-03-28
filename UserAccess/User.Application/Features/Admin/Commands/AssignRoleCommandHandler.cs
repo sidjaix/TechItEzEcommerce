@@ -12,7 +12,7 @@ namespace UserAccess.Application.Features.Admin.Commands
         public async Task<ResponseDto> Handle(AssignRoleCommand request, CancellationToken cancellationToken)
         {
             var response = new ResponseDto();
-            var hasAssigned = await identityRepository.AssignRoleAsync(request.Email, request.RoleName);
+            var hasAssigned = await identityRepository.AssignRoleAsync(request.Username, request.RoleName);
             if (!hasAssigned)
             {
                 response.IsSuccess = false;

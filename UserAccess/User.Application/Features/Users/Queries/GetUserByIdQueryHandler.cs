@@ -1,21 +1,18 @@
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Dtos;
-using Entity = UserAccess.Core.Entities;
-using UserAccess.Application.Mappers;
+using User.Application.Interfaces;
 
 namespace UserAccess.Application.Features.Users.Queries
 {
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, ResponseDto>
     {
-        private readonly UserManager<Entity.User> _userManager;
+        private readonly IIdentityRepository identityRepository;
         private readonly ILogger<GetUserByIdQueryHandler> _logger;
 
-        public GetUserByIdQueryHandler(UserManager<Entity.User> userManager, ILogger<GetUserByIdQueryHandler> logger)
+        public GetUserByIdQueryHandler(IIdentityRepository identityRepository, ILogger<GetUserByIdQueryHandler> logger)
         {
-            _userManager = userManager;
+            this.identityRepository = identityRepository;
             _logger = logger;
         }
 
@@ -24,9 +21,7 @@ namespace UserAccess.Application.Features.Users.Queries
             var response = new ResponseDto();
             _logger.LogInformation("Attempting to get user by id {UserId}", request.UserId);
 
-            var existingUser = await _userManager.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
+            var existingUser = await identityRepository.GetUserByIdAsync(request.UserId, cancellationToken);
 
             if (existingUser is null)
             {
@@ -35,8 +30,7 @@ namespace UserAccess.Application.Features.Users.Queries
                 response.IsSuccess = false;
                 return response;
             }
-
-            response.Result = existingUser.MapToDto();
+            response.Result = existingUser;
             return response;
         }
     }

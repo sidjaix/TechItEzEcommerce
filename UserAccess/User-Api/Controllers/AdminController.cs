@@ -33,7 +33,7 @@ public class AdminController : ControllerBase
         {
             return BadRequest(response);
         }
-        return Created();
+        return Created(Url.Action(nameof(CreateRole), role), response);
     }
 
     /// <summary>
@@ -105,7 +105,7 @@ public class AdminController : ControllerBase
     [HttpPost("AssignAdminRole")]
     public async Task<IActionResult> AssignAdminRole(AssignAdminRoleCommand user)
     {
-        _logger.LogInformation("API Call to assign admin role to user {UserId}", user.UserId);
+        _logger.LogInformation("API Call to assign admin role to user {UserId}", user.Username);
         var response = await _mediator.Send(user);
 
         if (!response.IsSuccess)
@@ -116,10 +116,10 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("AssignRole")]
-    public async Task<IActionResult> AssignRole(string email, string roleName)
+    public async Task<IActionResult> AssignRole(string username, string roleName)
     {
-        _logger.LogInformation("API Call to assign role {RoleName} to user {Email}", roleName, email);
-        var response = await _mediator.Send(new AssignRoleCommand { Email = email, RoleName = roleName });
+        _logger.LogInformation("API Call to assign role {RoleName} to user {username}", roleName, username);
+        var response = await _mediator.Send(new AssignRoleCommand { Username = username, RoleName = roleName });
 
         if (!response.IsSuccess)
         {

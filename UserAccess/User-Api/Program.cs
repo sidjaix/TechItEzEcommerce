@@ -19,6 +19,7 @@ using UserAccess.Core.Entities;
 using UserAccess.Application.Interfaces;
 using User.Application.Interfaces;
 using User.Infrastructure.Persistence.Repositories;
+using UserAccess.Infrastructure.Identity;
 
 internal class Program
 {
@@ -36,6 +37,7 @@ internal class Program
         var config = builder.Configuration;
 
         // For serilog logging
+        // While working on migration, Comment out this line and then uncomment after migration is done, otherwise it will throw error
         builder.Host.AddLogging("User-Api");
 
         //Add services to the container.
@@ -59,7 +61,7 @@ internal class Program
 
         //Register Identity
         builder.Services
-        .AddIdentity<UserAccess.Core.Entities.User, Role>()
+        .AddIdentity<ApplicationUser, ApplicationRole>()
         .AddEntityFrameworkStores<UserDbContext>()
         .AddDefaultTokenProviders();
 

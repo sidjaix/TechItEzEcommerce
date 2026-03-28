@@ -15,4 +15,6 @@ public interface IIdentityRepository
     Task<bool> ValidateUserPasswordAsync(string userName, string password);
     Task<ResponseDto> CreateUserAsync(RegisterModel register);
     Task<UserModel> GetUserRolesAsync(string userName);
+    Task<ResponseDto> UpdateUserAsync(UserModel userModel);
+    Task<UserModel?> GetUserByIdAsync(string userId, CancellationToken cancellationToken);
 }
