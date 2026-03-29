@@ -19,10 +19,11 @@ using UserAccess.Application.Interfaces;
 using User.Application.Interfaces;
 using User.Infrastructure.Persistence.Repositories;
 using UserAccess.Infrastructure.Identity;
+using UserAccess.API.Extensions;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         var config = builder.Configuration;
@@ -210,6 +211,8 @@ internal class Program
         // 7. Map Endpoints (Execute the logic)
         app.MapHealthChecks("/health");
         app.MapControllers();
+
+        await app.SeedDatabaseAsync();
 
         app.Run();
     }
