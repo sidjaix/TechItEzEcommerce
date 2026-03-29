@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using Product_Core;
-using Product_Core.Mapper;
-using Product_Core.Models;
-using Product_Data.Repository.IRepository;
+using ProductApplication.DTOs;
+using ProductApplication.Interfaces;
+using ProductApplication.Mappers;
+using ProductData.Persistence;
 
 
-namespace Product_Data.Repository;
+namespace ProductData.Repositories;
 
 public class CategoryRepository : ICategoryRepository
 {
@@ -14,7 +14,7 @@ public class CategoryRepository : ICategoryRepository
     {
         db = context;
     }
-    public async Task<CategoryModel> CreateNewCategoryAsync(CategoryModel categoryModel)
+    public async Task<CategoryDto> CreateNewCategoryAsync(CategoryDto categoryModel)
     {
         var category = categoryModel.MapToEntity();
         db.Categories.Add(category);
@@ -31,7 +31,7 @@ public class CategoryRepository : ICategoryRepository
         return numberOfRowDeleted > 0;
     }
 
-    public async Task<List<CategoryModel>> GetAllCategoryAsync()
+    public async Task<List<CategoryDto>> GetAllCategoryAsync()
     {
         var categories = await db.Categories
         .Select(x => x.MapToDto())
@@ -40,7 +40,7 @@ public class CategoryRepository : ICategoryRepository
         return categories;
     }
 
-    public async Task<CategoryModel> GetCategoryAsync(int categoryId)
+    public async Task<CategoryDto> GetCategoryAsync(int categoryId)
     {
         var category = await db.Categories.FindAsync(categoryId);
         if (category is null)
@@ -50,7 +50,7 @@ public class CategoryRepository : ICategoryRepository
         return category.MapToDto();
     }
 
-    public async Task<CategoryModel> UpdateExistingCategoryAsync(CategoryModel categoryModel)
+    public async Task<CategoryDto> UpdateExistingCategoryAsync(CategoryDto categoryModel)
     {
         var category = await db.Categories.FindAsync(categoryModel.CategoryId);
         if (category == null)

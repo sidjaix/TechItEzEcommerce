@@ -1,8 +1,6 @@
-﻿using Product_Core.Entities;
+﻿namespace ProductApplication.DTOs;
 
-namespace Product_Core.Models;
-
-public partial class ProductModel
+public partial class ProductDto
 {
     public int ProductId { get; set; }
     public int CategoryId { get; set; }
@@ -14,5 +12,5 @@ public partial class ProductModel
     public int QuantityInStock { get; set; }
     public string ImageUrl { get; set; }
 
-    public List<ProductImageModel> ProductImages { get; set; }
+    public List<ProductImageDto> ProductImages { get; set; }
 }

@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Product_Core;
+using ProductData.Persistence;
 
 #nullable disable
 
-namespace Product_Core.Migrations
+namespace ProductData.Persistence.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20240817200810_InitialMigration")]
-    partial class InitialMigration
+    partial class ProductDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +45,7 @@ namespace Product_Core.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("Product_Core.Entities.Product", b =>
@@ -86,7 +83,7 @@ namespace Product_Core.Migrations
 
                     b.HasIndex(new[] { "CategoryId" }, "IX_Products_CategoryId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
                 });
 
             modelBuilder.Entity("Product_Core.Entities.ProductImage", b =>

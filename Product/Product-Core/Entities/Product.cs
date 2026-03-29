@@ -1,13 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace ProductCore.Entities;
 
-namespace Product_Core.Entities;
-
-[Table("Product")]
 public partial class Product
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ProductId { get; set; }
     public int CategoryId { get; set; }
     public string ProductName { get; set; }

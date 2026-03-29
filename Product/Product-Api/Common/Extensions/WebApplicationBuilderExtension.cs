@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Text;
 
-namespace Product_Api.Common.Extensions;
+namespace ProductApi.Common.Extensions;
 
 public static class WebApplicationBuilderExtension
 {

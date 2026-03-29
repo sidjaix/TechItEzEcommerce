@@ -1,14 +1,9 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Product_Core.Entities;
+namespace ProductCore.Entities;
 
-[Table("ProductImage")]
 public partial class ProductImage
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ProductImageId { get; set; }
 
     public int ProductId { get; set; }

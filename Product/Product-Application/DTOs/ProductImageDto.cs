@@ -1,6 +1,6 @@
-﻿namespace Product_Core.Models;
+﻿namespace ProductApplication.DTOs;
 
-public partial class ProductImageModel
+public partial class ProductImageDto
 {
     public int ProductImageId { get; set; }
     public int ProductId { get; set; }

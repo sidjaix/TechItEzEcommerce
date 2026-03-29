@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Product_Core;
+using ProductData.Persistence;
 
-namespace Product_Api.Common.Extensions
+namespace ProductApi.Common.Extensions
 {
     public static class MigrationExtension
     {

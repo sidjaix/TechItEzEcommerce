@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Product_Core;
-using Product_Core.Entities;
-using Product_Core.Mapper;
-using Product_Core.Models;
-using Product_Data.Repository.IRepository;
+using ProductApplication.Interfaces;
+using ProductApplication.Mappers;
+using ProductApplication.DTOs;
+using ProductCore.Entities;
+using ProductData.Persistence;
 
-namespace Product_Data.Repository;
+namespace ProductData.Repositories;
 
 public class ProductRepository(ProductDbContext db) : IProductRepository
 {
-    public async Task<ProductModel> CreateNewProductAsync(ProductModel productData)
+    public async Task<ProductDto> CreateNewProductAsync(ProductDto productData)
     {
         Product product = productData.MapToEntity();
         await db.Products.AddAsync(product);
@@ -17,7 +17,7 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
         var productDto = product.MapToDto();
         return productDto;
     }
-    public async Task<ProductModel> UpdateExistingProductAsync(ProductModel productData)
+    public async Task<ProductDto> UpdateExistingProductAsync(ProductDto productData)
     {
         var existingProduct = await db.Products
         .FindAsync(productData.ProductId);
@@ -47,10 +47,10 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
         await db.SaveChangesAsync();
         return existingProduct.MapToDto();
     }
-    public async Task<List<ProductModel>> GetProductsAsync()
+    public async Task<List<ProductDto>> GetProductsAsync()
     {
         var productQuery = from product in db.Products
-                           select new ProductModel
+                           select new ProductDto
                            {
                                ProductId = product.ProductId,
                                ProductName = product.ProductName,
@@ -61,7 +61,7 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
                                ImageUrl = product.ImageUrl,
                                CategoryId = product.CategoryId,
                                CategoryName = product.Category.CategoryName,
-                               ProductImages = product.ProductImages.Select(x => new ProductImageModel
+                               ProductImages = product.ProductImages.Select(x => new ProductImageDto
                                {
                                    ProductId = product.ProductId,
                                    ProductImageUrl = x.ImageUrl,
@@ -76,11 +76,11 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
 
         return products;
     }
-    public async Task<ProductModel> GetProductDetailAsync(int productId)
+    public async Task<ProductDto> GetProductDetailAsync(int productId)
     {
         var productQuery = from p in db.Products
                            where p.ProductId == productId
-                           select new ProductModel
+                           select new ProductDto
                            {
                                ProductId = p.ProductId,
                                ProductName = p.ProductName,
@@ -90,7 +90,7 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
                                QuantityInStock = p.QuantityInStock,
                                ImageUrl = p.ImageUrl,
                                CategoryId = p.CategoryId,
-                               ProductImages = p.ProductImages.Select(pi => new ProductImageModel
+                               ProductImages = p.ProductImages.Select(pi => new ProductImageDto
                                {
                                    ProductId = p.ProductId,
                                    ProductImageUrl = pi.ImageUrl,
@@ -105,11 +105,11 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
 
         return product ?? default;
     }
-    public async Task<List<ProductModel>> GetProductsByCategoryAsync(int categoryId)
+    public async Task<List<ProductDto>> GetProductsByCategoryAsync(int categoryId)
     {
         var productsQuery = from product in db.Products
                             where product.CategoryId == categoryId
-                            select new ProductModel
+                            select new ProductDto
                             {
                                 ProductId = product.ProductId,
                                 ProductName = product.ProductName,
@@ -119,7 +119,7 @@ public class ProductRepository(ProductDbContext db) : IProductRepository
                                 QuantityInStock = product.QuantityInStock,
                                 ImageUrl = product.ImageUrl,
                                 CategoryId = product.CategoryId,
-                                ProductImages = product.ProductImages.Select(x => new ProductImageModel
+                                ProductImages = product.ProductImages.Select(x => new ProductImageDto
                                 {
                                     ProductId = product.ProductId,
                                     ProductImageUrl = x.ImageUrl,

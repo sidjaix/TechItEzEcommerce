@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Product_Core;
-using Product_Data.Repository;
-using Product_Data.Repository.IRepository;
+using ProductApplication.Interfaces;
+using ProductData.Persistence;
+using ProductData.Repositories;
 
-namespace Product_Api.Common.Extensions;
+namespace ProductApi.Common.Extensions;
 
 public static class DependencyInjection
 {

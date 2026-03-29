@@ -1,4 +1,4 @@
-namespace Product_Core.Models;
+namespace ProductApplication.DTOs;
 
 public class ResponseDto
 {

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>ProductApplication</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+   <ItemGroup>
+    <ProjectReference Include="..\..\Product\Product-Core\Product-Core.csproj" />
+  </ItemGroup>
+
+</Project>

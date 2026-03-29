@@ -1,13 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace ProductCore.Entities;
 
-namespace Product_Core.Entities;
-
-[Table("Promotion")]
 public partial class Promotion
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int PromotionId { get; set; }
 
     public string Name { get; set; }

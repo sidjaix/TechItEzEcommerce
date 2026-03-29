@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Product\Product-Core\Product-Core.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>Product_Data</RootNamespace>
+    <RootNamespace>ProductData</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <RootNamespace>Product_Data</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Product\Product-Core\Product-Core.csproj" />
+    <ProjectReference Include="..\..\Product\Product-Application\Product-Application.csproj" />
+  </ItemGroup>
+
 
 </Project>

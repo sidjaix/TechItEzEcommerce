@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Product_Core.Entities;
+using ProductCore.Entities;
 
-namespace Product_Core;
+namespace ProductData.Persistence;
 
 public class ProductDbContext : DbContext
 {
-    public ProductDbContext(DbContextOptions<ProductDbContext> options)
-          : base(options)
+    public ProductDbContext(DbContextOptions<ProductDbContext> options) : base(options)
     {
     }
 

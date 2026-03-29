@@ -1,7 +1,7 @@
 ﻿
-namespace Product_Core.Models;
+namespace ProductApplication.DTOs;
 
-public partial class CategoryModel
+public partial class CategoryDto
 {
     public int CategoryId { get; set; }
     public string CategoryName { get; set; } = null!;

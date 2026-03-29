@@ -1,11 +1,11 @@
-using Product_Core.Entities;
-using Product_Core.Models;
+using ProductApplication.DTOs;
+using ProductCore.Entities;
 
-namespace Product_Core.Mapper;
+namespace ProductApplication.Mappers;
 
 public static class ProductMapperExtension
 {
-    public static Product MapToEntity(this ProductModel productModel)
+    public static Product MapToEntity(this ProductDto productModel)
     {
         var product = new Product
         {
@@ -30,9 +30,9 @@ public static class ProductMapperExtension
         return product;
     }
 
-    public static ProductModel MapToDto(this Product product)
+    public static ProductDto MapToDto(this Product product)
     {
-        return new ProductModel
+        return new ProductDto
         {
             ProductId = product.ProductId,
             ProductName = product.ProductName,
@@ -42,7 +42,7 @@ public static class ProductMapperExtension
             SellingPrice = product.SellingPrice,
             QuantityInStock = product.QuantityInStock,
             ImageUrl = product.ImageUrl,
-            ProductImages = product.ProductImages?.Select(x => new ProductImageModel
+            ProductImages = product.ProductImages?.Select(x => new ProductImageDto
             {
                 ProductId = product.ProductId,
                 ProductImageUrl = x.ImageUrl,

@@ -1,12 +1,11 @@
-using Product_Core.Entities;
-using Product_Core.Models;
-using System;
+using ProductApplication.DTOs;
+using ProductCore.Entities;
 
-namespace Product_Core.Mapper;
+namespace ProductApplication.Mappers;
 
 public static class CategoryMapper
 {
-    public static Category MapToEntity(this CategoryModel categoryModel)
+    public static Category MapToEntity(this CategoryDto categoryModel)
     {
         return new Category
         {
@@ -18,9 +17,9 @@ public static class CategoryMapper
         };
     }
 
-    public static CategoryModel MapToDto(this Category category)
+    public static CategoryDto MapToDto(this Category category)
     {
-        return new CategoryModel
+        return new CategoryDto
         {
             CategoryId = category.CategoryId,
             CategoryName = category.CategoryName,

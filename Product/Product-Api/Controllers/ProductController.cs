@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Product_Api.Common.Filters;
-using Product_Core.Models;
-using Product_Data.Repository.IRepository;
+using ProductApi.Common.Filters;
+using ProductApplication.DTOs;
+using ProductApplication.Interfaces;
 
-namespace Product_Api.Controllers
+namespace ProductApi.Controllers
 {
     [Route("api/product")]
     [ApiController]
@@ -25,7 +25,7 @@ namespace Product_Api.Controllers
         /// <returns>Custom response with product model as result</returns>
         [HttpPost]
         [ValidateModel]
-        public async Task<ActionResult<ProductModel>> CreateNewProduct([FromBody] ProductModel productData)
+        public async Task<ActionResult<ProductDto>> CreateNewProduct([FromBody] ProductDto productData)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace Product_Api.Controllers
         /// </summary>
         /// <returns>custom response with list of product model as result</returns>
         [HttpGet]
-        public async Task<ActionResult<List<ProductModel>>> GetProducts()
+        public async Task<ActionResult<List<ProductDto>>> GetProducts()
         {
             try
             {
@@ -117,7 +117,7 @@ namespace Product_Api.Controllers
         /// <returns>Custom Response</returns>
         [HttpPut("Update")]
         [ValidateModel]
-        public async Task<ActionResult<ResponseDto>> UpdateProduct(ProductModel productData)
+        public async Task<ActionResult<ResponseDto>> UpdateProduct(ProductDto productData)
         {
             try
             {

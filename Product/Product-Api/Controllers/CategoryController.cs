@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Product_Api.Common.Filters;
-using Product_Core.Models;
-using Product_Data.Repository.IRepository;
+using ProductApi.Common.Filters;
+using ProductApplication.DTOs;
+using ProductApplication.Interfaces;
 
-namespace Product_Api.Controllers
+namespace ProductApi.Controllers
 {
     [Route("api/category")]
     [ApiController]
@@ -25,7 +25,7 @@ namespace Product_Api.Controllers
         /// <returns>CategoryModel</returns>
         [HttpPost]
         [ValidateModel]
-        public async Task<ActionResult<CategoryModel>> CreateNewCategoryAsync([FromBody] CategoryModel categoryData)
+        public async Task<ActionResult<CategoryDto>> CreateNewCategoryAsync([FromBody] CategoryDto categoryData)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace Product_Api.Controllers
         /// <param name="categoryId"></param>
         /// <returns>CategoryModel</returns>
         [HttpGet("{categoryId}")]
-        public async Task<ActionResult<CategoryModel>> GetCategoryAsync(int categoryId)
+        public async Task<ActionResult<CategoryDto>> GetCategoryAsync(int categoryId)
         {
 
             try
@@ -96,7 +96,7 @@ namespace Product_Api.Controllers
         /// <returns>CategoryModel</returns>
         [HttpPut("Update")]
         [ValidateModel]
-        public async Task<ActionResult<CategoryModel>> UpdateExistingCategoryAsync(CategoryModel categoryData)
+        public async Task<ActionResult<CategoryDto>> UpdateExistingCategoryAsync(CategoryDto categoryData)
         {
             try
             {

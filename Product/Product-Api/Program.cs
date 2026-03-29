@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
-using Product_Core;
-using Product_Api.Common.Extensions;
-using Product_Data.Repository;
-using Product_Data.Repository.IRepository;
+using ProductApi.Common.Extensions;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ProductApplication.Interfaces;
+using ProductData.Repositories;
+using ProductData.Persistence;
 
 internal class Program
 {
