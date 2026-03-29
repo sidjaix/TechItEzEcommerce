@@ -7,13 +7,9 @@ public static class CategoryMapper
 {
     public static Category MapToEntity(this CategoryDto categoryModel)
     {
-        return new Category
+        return new Category(categoryModel.CategoryName, categoryModel.CategoryDescription, null)
         {
-            CategoryId = categoryModel.CategoryId,
-            CategoryName = categoryModel.CategoryName,
-            CategoryDescription = categoryModel.CategoryDescription,
-            CategoryImageUrl = categoryModel.CategoryImageUrl
-            // Add other properties as needed
+
         };
     }
 
@@ -21,11 +17,7 @@ public static class CategoryMapper
     {
         return new CategoryDto
         {
-            CategoryId = category.CategoryId,
-            CategoryName = category.CategoryName,
-            CategoryDescription = category.CategoryDescription,
-            CategoryImageUrl = category.CategoryImageUrl
-            // Add other properties as needed
+
         };
     }
 }

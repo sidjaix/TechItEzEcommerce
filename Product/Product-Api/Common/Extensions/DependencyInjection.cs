@@ -22,7 +22,7 @@ public static class DependencyInjection
         // Register DbContext
         services.AddDbContextPool<ProductDbContext>(options =>
         {
-            var connectionString = config.GetConnectionString("ProductApi");
+            var connectionString = config.GetConnectionString("DefaultConnection");
             options.UseSqlServer(connectionString, sqlOptions =>
             {
                 sqlOptions.EnableRetryOnFailure(

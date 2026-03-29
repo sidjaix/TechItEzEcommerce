@@ -1,8 +1,17 @@
-SELECT *
-FROM [UserApiDb].[dbo].[ErrorLog]
+use ProductApiDb;
 
 select *
-from AspNetUsers
+from cat.Brands;
 select *
-from AspNetUserRoles
+from cat.Categories;
+select *
+from cat.CatalogItems;
+select *
+from cat.ProductVariants;
+select *
+from cat.ProductTags;
+select *
+from cat.ProductImages;
+select *
+from cat.ProductReviews;
 

@@ -123,7 +123,7 @@ namespace ProductApi.Controllers
         /// <param name="categoryId"></param>
         /// <returns>bool</returns>
         [HttpDelete("{categoryId}")]
-        public async Task<ActionResult<bool>> DeleteCategoryAsync(int categoryId)
+        public async Task<ActionResult<bool>> DeleteCategoryAsync(Guid categoryId)
         {
             try
             {

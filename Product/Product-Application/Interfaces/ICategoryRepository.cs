@@ -8,5 +8,5 @@ public interface ICategoryRepository
     Task<CategoryDto> UpdateExistingCategoryAsync(CategoryDto categoryModel);
     Task<List<CategoryDto>> GetAllCategoryAsync();
     Task<CategoryDto> GetCategoryAsync(int categoriesId);
-    Task<bool> DeleteCategoryAsync(int categoryId);
+    Task<bool> DeleteCategoryAsync(Guid categoryId);
 }

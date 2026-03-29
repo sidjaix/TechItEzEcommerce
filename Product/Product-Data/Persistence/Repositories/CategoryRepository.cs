@@ -22,10 +22,10 @@ public class CategoryRepository : ICategoryRepository
         return category.MapToDto();
     }
 
-    public async Task<bool> DeleteCategoryAsync(int categoryId)
+    public async Task<bool> DeleteCategoryAsync(Guid categoryId)
     {
         var numberOfRowDeleted = await db.Categories
-        .Where(p => p.CategoryId == categoryId)
+        .Where(p => p.Id == categoryId)
         .ExecuteDeleteAsync();
 
         return numberOfRowDeleted > 0;
@@ -57,9 +57,10 @@ public class CategoryRepository : ICategoryRepository
         {
             return default;
         }
-        category.CategoryName = categoryModel.CategoryName;
-        category.CategoryDescription = categoryModel.CategoryDescription;
-        category.CategoryImageUrl = categoryModel.CategoryImageUrl;
+
+        // category.Name = categoryModel.CategoryName;
+        // category.Description = categoryModel.CategoryDescription;
+        // category.ImageUrl = categoryModel.CategoryImageUrl;
         db.Attach(category);
         await db.SaveChangesAsync();
         return category.MapToDto();

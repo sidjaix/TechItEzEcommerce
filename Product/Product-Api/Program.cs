@@ -11,7 +11,7 @@ using ProductData.Persistence;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -51,7 +51,7 @@ internal class Program
         builder.Services.AddDbContextPool<ProductDbContext>((serviceProvider, options) =>
         {
             var environment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
-            var connectionString = config.GetConnectionString("ProductApi");
+            var connectionString = config.GetConnectionString("DefaultConnection");
             options
             .UseSqlServer(connectionString, options =>
             {
@@ -143,8 +143,7 @@ internal class Program
 
         app.MapControllers();
 
-        // Apply Pending Migration
-        app.UseMigiration();
+        await app.InitializeDatabaseAsync(); // Ensure the database is initialized and seeded before handling requests
 
         app.Run();
     }
