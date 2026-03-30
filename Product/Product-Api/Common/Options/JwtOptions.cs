@@ -1,4 +1,6 @@
-namespace UserAccess.Application.Dtos;
+using System;
+
+namespace ProductApi.Common.Options;
 
 public class JwtOptions
 {

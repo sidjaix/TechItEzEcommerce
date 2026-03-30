@@ -5,15 +5,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
 
-    <!-- NuGet Package Settings 
-    <Version>1.0.1</Version>
-    <Authors>Seyfarth Shaw</Authors>
-    <Company>Seyfarth Shaw</Company>
-    <PackageId>Seyfarth.Logging</PackageId>
-    <Description>A centralized structured logging library for Seyfarth applications.</Description>
-    <PackageOutputPath>../Seyfarth/nupkgs</PackageOutputPath>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    -->
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,9 +15,6 @@
     <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
     <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.6.0" />
-
-    <Folder Include="Extensions/" />
-    <Folder Include="Middlewares/" />
   </ItemGroup>
 
 </Project>
