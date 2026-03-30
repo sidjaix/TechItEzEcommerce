@@ -2,16 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Logging.Extensions;
-using UserAccess.API.Common.Middlewares;
+using Logging.Middlewares;
 using UserAccess.Infrastructure.Persistence.Repositories;
 using UserAccess.Infrastructure.Persistence;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using UserAccess.Application.Dtos;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.IdentityModel.JsonWebTokens;
 using FluentValidation.AspNetCore;
 using User_Api.Common.Filters;
@@ -20,6 +15,8 @@ using User.Application.Interfaces;
 using User.Infrastructure.Persistence.Repositories;
 using UserAccess.Infrastructure.Identity;
 using UserAccess.API.Extensions;
+using ApiCommon.Extensions;
+using ApiCommon.Options;
 
 internal class Program
 {
@@ -57,13 +54,7 @@ internal class Program
         // ==========================================
         // 3. CORS POLICY
         // ==========================================
-        builder.Services.AddCors(o => o.AddPolicy("default", policyBuilder =>
-        {
-            policyBuilder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        }));
+        builder.Services.AddCorsPolicy();
 
         // ==========================================
         // 4. DATABASE & IDENTITY (Always Registered)
@@ -97,72 +88,15 @@ internal class Program
         // 5. AUTHENTICATION & AUTHORIZATION
         // ==========================================
         builder.Services.Configure<JwtOptions>(config.GetSection("JWT"));
-
-        var jwtSettings = config.GetSection("JWT");
-        var secret = jwtSettings.GetValue<string>("Secret");
-        var issuer = jwtSettings.GetValue<string>("Issuer");
-        var audience = jwtSettings.GetValue<string>("Audience");
-        var key = Encoding.ASCII.GetBytes(secret);
-
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-        builder.Services.AddAuthentication(x =>
-        {
-            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(x =>
-        {
-            x.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
-                ValidIssuer = issuer,
-                ValidAudience = audience,
-                ValidateAudience = true
-            };
-        });
-        builder.Services.AddAuthorization();
+        builder.Services.AddAppAuthentication();
 
         // ==========================================
         // 6. SWAGGER / OPENAPI
         // ==========================================
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(c =>
-        {
-            c.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme()
-            {
-                Name = "Authorization",
-                Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = "Bearer"
-            });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    }, Array.Empty<string>()
-                }
-            });
-            c.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "User API",
-                Version = "v1",
-                Description = "An API to perform e-commerce User Authentication related operations",
-                Contact = new OpenApiContact { Name = "Siddharth Jaiswal", Email = "sidjaix@tie.com" }
-            });
-
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            c.IncludeXmlComments(xmlPath);
-        });
+        builder.Services.AddSwagger("User API");
 
         // ==========================================
         // 7. DEPENDENCY INJECTION & MISC SERVICES
@@ -188,12 +122,7 @@ internal class Program
         app.UseExceptionHandler();
 
         // 2. Swagger (Serve documentation)
-        app.UseSwagger();
-        app.UseSwaggerUI(option =>
-        {
-            option.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API V1");
-            option.RoutePrefix = string.Empty;
-        });
+        app.UseSwaggerWUIWithAuth();
 
         // 3. Routing (Figure out which endpoint is being called)
         app.UseRouting();
