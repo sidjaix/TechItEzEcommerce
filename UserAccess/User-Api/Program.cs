@@ -89,7 +89,7 @@ internal class Program
         builder.Services.Configure<JwtOptions>(config.GetSection("JWT"));
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-        builder.Services.AddAppAuthentication();
+        builder.AddAppAuthentication();
 
         // ==========================================
         // 6. SWAGGER / OPENAPI

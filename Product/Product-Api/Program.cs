@@ -78,7 +78,7 @@ internal class Program
         // 5. AUTHENTICATION & AUTHORIZATION
         // ==========================================
         builder.Services.Configure<JwtOptions>(config.GetSection("JWT"));
-        builder.Services.AddAppAuthentication();
+        builder.AddAppAuthentication();
 
         // ==========================================
         // 6. SWAGGER / OPENAPI
