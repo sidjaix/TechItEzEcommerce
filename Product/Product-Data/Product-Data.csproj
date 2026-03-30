@@ -8,13 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Product\Product-Core\Product-Core.csproj" />
-    <ProjectReference Include="..\..\Product\Product-Application\Product-Application.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence/Configurations/" />
+    <ProjectReference Include="..\..\Product\Product-Core\Product-Core.csproj" />
+    <ProjectReference Include="..\..\Product\Product-Application\Product-Application.csproj" />
   </ItemGroup>
-
 
 </Project>

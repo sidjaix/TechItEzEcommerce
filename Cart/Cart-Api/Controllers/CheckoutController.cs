@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cart_Api.Controllers
+namespace CartApi.Controllers
 {
     [Route("api/checkout")]
     [ApiController]

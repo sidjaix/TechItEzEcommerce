@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Order_Api</RootNamespace>
+    <RootNamespace>OrderApi</RootNamespace>
   </PropertyGroup>
 
     <PropertyGroup>
@@ -20,19 +20,19 @@
    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.5" />
     
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Logging\Logging.csproj" />
     <ProjectReference Include="..\..\Order\Order-Data\Order-Data.csproj" />
+    <ProjectReference Include="..\..\Shared\Api-Common\Api-Common.csproj" />
+     <ProjectReference Include="..\Order-Application\Order-Application.csproj" />
     <ProjectReference Include="..\..\Shared\App-Contracts\App-Contracts.csproj" />
   </ItemGroup>
 

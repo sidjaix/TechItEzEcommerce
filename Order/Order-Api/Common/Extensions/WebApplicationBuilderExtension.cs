@@ -7,13 +7,14 @@ using System.Reflection;
 using Newtonsoft.Json;
 using System.Text;
 
-using Order_Core;
-using Order_Core.Models;
-using Order_Data.Repository;
-using Order_Data.Repository.IRepository;
-using MassTransit;
 
-namespace Order_Api.Common.Extensions;
+using OrderApplication.Interfaces;
+using OrderData.Persistence.Repositories;
+using MassTransit;
+using App_Contracts.Common;
+using OrderData.Persistence;
+
+namespace OrderApi.Common.Extensions;
 
 public static class WebApplicationBuilderExtension
 {

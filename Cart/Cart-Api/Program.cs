@@ -5,14 +5,13 @@ using Newtonsoft.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-using Cart_Core;
-using Cart_Data.Repository;
-using Cart_Api.Common.Extensions;
-using Cart_Data.Repository.IRepository;
-using Cart_Api.Utility;
-using Cart_Data.Services.IServices;
-using Cart_Data.Services;
-using Cart_Core.Models;
+using CartData.Persistence;
+using CartData.Services.IServices;
+using CartData.Services;
+using CartApplication.Interfaces;
+using CartData.Persistence.Repositories;
+using CartApplication.DTOs;
+using CartApi.Utility;
 
 internal class Program
 {
@@ -39,7 +38,7 @@ internal class Program
         });
 
         // Add application Authentication configuration
-        builder.AddAppAuthetication();
+        //builder.AddAppAuthetication();
 
         // Add application Authorization configuration
         builder.Services.AddAuthorization();
@@ -162,7 +161,8 @@ internal class Program
         app.MapControllers();
 
         // Apply Pending Migration
-        app.UseMigiration();
+        //app.UseMigiration();
+
         app.Run();
     }
 }

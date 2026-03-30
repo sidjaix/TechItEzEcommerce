@@ -16,7 +16,6 @@ using User.Infrastructure.Persistence.Repositories;
 using UserAccess.Infrastructure.Identity;
 using UserAccess.API.Extensions;
 using ApiCommon.Extensions;
-using ApiCommon.Options;
 
 internal class Program
 {

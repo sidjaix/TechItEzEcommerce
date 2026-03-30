@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Cart_Api</RootNamespace>
+    <RootNamespace>CartApi</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -15,19 +15,18 @@
   <ItemGroup>
    <PackageReference Include="Azure.Data.AppConfiguration" Version="1.5.0" />
     <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="7.3.0" />
-    
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+   <ProjectReference Include="..\Cart-Application\Cart-Application.csproj" />
     <ProjectReference Include="..\Cart-Data\Cart-Data.csproj" />
+    <ProjectReference Include="..\..\Shared\Api-Common\Api-Common.csproj" />
+    <ProjectReference Include="..\..\Shared\Logging\Logging.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
-using Order_Api.Common.Extensions;
+using OrderApi.Common.Extensions;
 using Order_Api.Utility;
-using Order_Data.Services.IServices;
+using OrderData.Services.IServices;
 using Order_Data.Services;
 using MassTransit;
 

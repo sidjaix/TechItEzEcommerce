@@ -5,11 +5,11 @@ using System.Reflection;
 using Newtonsoft.Json;
 using MassTransit;
 
-using Order_Core;
-using Order_Core.Models;
-using Order_Service.EventHandlers;
+using OrderService.EventHandlers;
+using OrderData.Persistence;
+using App_Contracts.Common;
 
-namespace Order_Service.Utility.Extensions;
+namespace OrderService.Utility.Extensions;
 
 public static class Common_Extensions_WebApplicationBuilderExtension
 {

@@ -1,10 +1,8 @@
-using Cart_Core.Models;
-
-namespace Cart_Data.Services.IServices;
+namespace CartData.Services.IServices;
 
 public interface IProductService
 {
-    Task<List<ProductModel>> GetProductsAsync();
-    Task<List<ProductModel>> GetProductsByIdsAsync(List<int> productIds);
-    Task<ProductModel> GetProductDetailAsync(int productId);
+    // Task<List<ProductModel>> GetProductsAsync();
+    // Task<List<ProductModel>> GetProductsByIdsAsync(List<int> productIds);
+    // Task<ProductModel> GetProductDetailAsync(int productId);
 }

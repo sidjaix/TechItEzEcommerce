@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Authentication;
 using System.Net.Http.Headers;
 
-namespace Cart_Api.Utility;
+namespace CartApi.Utility;
 
 public class AuthenticationDelegateHandler(IHttpContextAccessor accessor) : DelegatingHandler
 {
-
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var token = await accessor.HttpContext.GetTokenAsync("access_token");

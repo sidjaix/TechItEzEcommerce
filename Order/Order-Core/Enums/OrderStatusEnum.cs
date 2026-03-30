@@ -1,4 +1,4 @@
-namespace Order_Core.Enums;
+namespace OrderCore.Enums;
 
 public enum OrderStatusEnum
 {

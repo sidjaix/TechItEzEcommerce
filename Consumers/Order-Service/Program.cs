@@ -1,4 +1,4 @@
-using Order_Service.Utility.Extensions;
+using OrderService.Utility.Extensions;
 
 internal class Program
 {

@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using User.Application.Interfaces;
 using UserAccess.Application.Dtos;
 using UserAccess.Application.Mappers;
@@ -261,5 +265,40 @@ public class IdentityRepository(ILogger<IdentityRepository> logger, UserManager<
         return existingUser?.MapToDto();
     }
 
+    public string GenerateToken(UserModel user, JwtOptions jwtOptions)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var key = Encoding.ASCII.GetBytes(jwtOptions.Secret);
+
+        var claims = new List<Claim>
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+            new Claim(JwtRegisteredClaimNames.NameId, user.UserName!),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+            new Claim(JwtRegisteredClaimNames.Name, user.Name!)
+        };
+
+        claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret));
+
+        SigningCredentials signingCred = new SigningCredentials(
+            key: securityKey,
+            algorithm: SecurityAlgorithms.HmacSha512Signature
+        );
+
+        var tokenExpiresOn = DateTime.UtcNow.AddMinutes(jwtOptions.ExpiresOn);
+
+        SecurityToken securityToken = new JwtSecurityToken(
+            issuer: jwtOptions.Issuer,
+            audience: jwtOptions.Audience,
+            claims: claims,
+            expires: tokenExpiresOn,
+            signingCredentials: signingCred
+        );
+        var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
+        return token;
+    }
 
 }

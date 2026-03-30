@@ -17,4 +17,5 @@ public interface IIdentityRepository
     Task<UserModel> GetUserRolesAsync(string userName);
     Task<ResponseDto> UpdateUserAsync(UserModel userModel);
     Task<UserModel?> GetUserByIdAsync(string userId, CancellationToken cancellationToken);
+    string GenerateToken(UserModel user, JwtOptions jwtOptions);
 }
