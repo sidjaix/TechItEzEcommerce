@@ -11,7 +11,7 @@ using System.Text;
 using OrderApplication.Interfaces;
 using OrderData.Persistence.Repositories;
 using MassTransit;
-using App_Contracts.Common;
+using AppContracts.Common;
 using OrderData.Persistence;
 
 namespace OrderApi.Common.Extensions;

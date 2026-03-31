@@ -1,9 +1,6 @@
 using Newtonsoft.Json;
-using System.Reflection;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using CartData.Persistence;
 using CartData.Services.IServices;
@@ -12,156 +9,140 @@ using CartApplication.Interfaces;
 using CartData.Persistence.Repositories;
 using CartApplication.DTOs;
 using CartApi.Utility;
+using Logging.Extensions;
+using ApiCommon.Extensions;
+using Logging.Middlewares;
+using FluentValidation.AspNetCore;
+using ApiCommon.Options;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        var environment = builder.Environment;
-        // Retrieve the connection string of Azure App Config Store
-        var useAzureAppConfig = builder.Configuration.GetValue<bool>("Azure:UseAzureAppConfig");
-        if (useAzureAppConfig)
-        {
-            var azAppConfigConnectionString = builder.Configuration.GetValue<string>("Azure:AppConfig");
-            builder.Configuration.AddAzureAppConfiguration(azAppConfigConnectionString);
-        }
         var config = builder.Configuration;
 
-        //Add services to the container.
-        builder.Services.AddControllers().AddNewtonsoftJson(o =>
+        // ==========================================
+        // 1. CONFIGURATION & LOGGING
+        // ==========================================
+        var useAzureAppConfig = config.GetValue<bool>("Azure:UseAzureAppConfig");
+        if (useAzureAppConfig)
+        {
+            var azAppConfigConnectionString = config.GetValue<string>("Azure:AppConfig");
+            config.AddAzureAppConfiguration(azAppConfigConnectionString);
+        }
+
+        // Comment this line while working on EF Migrations to avoid issues with DB Context Configuration connection string not being available during design time
+        builder.Host.AddLogging("Cart-Api");
+
+        // ==========================================
+        // 2. CONTROLLERS & JSON FORMATTING
+        // ==========================================
+        builder.Services.AddControllers(options =>
+        {
+            //options.Filters.Add<ValidateModelAttribute>();
+        }).AddNewtonsoftJson(o =>
         {
             o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             o.SerializerSettings.Formatting = Formatting.Indented;
             o.SerializerSettings.ContractResolver = new DefaultContractResolver();
         });
 
-        // Add application Authentication configuration
-        //builder.AddAppAuthetication();
+        // ==========================================
+        // 3. CORS POLICY: In production, modify this with the actual domains you want to allow
+        // ==========================================
+        builder.Services.AddCorsPolicy();
 
-        // Add application Authorization configuration
-        builder.Services.AddAuthorization();
-
-        // In production, modify this with the actual domains you want to allow
-        builder.Services.AddCors(o => o.AddPolicy("default", builder =>
-        {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        }));
-
-        // Register db context pool for sql server
+        // ==========================================
+        // 4. DATABASE & IDENTITY (Always Registered)
+        // ==========================================
         builder.Services.AddDbContextPool<CartDbContext>((serviceProvider, options) =>
         {
-            var connectionString = config.GetConnectionString("CartApi");
-            options
-            .UseSqlServer(connectionString, options =>
+            var connectionString = config.GetConnectionString("DefaultConnection");
+            options.UseSqlServer(connectionString, sqlOptions =>
             {
-                options.EnableRetryOnFailure(
+                sqlOptions.EnableRetryOnFailure(
                     maxRetryCount: 5,
                     maxRetryDelay: TimeSpan.FromSeconds(30),
                     errorNumbersToAdd: null
                 );
-            })
-            .EnableSensitiveDataLogging(environment.IsDevelopment());  //should not be used in production, only for development purpose
+                sqlOptions.MigrationsAssembly(typeof(CartDbContext).Assembly.FullName);
+            });
+
+            // Keep sensitive data logging restricted to development
+            if (builder.Environment.IsDevelopment())
+            {
+                //options.EnableSensitiveDataLogging();
+            }
         });
 
-        builder.Services.AddHttpContextAccessor();
+        // ==========================================
+        // 5. AUTHENTICATION & AUTHORIZATION
+        // ==========================================
+        builder.Services.Configure<JwtOptions>(config.GetSection("JWT"));
+        builder.AddAppAuthentication();
 
-        builder.Services.AddScoped<AuthenticationDelegateHandler>();
-
-        builder.Services.AddHttpClient<IProductService, ProductService>(u =>
-        {
-            u.BaseAddress = environment.IsDevelopment() ?
-            new Uri("http://localhost:5002") :
-            new Uri(builder.Configuration["ServiceUrls:ProductApi"]);
-        }).AddHttpMessageHandler<AuthenticationDelegateHandler>();
-
-        // Add services to the container.
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        // ==========================================
+        // 6. SWAGGER / OPENAPI
+        // ==========================================
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwagger("Cart API");
 
-        // Register the Swagger generator, defining 1 or more Swagger documents
-        builder.Services.AddSwaggerGen(c =>
-        {
-            c.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme()
-            {
-                Name = "Authorization",
-                Description = $"Enter the Bearer Authorization string as following: `{JwtBearerDefaults.AuthenticationScheme} Generated-JWT-Token`",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-                BearerFormat = "JWT",
-                Scheme = JwtBearerDefaults.AuthenticationScheme
-            });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Id = JwtBearerDefaults.AuthenticationScheme,
-                            Type = ReferenceType.SecurityScheme
-                        }
-                    },
-                    new string[] {}
-                }
-            });
-            c.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "Cart API",
-                Version = "v1",
-                Description = "An API to perform e-commerce Cart related operations",
-                TermsOfService = new Uri("https://twitter.com/sidjaix"),
-                Contact = new OpenApiContact
-                {
-                    Name = "Siddharth Jaiswal",
-                    Email = "sidjaix@tie.com",
-                    Url = new Uri("https://twitter.com/sidjaix"),
-                },
-                License = new OpenApiLicense
-                {
-                    Name = "Tech It Ez e-Commerce API LICX",
-                    Url = new Uri("https://twitter.com/sidjaix"),
-                }
-            });
-            // Set the comments path for the Swagger JSON and UI.
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            c.IncludeXmlComments(xmlPath);
-        });
-
-        // Register Dependency Services
+        // ==========================================
+        // 7. DEPENDENCY INJECTION & MISC SERVICES
+        // ==========================================
         builder.Services.AddScoped<ICartRepository, CartRepository>();
         builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
         builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
         builder.Services.AddScoped<ResponseDto>();
 
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<AuthenticationDelegateHandler>();
+        builder.Services.AddHttpClient<IProductService, ProductService>(u =>
+        {
+            u.BaseAddress = builder.Environment.IsDevelopment() ?
+            new Uri("http://localhost:5002") :
+            new Uri(builder.Configuration["ServiceUrls:ProductApi"]);
+        }).AddHttpMessageHandler<AuthenticationDelegateHandler>();
+
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ResponseDto).Assembly));
+        builder.Services.AddFluentValidationAutoValidation();
+
+        builder.Services.AddProblemDetails();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        builder.Services.AddHealthChecks();
+
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        app.UseCors("default");
-        // if (app.Environment.IsDevelopment())
-        // {
-        app.UseSwagger();
-        app.UseSwaggerUI(option =>
-        {
-            option.SwaggerEndpoint("/swagger/v1/swagger.json", "Cart API V1");
-            option.RoutePrefix = string.Empty; // Serve Swagger UI at the app's root
-        });
-        //}
-        //app.UseHttpsRedirection();
+        // ==========================================
+        // 8. HTTP REQUEST PIPELINE (Strict Ordering)
+        // ==========================================
+
+        // 1. Error Handling (Catch errors early)
+        app.UseExceptionHandler();
+
+        // 2. Swagger (Serve documentation)
+        app.UseSwaggerWUIWithAuth();
+
+        // 3. Routing (Figure out which endpoint is being called)
         app.UseRouting();
 
-        // Apply Authentication and Authorization
+        // 4. CORS (Check if the caller is allowed to hit the routed endpoint)
+        app.UseCors("default");
+
+        // 5. Authentication & Logging (Identify the user and start correlation)
         app.UseAuthentication();
+        app.UseCorrelationId();
+
+        // 6. Authorization (Check if the identified user has permissions)
         app.UseAuthorization();
 
+        // 7. Map Endpoints (Execute the logic)
+        app.MapHealthChecks("/health");
         app.MapControllers();
 
-        // Apply Pending Migration
-        //app.UseMigiration();
+        // Ensure the database is initialized and seeded before handling requests
+        //await app.InitializeDatabaseAsync();
 
         app.Run();
     }

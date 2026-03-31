@@ -1,4 +1,4 @@
-namespace App_Contracts.Order;
+namespace AppContracts.Order;
 
 public class OrderCreateEvent
 {

@@ -1,4 +1,4 @@
-using App_Contracts.Common;
+using AppContracts.Common;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

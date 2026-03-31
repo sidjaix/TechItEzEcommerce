@@ -7,7 +7,7 @@ using MassTransit;
 
 using OrderService.EventHandlers;
 using OrderData.Persistence;
-using App_Contracts.Common;
+using AppContracts.Common;
 
 namespace OrderService.Utility.Extensions;
 

@@ -1,4 +1,4 @@
-namespace App_Contracts.Common;
+namespace AppContracts.Common;
 
 public class ResponseDto
 {

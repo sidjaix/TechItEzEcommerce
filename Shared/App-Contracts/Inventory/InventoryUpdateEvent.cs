@@ -1,4 +1,4 @@
-namespace App_Contracts.Inventory;
+namespace AppContracts.Inventory;
 
 public class InventoryUpdateEvent
 {

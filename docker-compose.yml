@@ -57,14 +57,24 @@ services:
       dockerfile: ./Cart/Dockerfile
     ports:
       - '5003:80'
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - sqlserver
     #restart: always
     # depends_on:
     #   - sqlserver
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__CartApi=server=techitez_sqlserver;Initial Catalog=CartApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
+      - ConnectionStrings__DefaultConnection=${CART_API_CONNECTION_STRING}
     networks:
       - techitez_network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   order_api:
     container_name: e_commerce_order_api
@@ -74,12 +84,14 @@ services:
       dockerfile: ./Order/Dockerfile
     ports:
       - '5004:80'
+    env_file:
+      - .env
     restart: always
     depends_on:
       - sqlserver
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__OrderApi=server=techitez_sqlserver;Initial Catalog=OrderApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
+      - ConnectionStrings__DefaultConnection=${ORDER_API_CONNECTION_STRING}
     networks:
       - techitez_network
     healthcheck:
@@ -96,12 +108,14 @@ services:
       dockerfile: ./Consumers/Order-Service/Dockerfile
     ports:
       - '5005:80'
+    env_file:
+      - .env
     #restart: always
     # depends_on:
     #   - sqlserver
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__OrderDb=server=techitez_sqlserver;Initial Catalog=OrderApiDb; user ID=SA; Password=Admin@123; TrustServerCertificate=true; MultipleActiveResultSets=True;
+      - ConnectionStrings__DefaultConnection=${ORDER_API_CONNECTION_STRING}
     networks:
       - techitez_network
 

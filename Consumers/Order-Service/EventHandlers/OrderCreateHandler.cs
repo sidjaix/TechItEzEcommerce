@@ -1,4 +1,4 @@
-using App_Contracts.Order;
+using AppContracts.Order;
 using MassTransit;
 using OrderData.Persistence;
 
