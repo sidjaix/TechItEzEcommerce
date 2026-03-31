@@ -217,6 +217,12 @@ dotnet ef database drop --project ./Order/Order-Data/Order-Data.csproj --startup
 Delete Migrations Folder From Cart-Data/Persistence
 dotnet ef migrations add InitialCreate --project ./Order/Order-Data/Order-Data.csproj --startup-project ./Order/Order-Api/Order-Api.csproj --output-dir Persistence/Migrations
 dotnet ef database update --project ./Order/Order-Data/Order-Data.csproj --startup-project ./Order/Order-Api/Order-Api.csproj
+
+dotnet ef migrations remove --project ./Product/Product-Data/Product-Data.csproj --startup-project ./Product/Product-Api/Product-Api.csproj
+dotnet ef database drop --project ./Product/Product-Data/Product-Data.csproj --startup-project ./Product/Product-Api/Product-Api.csproj
+Delete Migrations Folder From Cart-Data/Persistence
+dotnet ef migrations add InitialCreate --project ./Product/Product-Data/Product-Data.csproj --startup-project ./Product/Product-Api/Product-Api.csproj --output-dir Persistence/Migrations
+dotnet ef database update --project ./Product/Product-Data/Product-Data.csproj --startup-project ./Product/Product-Api/Product-Api.csproj
 ```
 
 <!--

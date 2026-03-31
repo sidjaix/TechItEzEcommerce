@@ -233,17 +233,21 @@ namespace ProductData.Persistence.Migrations
 
             modelBuilder.Entity("ProductCore.Entities.CatalogItem", b =>
                 {
-                    b.HasOne("ProductCore.Entities.Brand", null)
+                    b.HasOne("ProductCore.Entities.Brand", "Brand")
                         .WithMany()
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProductCore.Entities.Category", null)
+                    b.HasOne("ProductCore.Entities.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("ProductCore.Entities.Category", b =>

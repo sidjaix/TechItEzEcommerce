@@ -121,7 +121,7 @@ internal class Program
         app.UseExceptionHandler();
 
         // 2. Swagger (Serve documentation)
-        app.UseSwaggerWUIWithAuth();
+        app.UseSwaggerWUIWithAuth("USER API");
 
         // 3. Routing (Figure out which endpoint is being called)
         app.UseRouting();
