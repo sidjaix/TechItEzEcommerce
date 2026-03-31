@@ -24,6 +24,13 @@ public class CatalogItem
     /// <summary>Foreign Key to the Manufacturer/Brand.</summary>
     public Guid BrandId { get; private set; }
 
+    // --- NAVIGATION PROPERTIES ---
+    /// <summary>EF Core navigation property to load the Category name.</summary>
+    public Category Category { get; private set; }
+
+    /// <summary>EF Core navigation property to load the Brand name.</summary>
+    public Brand Brand { get; private set; }
+
     // --- AI & RAG FUEL ---
     /// <summary>A 1-2 sentence summary for grid views and initial LLM context.</summary>
     public string ShortSummary { get; private set; }
@@ -44,12 +51,10 @@ public class CatalogItem
     public IReadOnlyCollection<ProductTag> Tags => _tags.AsReadOnly();
     private readonly List<ProductTag> _tags = new();
 
-    public CatalogItem()
-    {
-
-    }
 
     // Constructor to enforce valid state upon creation
+    public CatalogItem() { }
+
     public CatalogItem(string baseName, string slug, Guid categoryId, Guid brandId)
     {
         Id = Guid.NewGuid();
@@ -58,5 +63,21 @@ public class CatalogItem
         CategoryId = categoryId;
         BrandId = brandId;
         IsPublished = false; // Default to draft
+    }
+
+    /// <summary>Safely adds a variant while enforcing domain rules (e.g., unique SKU check).</summary>
+    public void AddVariant(string sku, decimal price, string attributesJson)
+    {
+        if (_variants.Any(v => v.Sku == sku))
+            throw new InvalidOperationException($"SKU {sku} already exists on this catalog item.");
+
+        _variants.Add(new ProductVariant(this.Id, sku, price, attributesJson));
+    }
+
+    /// <summary>Updates the AI/Semantic profile data for the catalog item.</summary>
+    public void UpdateSemanticProfile(string shortSummary, string semanticDescription)
+    {
+        ShortSummary = shortSummary;
+        SemanticDescription = semanticDescription;
     }
 }

@@ -92,8 +92,7 @@ internal class Program
         // 7. DEPENDENCY INJECTION & MISC SERVICES
         // ==========================================
         builder.Services.AddScoped<ICartRepository, CartRepository>();
-        builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
-        builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
+        //builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
         builder.Services.AddScoped<ResponseDto>();
 
         builder.Services.AddHttpContextAccessor();
@@ -122,7 +121,7 @@ internal class Program
         app.UseExceptionHandler();
 
         // 2. Swagger (Serve documentation)
-        app.UseSwaggerWUIWithAuth();
+        app.UseSwaggerWUIWithAuth("Cart API");
 
         // 3. Routing (Figure out which endpoint is being called)
         app.UseRouting();

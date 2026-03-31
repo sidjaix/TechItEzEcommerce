@@ -6,5 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities/" />
+    <Folder Include="ValueObjects/" />
+  </ItemGroup>
   
 </Project>

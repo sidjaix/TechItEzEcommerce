@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\Product\Product-Core\Product-Core.csproj" />
   </ItemGroup>
 
+   <ItemGroup>
+     <Folder Include="Command/" />
+   </ItemGroup>
+
 </Project>

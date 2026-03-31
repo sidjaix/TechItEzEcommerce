@@ -12,6 +12,7 @@ using ProductApplication.DTOs;
 using FluentValidation.AspNetCore;
 using Logging.Middlewares;
 using ApiCommon.Extensions;
+using ProductApplication.Queries;
 
 internal class Program
 {
@@ -89,11 +90,12 @@ internal class Program
         // ==========================================
         // 7. DEPENDENCY INJECTION & MISC SERVICES
         // ==========================================
-        builder.Services.AddScoped<IProductRepository, ProductRepository>();
-        builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+        // In Program.cs or DependencyInjection.cs
+        builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+        builder.Services.AddScoped<ITaxonomyRepository, TaxonomyRepository>();
         builder.Services.AddScoped<ResponseDto>();
 
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ResponseDto).Assembly));
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetActiveCatalogItemsQuery).Assembly));
         builder.Services.AddFluentValidationAutoValidation();
 
         builder.Services.AddProblemDetails();

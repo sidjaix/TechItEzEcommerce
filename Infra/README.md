@@ -205,6 +205,20 @@ docker pull sidjaix.azurecr.io/user-api:latest
 docker run -p 10001:80 sidjaix.azurecr.io/user-api:latest -e "ConnectionStrings_AzureDB=Server=tcp:techitez.database.windows.net,1433;Initial Catalog=TechItEzEcommerce;Persist Security Info=False;User ID=sidjaix;Password=admin@123; MultipleActiveResultSets=True; Encrypt=True; TrustServerCertificate=True; Connection Timeout=60;" -rm
 ```
 
+```bash
+dotnet ef migrations remove --project ./Cart/Cart-Data/Cart-Data.csproj --startup-project ./Cart/Cart-Api/Cart-Api.csproj
+dotnet ef database drop --project ./Cart/Cart-Data/Cart-Data.csproj --startup-project ./Cart/Cart-Api/Cart-Api.csproj
+Delete Migrations Folder From Cart-Data/Persistence
+dotnet ef migrations add InitialCreate --project ./Cart/Cart-Data/Cart-Data.csproj --startup-project ./Cart/Cart-Api/Cart-Api.csproj --output-dir Persistence/Migrations
+dotnet ef database update --project ./Cart/Cart-Data/Cart-Data.csproj --startup-project ./Cart/Cart-Api/Cart-Api.csproj
+
+dotnet ef migrations remove --project ./Order/Order-Data/Order-Data.csproj --startup-project ./Order/Order-Api/Order-Api.csproj
+dotnet ef database drop --project ./Order/Order-Data/Order-Data.csproj --startup-project ./Order/Order-Api/Order-Api.csproj
+Delete Migrations Folder From Cart-Data/Persistence
+dotnet ef migrations add InitialCreate --project ./Order/Order-Data/Order-Data.csproj --startup-project ./Order/Order-Api/Order-Api.csproj --output-dir Persistence/Migrations
+dotnet ef database update --project ./Order/Order-Data/Order-Data.csproj --startup-project ./Order/Order-Api/Order-Api.csproj
+```
+
 <!--
 navigate to compose file location
 docker-compose build

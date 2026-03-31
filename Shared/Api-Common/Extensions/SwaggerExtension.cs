@@ -70,12 +70,12 @@ public static class SwaggerExtension
     /// </summary>
     /// <param name="app"></param>
     /// <returns></returns>
-    public static WebApplication UseSwaggerWUIWithAuth(this WebApplication app)
+    public static WebApplication UseSwaggerWUIWithAuth(this WebApplication app, string apiTitle = "API")
     {
         app.UseSwagger();
         app.UseSwaggerUI(option =>
         {
-            option.SwaggerEndpoint("/swagger/v1/swagger.json", "Product API V1");
+            option.SwaggerEndpoint("/swagger/v1/swagger.json", $"{apiTitle} V1");
             option.RoutePrefix = string.Empty;
         });
         return app;
