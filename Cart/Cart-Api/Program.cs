@@ -3,8 +3,6 @@ using Newtonsoft.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 using CartData.Persistence;
-using CartData.Services.IServices;
-using CartData.Services;
 using CartApplication.Interfaces;
 using CartData.Persistence.Repositories;
 using CartApplication.DTOs;
@@ -96,13 +94,15 @@ internal class Program
         builder.Services.AddScoped<ResponseDto>();
 
         builder.Services.AddHttpContextAccessor();
+        /*
         builder.Services.AddScoped<AuthenticationDelegateHandler>();
-        builder.Services.AddHttpClient<IProductService, ProductService>(u =>
+        builder.Services.AddHttpClient<ICartIntegrationService, ProductService>(u =>
         {
             u.BaseAddress = builder.Environment.IsDevelopment() ?
             new Uri("http://localhost:5002") :
             new Uri(builder.Configuration["ServiceUrls:ProductApi"]);
         }).AddHttpMessageHandler<AuthenticationDelegateHandler>();
+        */
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ResponseDto).Assembly));
         builder.Services.AddFluentValidationAutoValidation();

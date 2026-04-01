@@ -1,13 +1,16 @@
+using ApiCommon.Extensions;
 using CartApplication.Commands;
 using CartApplication.DTOs;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CartApi.Controllers
 {
     [ApiController]
-    [Route("api/admin")]
+    [Route("api/[controller]")]
     [Produces("application/json")]
+    [Authorize]
     public class CartController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -22,11 +25,14 @@ namespace CartApi.Controllers
         /// This endpoint returns the current state of the customer's cart, including all items and their details. 
         /// If the cart does not exist, it may return an empty cart or a not found response based on implementation.
         /// </summary>
-        /// <param name="customerId"></param>
-        /// <returns></returns>
-        [HttpGet("{customerId}")]
-        public async Task<ActionResult<CartDto>> GetCart(Guid customerId)
-            => Ok(await _mediator.Send(new GetCartQuery(customerId)));
+        /// <returns>CartDto</returns>
+        [HttpGet("GetCart")]
+        public async Task<ActionResult<CartDto>> GetCart()
+        {
+            var customerId = User.GetUserId();
+            Console.WriteLine($"Received request for cart of customer using User.GetUserId(): {customerId}");
+            return Ok(await _mediator.Send(new GetCartQuery(customerId)));
+        }
 
         /// <summary>
         /// Adds an item to the customer's cart. 
@@ -34,7 +40,7 @@ namespace CartApi.Controllers
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-        [HttpPost("items")]
+        [HttpPost("AddItem")]
         public async Task<IActionResult> AddItem(AddItemToCartCommand command)
         {
             var result = await _mediator.Send(command);

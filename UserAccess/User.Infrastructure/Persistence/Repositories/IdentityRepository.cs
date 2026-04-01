@@ -273,7 +273,7 @@ public class IdentityRepository(ILogger<IdentityRepository> logger, UserManager<
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+            new Claim(JwtRegisteredClaimNames.Sub, user.UserId),
             new Claim(JwtRegisteredClaimNames.NameId, user.UserName!),
             new Claim(JwtRegisteredClaimNames.Email, user.Email!),
             new Claim(JwtRegisteredClaimNames.Name, user.Name!)

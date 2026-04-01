@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cart-Application", "Cart\Ca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Order-Application", "Order\Order-Application\Order-Application.csproj", "{F56B8E7F-FA68-4B63-82FE-0FB0CD456981}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -363,6 +365,18 @@ Global
 		{F56B8E7F-FA68-4B63-82FE-0FB0CD456981}.Release|x64.Build.0 = Release|Any CPU
 		{F56B8E7F-FA68-4B63-82FE-0FB0CD456981}.Release|x86.ActiveCfg = Release|Any CPU
 		{F56B8E7F-FA68-4B63-82FE-0FB0CD456981}.Release|x86.Build.0 = Release|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Debug|x64.Build.0 = Debug|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Debug|x86.Build.0 = Debug|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Release|x64.ActiveCfg = Release|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Release|x64.Build.0 = Release|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Release|x86.ActiveCfg = Release|Any CPU
+		{1B3E7FED-300F-4963-9AB3-3AF9B6C23B2E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

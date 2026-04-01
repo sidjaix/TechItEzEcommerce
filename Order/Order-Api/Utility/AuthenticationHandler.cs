@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using System.Net.Http.Headers;
 
-namespace Order_Api.Utility;
+namespace OrderApi.Utility;
 
 public class AuthenticationHandler(IHttpContextAccessor accessor) : DelegatingHandler
 {

@@ -1,8 +1,8 @@
 using OrderApi.Common.Extensions;
-using Order_Api.Utility;
-using OrderData.Services.IServices;
-using Order_Data.Services;
+using OrderApi.Utility;
+using OrderData.Services;
 using MassTransit;
+using OrderApplication.Interfaces;
 
 internal class Program
 {
@@ -49,11 +49,11 @@ internal class Program
 
         builder.Services.AddScoped<AuthenticationHandler>();
 
-        builder.Services.AddHttpClient<IProductService, ProductService>(u =>
+        builder.Services.AddHttpClient<ICartIntegrationService, CartIntegrationService>(client =>
         {
-            u.BaseAddress = environment.IsDevelopment() ?
-            new Uri("http://localhost:5002") :
-            new Uri(builder.Configuration["ServiceUrls:ProductApi"]);
+            // The internal Docker network DNS name for the gateway
+            // This routes the request internally to the gateway, which then proxies it to Cart-Api
+            client.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ApiGateway"]);
         }).AddHttpMessageHandler<AuthenticationHandler>();
 
         // Add services to the container.

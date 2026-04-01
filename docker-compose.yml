@@ -146,6 +146,25 @@ services:
     networks:
       - techitez_network
 
+  api_gateway:
+    container_name: e_commerce_api_gateway
+    image: sidjaix/api-gateway:latest
+    build:
+      context: .
+      dockerfile: ./ApiGateway/Dockerfile
+    ports:
+      - '8080:80' # This is your new master entry point!
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - user_api
+      - product_api
+      - cart_api
+      - order_api
+    networks:
+      - techitez_network
+
 networks:
   techitez_network:
     driver: bridge

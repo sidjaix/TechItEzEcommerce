@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using ProductApplication.Queries;
 using ProductApplication.DTOs;
 using ProductApplication.Command;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProductApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize] // Mandate a valid JWT for the entire controller
 public class CatalogController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -1,3 +1,4 @@
+using ApiCommon.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,8 @@ namespace OrderApi.Controllers
     [ApiController]
     public class OrderController(IMediator mediator) : ControllerBase
     {
+        // Frontend only sends the Address now!
+        public record CreateOrderRequest(AddressDto ShippingAddress);
 
         /// <summary>
         /// Retrieves the complete order history for a specific customer.
@@ -31,15 +34,12 @@ namespace OrderApi.Controllers
         /// Creates a new immutable order record.
         /// </summary>
         [HttpPost]
-        public async Task<ActionResult<Guid>> CreateOrder([FromBody] CreateOrderCommand command)
+        public async Task<ActionResult<Guid>> CreateOrder([FromBody] CreateOrderRequest request)
         {
-            // In a production environment, the CustomerId would be extracted from the JWT Claims (User.Identity).
-            // For this POC, we accept it in the command payload to easily test via Swagger.
+            var customerId = User.GetUserId();
 
-            if (command.Items == null || !command.Items.Any())
-            {
-                return BadRequest("Cannot create an order without items.");
-            }
+            // Assemble the command
+            var command = new CreateOrderCommand(customerId, request.ShippingAddress);
 
             var orderId = await mediator.Send(command);
 
