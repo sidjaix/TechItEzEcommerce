@@ -41,6 +41,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${PRODUCT_API_CONNECTION_STRING}
+      - RabbitMq__Host=${RabbitMq_Host}
     networks:
       - techitez_network
     healthcheck:
@@ -62,12 +63,10 @@ services:
     restart: always
     depends_on:
       - sqlserver
-    #restart: always
-    # depends_on:
-    #   - sqlserver
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${CART_API_CONNECTION_STRING}
+      - RabbitMq__Host=${RabbitMq_Host}
     networks:
       - techitez_network
     healthcheck:
@@ -100,25 +99,6 @@ services:
       timeout: 10s
       retries: 3
 
-  order-handler:
-    container_name: e_commerce_order_handler
-    image: sidjaix/order-handler:latest
-    build:
-      context: .
-      dockerfile: ./Consumers/Order-Service/Dockerfile
-    ports:
-      - '5005:80'
-    env_file:
-      - .env
-    #restart: always
-    # depends_on:
-    #   - sqlserver
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=${ORDER_API_CONNECTION_STRING}
-    networks:
-      - techitez_network
-
   rabbit_mq:
     container_name: techitez_rabbitmqserver
     image: rabbitmq:3-management
@@ -127,8 +107,8 @@ services:
       - '5672:5672'
       - '15672:15672'
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
     networks:
       - techitez_network
 

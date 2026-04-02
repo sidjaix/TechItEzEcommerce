@@ -1,5 +1,3 @@
-using OrderApi.Common.Extensions;
-using OrderApi.Utility;
 using OrderData.Services;
 using MassTransit;
 using OrderApplication.Interfaces;
@@ -13,9 +11,9 @@ using OrderData.Persistence;
 using Microsoft.EntityFrameworkCore;
 using ApiCommon.Options;
 using OrderData.Persistence.Repositories;
-using AppContracts.Common;
 using ApiCommon.Handlers;
 using Logging.Middlewares;
+using OrderApi.Services;
 
 internal class Program
 {
@@ -49,19 +47,6 @@ internal class Program
             o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             o.SerializerSettings.Formatting = Formatting.Indented;
             o.SerializerSettings.ContractResolver = new DefaultContractResolver();
-        });
-
-        builder.Services.AddMassTransit(config =>
-        {
-            config.SetKebabCaseEndpointNameFormatter();
-            config.UsingRabbitMq((ctx, cfg) =>
-            {
-                var host = environment.IsDevelopment()
-                ? "amqp://guest:guest@localhost:5672"
-                : builder.Configuration["RabbitMq:Host"];
-                Console.WriteLine("IsDevelopment: {0}", environment.IsDevelopment());
-                cfg.Host(host);
-            });
         });
 
         // ==========================================
@@ -107,12 +92,25 @@ internal class Program
         // ==========================================
         // 7. DEPENDENCY INJECTION & MISC SERVICES
         // ==========================================
+        builder.Services.AddMassTransit(busConfig =>
+        {
+            busConfig.SetKebabCaseEndpointNameFormatter();
+            busConfig.UsingRabbitMq((ctx, cfg) =>
+            {
+                var host = environment.IsDevelopment()
+                ? "amqp://guest:guest@localhost:5672"
+                : config["RabbitMq:Host"];
+
+                cfg.Host(host);
+                cfg.ConfigureEndpoints(ctx);
+            });
+        });
+
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-        builder.Services.AddScoped<ResponseDto>();
+        builder.Services.AddScoped<IOrderEventPublisher, OrderEventPublisher>();
+        builder.Services.AddScoped<TokenDelegatingHandler>();
 
         builder.Services.AddHttpContextAccessor();
-
-        builder.Services.AddScoped<TokenDelegatingHandler>();
         builder.Services.AddHttpClient<ICartIntegrationService, CartIntegrationService>(u =>
         {
             // If running in VS natively, hit the exposed localhost port. 
@@ -120,6 +118,7 @@ internal class Program
             u.BaseAddress = builder.Environment.IsDevelopment()
                 ? new Uri("http://localhost:8080")
                 : new Uri(builder.Configuration["ServiceUrls:ApiGateway"]);
+
         }).AddHttpMessageHandler<TokenDelegatingHandler>();
 
 

@@ -35,12 +35,66 @@ public class ProductVariant
 
     }
 
-    public ProductVariant(Guid catalogItemId, string sku, decimal price, string attributesJson)
+    public ProductVariant(Guid catalogItemId, string sku, decimal price, int stockQuantity, string attributesJson)
     {
         Id = Guid.NewGuid();
         CatalogItemId = catalogItemId;
         Sku = sku;
         Price = price;
+        StockQuantity = stockQuantity;
         AttributesJson = attributesJson;
+    }
+
+    /// <summary>Safely reduces stock, throwing an exception if inventory would go negative.</summary>
+    public void DecreaseStock(int quantity)
+    {
+        if (quantity <= 0)
+        {
+            throw new ArgumentException("Quantity to decrease must be greater than zero.");
+        }
+
+        if (StockQuantity - quantity < 0)
+        {
+            throw new InvalidOperationException($"Insufficient stock for SKU {Sku}. Available: {StockQuantity}, Requested: {quantity}");
+        }
+
+        StockQuantity -= quantity;
+    }
+
+    /// <summary>Increases available stock.</summary>
+    public void IncreaseStock(int quantity)
+    {
+        if (quantity <= 0)
+        {
+            throw new ArgumentException("Quantity to increase must be greater than zero.");
+        }
+
+        StockQuantity += quantity;
+    }
+
+    /// <summary>Updates the price of the variant.</summary>
+    public void UpdatePrice(decimal newPrice)
+    {
+        if (newPrice < 0)
+        {
+            throw new ArgumentException("Price cannot be negative.");
+        }
+
+        Price = newPrice;
+    }
+
+    /// <summary>Adds an image specific to this variant.</summary>
+    public void AddImage(string imageUrl, string altText, bool isPrimary, int displayOrder)
+    {
+        // If this new image is primary, we must unset any existing primary images for this variant
+        if (isPrimary)
+        {
+            foreach (var img in _images.Where(i => i.IsPrimary))
+            {
+                img.RemovePrimaryStatus();
+            }
+        }
+
+        _images.Add(new ProductImage(this.Id, imageUrl, altText, isPrimary, displayOrder));
     }
 }

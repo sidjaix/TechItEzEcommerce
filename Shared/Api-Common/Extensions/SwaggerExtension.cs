@@ -69,6 +69,7 @@ public static class SwaggerExtension
     /// This method configures the application to use Swagger middleware and sets up the Swagger UI at the root URL.
     /// </summary>
     /// <param name="app"></param>
+    /// <param name="apiTitle"></param>
     /// <returns></returns>
     public static WebApplication UseSwaggerWUIWithAuth(this WebApplication app, string apiTitle = "API")
     {

@@ -13,6 +13,8 @@ using FluentValidation.AspNetCore;
 using Logging.Middlewares;
 using ApiCommon.Extensions;
 using ProductApplication.Queries;
+using MassTransit;
+using ProductApi.Consumers;
 
 internal class Program
 {
@@ -20,9 +22,10 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         var config = builder.Configuration;
+        var environment = builder.Environment;
 
         // ==========================================
-        // 1. CONFIGURATION & LOGGING
+        // 1. CONFIGURATION
         // ==========================================
         var useAzureAppConfig = config.GetValue<bool>("Azure:UseAzureAppConfig");
         if (useAzureAppConfig)
@@ -69,7 +72,7 @@ internal class Program
             });
 
             // Keep sensitive data logging restricted to development
-            if (builder.Environment.IsDevelopment())
+            if (environment.IsDevelopment())
             {
                 //options.EnableSensitiveDataLogging();
             }
@@ -90,10 +93,28 @@ internal class Program
         // ==========================================
         // 7. DEPENDENCY INJECTION & MISC SERVICES
         // ==========================================
+        builder.Services.AddMassTransit(busConfig =>
+        {
+            // This will create a queue named: product-order-placed-event
+            busConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("product", false));
+
+            // THIS LINE IS REQUIRED TO BIND THE QUEUE
+            busConfig.AddConsumer<OrderPlacedEventConsumer>();
+
+            busConfig.UsingRabbitMq((ctx, cfg) =>
+            {
+                var host = environment.IsDevelopment()
+                ? "amqp://guest:guest@localhost:5672"
+                : builder.Configuration["RabbitMq:Host"];
+
+                cfg.Host(host);
+                cfg.ConfigureEndpoints(ctx);
+            });
+        });
+
         // In Program.cs or DependencyInjection.cs
         builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
         builder.Services.AddScoped<ITaxonomyRepository, TaxonomyRepository>();
-        builder.Services.AddScoped<ResponseDto>();
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetActiveCatalogItemsQuery).Assembly));
         builder.Services.AddFluentValidationAutoValidation();

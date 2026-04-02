@@ -1,6 +1,6 @@
 {
-"userName": "sidjaix@techitez.com",
-"password": "Sidjaix@#1357"
+"userName": "admin@tie.com",
+"password": "Admin@#123"
 }
 
 docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=YourStrongPassword123!' -e 'MSSQL_PID=Express' -p 1435:1433 --name sqlserver-container --hostname my-sql-edge-host --network my-sql-network -v sql_edge_backup:/var/opt/mssql/backup -d mcr.microsoft.com/mssql/server:2022-latest

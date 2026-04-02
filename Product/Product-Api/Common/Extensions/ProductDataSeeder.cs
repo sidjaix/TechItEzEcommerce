@@ -74,6 +74,7 @@ public static class ProductDataSeeder
                     catalogItemId: item.Id,
                     sku: new Faker().Commerce.Ean13(),
                     price: decimal.Parse(new Faker().Commerce.Price(10, 1000)),
+                    stockQuantity: new Faker().Random.Int(0, 100),
                     attributesJson: JsonSerializer.Serialize(attributes)
                 );
 

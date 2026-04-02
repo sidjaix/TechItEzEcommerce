@@ -10,10 +10,12 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
 {
     private readonly IOrderRepository _orderRepository;
     private readonly ICartIntegrationService _cartService;
-    public CreateOrderCommandHandler(IOrderRepository orderRepository, ICartIntegrationService cartService)
+    private readonly IOrderEventPublisher _eventPublisher;
+    public CreateOrderCommandHandler(IOrderRepository orderRepository, ICartIntegrationService cartService, IOrderEventPublisher eventPublisher)
     {
         _orderRepository = orderRepository;
         _cartService = cartService;
+        _eventPublisher = eventPublisher;
     }
 
     public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken ct)
@@ -44,6 +46,16 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
 
         // 4. Save to Database
         await _orderRepository.AddAsync(order, ct);
+
+        // Convert the domain items to the local Application DTO
+        var applicationItems = order.Items.Select(i => new OrderItemDto
+        {
+            VariantId = i.VariantId,
+            Quantity = i.Quantity
+        }).ToList();
+
+        // Publish using the abstraction
+        await _eventPublisher.PublishOrderPlacedAsync(order.Id, order.CustomerId, applicationItems, ct);
 
         return order.Id;
     }

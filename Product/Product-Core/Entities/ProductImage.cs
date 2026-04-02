@@ -34,4 +34,6 @@ public partial class ProductImage
         IsPrimary = isPrimary;
         DisplayOrder = displayOrder;
     }
+
+    internal void RemovePrimaryStatus() => IsPrimary = false;
 }

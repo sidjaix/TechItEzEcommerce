@@ -1,10 +1,9 @@
 using MediatR;
 using ProductApplication.Interfaces;
-using System;
 
 namespace ProductApplication.Command;
 
-public record AddVariantCommand(Guid CatalogItemId, string Sku, decimal Price, string AttributesJson) : IRequest<bool>;
+public record AddVariantCommand(Guid CatalogItemId, string Sku, decimal Price, int stockQuantity, string AttributesJson) : IRequest<bool>;
 
 public class AddVariantCommandHandler : IRequestHandler<AddVariantCommand, bool>
 {
@@ -17,7 +16,7 @@ public class AddVariantCommandHandler : IRequestHandler<AddVariantCommand, bool>
         if (item == null) return false;
 
         // Uses the domain method to ensure invariants (e.g., duplicate SKU checks)
-        item.AddVariant(request.Sku, request.Price, request.AttributesJson);
+        item.AddVariant(request.Sku, request.Price, request.stockQuantity, request.AttributesJson);
 
         await _repository.UpdateAsync(item, cancellationToken);
         return true;

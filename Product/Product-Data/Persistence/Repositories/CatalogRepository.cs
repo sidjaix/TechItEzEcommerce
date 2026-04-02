@@ -46,6 +46,13 @@ public class CatalogRepository : ICatalogRepository
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 
+    public async Task<CatalogItem> GetByVariantIdAsync(Guid variantId, CancellationToken cancellationToken)
+    {
+        return await db.CatalogItems
+            .Include(c => c.Variants)
+            .FirstOrDefaultAsync(c => c.Variants.Any(v => v.Id == variantId), cancellationToken);
+    }
+
     public async Task AddAsync(CatalogItem item, CancellationToken cancellationToken)
     {
         await db.CatalogItems.AddAsync(item, cancellationToken);

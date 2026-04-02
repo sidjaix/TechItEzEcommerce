@@ -66,12 +66,12 @@ public class CatalogItem
     }
 
     /// <summary>Safely adds a variant while enforcing domain rules (e.g., unique SKU check).</summary>
-    public void AddVariant(string sku, decimal price, string attributesJson)
+    public void AddVariant(string sku, decimal price, int stockQuantity, string attributesJson)
     {
         if (_variants.Any(v => v.Sku == sku))
             throw new InvalidOperationException($"SKU {sku} already exists on this catalog item.");
 
-        _variants.Add(new ProductVariant(this.Id, sku, price, attributesJson));
+        _variants.Add(new ProductVariant(this.Id, sku, price, stockQuantity, attributesJson));
     }
 
     /// <summary>Updates the AI/Semantic profile data for the catalog item.</summary>

@@ -6,12 +6,13 @@ using CartData.Persistence;
 using CartApplication.Interfaces;
 using CartData.Persistence.Repositories;
 using CartApplication.DTOs;
-using CartApi.Utility;
 using Logging.Extensions;
 using ApiCommon.Extensions;
 using Logging.Middlewares;
 using FluentValidation.AspNetCore;
 using ApiCommon.Options;
+using MassTransit;
+using CartApi.Consumers;
 
 internal class Program
 {
@@ -19,6 +20,7 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         var config = builder.Configuration;
+        var environment = builder.Environment;
 
         // ==========================================
         // 1. CONFIGURATION & LOGGING
@@ -89,19 +91,38 @@ internal class Program
         // ==========================================
         // 7. DEPENDENCY INJECTION & MISC SERVICES
         // ==========================================
+        builder.Services.AddMassTransit(busConfig =>
+        {
+            // This will create a queue named: cart-order-placed-event
+            busConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("cart", false));
+
+            // THIS LINE IS REQUIRED TO BIND THE QUEUE
+            busConfig.AddConsumer<OrderPlacedEventConsumer>();
+
+            busConfig.UsingRabbitMq((ctx, cfg) =>
+            {
+                var host = environment.IsDevelopment()
+                ? "amqp://guest:guest@localhost:5672"
+                : builder.Configuration["RabbitMq:Host"];
+
+                cfg.Host(host);
+                cfg.ConfigureEndpoints(ctx);
+            });
+        });
+
         builder.Services.AddScoped<ICartRepository, CartRepository>();
         builder.Services.AddScoped<ResponseDto>();
 
-        builder.Services.AddHttpContextAccessor();
         /*
         builder.Services.AddScoped<AuthenticationDelegateHandler>();
+        builder.Services.AddHttpContextAccessor();
         builder.Services.AddHttpClient<ICartIntegrationService, ProductService>(u =>
         {
             u.BaseAddress = new Uri(config["ServiceUrls:ApiGateway"]);
         }).AddHttpMessageHandler<AuthenticationDelegateHandler>();
         */
 
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ResponseDto).Assembly));
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCartQuery).Assembly));
         builder.Services.AddFluentValidationAutoValidation();
 
         builder.Services.AddProblemDetails();

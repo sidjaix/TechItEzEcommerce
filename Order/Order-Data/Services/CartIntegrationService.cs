@@ -15,7 +15,7 @@ public class CartIntegrationService : ICartIntegrationService
     public async Task<CartIntegrationDto?> GetActiveCartAsync(Guid customerId, CancellationToken cancellationToken)
     {
         // Making the HTTP GET request to the Cart API via the Gateway
-        var response = await _httpClient.GetAsync($"/api/cart/GetCart", cancellationToken);
+        var response = await _httpClient.GetAsync($"/api/Cart/GetCart", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {

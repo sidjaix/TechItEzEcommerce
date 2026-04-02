@@ -19,7 +19,5 @@ public class AzureAppConfigExtension
 
         ConfigurationSetting setting = new ConfigurationSetting(azureDbKey, azureDbValue);
         await client.SetConfigurationSettingAsync(setting);
-
-        //Console.WriteLine($"Key '{azureDbKey}' with value '{azureDbValue}' added to App Configuration.");
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using UserAccess.Application.Features.Admin.Queries;
 using UserAccess.Application.Features.Users.Queries;
 
-namespace User_AzureFunctions
+namespace UserAzureFunctions
 {
     public class User
     {
