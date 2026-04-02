@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="7.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -32,10 +33,6 @@
     <ProjectReference Include="..\Product-Data\Product-Data.csproj" />
     <ProjectReference Include="..\..\Shared\Api-Common\Api-Common.csproj" />
     <ProjectReference Include="..\..\Shared\Logging\Logging.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers/" />
   </ItemGroup>
 
 </Project>
