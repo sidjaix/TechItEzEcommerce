@@ -90,7 +90,6 @@ internal class Program
         // 7. DEPENDENCY INJECTION & MISC SERVICES
         // ==========================================
         builder.Services.AddScoped<ICartRepository, CartRepository>();
-        //builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
         builder.Services.AddScoped<ResponseDto>();
 
         builder.Services.AddHttpContextAccessor();
@@ -98,9 +97,7 @@ internal class Program
         builder.Services.AddScoped<AuthenticationDelegateHandler>();
         builder.Services.AddHttpClient<ICartIntegrationService, ProductService>(u =>
         {
-            u.BaseAddress = builder.Environment.IsDevelopment() ?
-            new Uri("http://localhost:5002") :
-            new Uri(builder.Configuration["ServiceUrls:ProductApi"]);
+            u.BaseAddress = new Uri(config["ServiceUrls:ApiGateway"]);
         }).AddHttpMessageHandler<AuthenticationDelegateHandler>();
         */
 

@@ -3,24 +3,53 @@ using OrderApi.Utility;
 using OrderData.Services;
 using MassTransit;
 using OrderApplication.Interfaces;
+using FluentValidation.AspNetCore;
+using OrderApplication.Queries;
+using Logging.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using ApiCommon.Extensions;
+using OrderData.Persistence;
+using Microsoft.EntityFrameworkCore;
+using ApiCommon.Options;
+using OrderData.Persistence.Repositories;
+using AppContracts.Common;
+using ApiCommon.Handlers;
+using Logging.Middlewares;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        var config = builder.Configuration;
         var environment = builder.Environment;
-        // Retrieve the connection string of Azure App Config Store
-        var useAzureAppConfig = builder.Configuration.GetValue<bool>("Azure:UseAzureAppConfig");
+
+        // ==========================================
+        // 1. CONFIGURATION & LOGGING
+        // ==========================================
+        var useAzureAppConfig = config.GetValue<bool>("Azure:UseAzureAppConfig");
         if (useAzureAppConfig)
         {
-            var azAppConfigConnectionString = builder.Configuration.GetValue<string>("Azure:AppConfig");
-            builder.Configuration.AddAzureAppConfiguration(azAppConfigConnectionString);
+            var azAppConfigConnectionString = config.GetValue<string>("Azure:AppConfig");
+            config.AddAzureAppConfiguration(azAppConfigConnectionString);
         }
-        var config = builder.Configuration;
 
-        builder.AddController();
+        // Comment this line while working on EF Migrations to avoid issues with DB Context Configuration connection string not being available during design time
+        builder.Host.AddLogging("Cart-Api");
+
+        // ==========================================
+        // 2. CONTROLLERS & JSON FORMATTING
+        // ==========================================
+        builder.Services.AddControllers(options =>
+        {
+            //options.Filters.Add<ValidateModelAttribute>();
+        }).AddNewtonsoftJson(o =>
+        {
+            o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            o.SerializerSettings.Formatting = Formatting.Indented;
+            o.SerializerSettings.ContractResolver = new DefaultContractResolver();
+        });
 
         builder.Services.AddMassTransit(config =>
         {
@@ -35,61 +64,103 @@ internal class Program
             });
         });
 
-        // Add application Authentication configuration
-        builder.AddAppAuthetication();
+        // ==========================================
+        // 3. CORS POLICY: In production, modify this with the actual domains you want to allow
+        // ==========================================
+        builder.Services.AddCorsPolicy();
 
-        // Add application Authorization configuration
-        builder.Services.AddAuthorization();
+        // ==========================================
+        // 4. DATABASE & IDENTITY (Always Registered)
+        // ==========================================
+        builder.Services.AddDbContextPool<OrderDbContext>((serviceProvider, options) =>
+        {
+            var connectionString = config.GetConnectionString("DefaultConnection");
+            options.UseSqlServer(connectionString, sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null
+                );
+                sqlOptions.MigrationsAssembly(typeof(OrderDbContext).Assembly.FullName);
+            });
 
-        builder.AddCors();
+            // Keep sensitive data logging restricted to development
+            if (builder.Environment.IsDevelopment())
+            {
+                //options.EnableSensitiveDataLogging();
+            }
+        });
 
-        builder.AddDbContextPool();
+        // ==========================================
+        // 5. AUTHENTICATION & AUTHORIZATION
+        // ==========================================
+        builder.Services.Configure<JwtOptions>(config.GetSection("JWT"));
+        builder.AddAppAuthentication();
+
+        // ==========================================
+        // 6. SWAGGER / OPENAPI
+        // ==========================================
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwagger("Order API");
+
+        // ==========================================
+        // 7. DEPENDENCY INJECTION & MISC SERVICES
+        // ==========================================
+        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<ResponseDto>();
 
         builder.Services.AddHttpContextAccessor();
 
-        builder.Services.AddScoped<AuthenticationHandler>();
-
-        builder.Services.AddHttpClient<ICartIntegrationService, CartIntegrationService>(client =>
+        builder.Services.AddScoped<TokenDelegatingHandler>();
+        builder.Services.AddHttpClient<ICartIntegrationService, CartIntegrationService>(u =>
         {
-            // The internal Docker network DNS name for the gateway
-            // This routes the request internally to the gateway, which then proxies it to Cart-Api
-            client.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ApiGateway"]);
-        }).AddHttpMessageHandler<AuthenticationHandler>();
+            // If running in VS natively, hit the exposed localhost port. 
+            // If in Docker, use the internal Docker DNS name.
+            u.BaseAddress = builder.Environment.IsDevelopment()
+                ? new Uri("http://localhost:8080")
+                : new Uri(builder.Configuration["ServiceUrls:ApiGateway"]);
+        }).AddHttpMessageHandler<TokenDelegatingHandler>();
 
-        // Add services to the container.
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
 
-        builder.AddSwaggerGen();
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCustomerOrdersQuery).Assembly));
+        builder.Services.AddFluentValidationAutoValidation();
 
-        builder.RegisterDependencyService();
+        builder.Services.AddProblemDetails();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        builder.Services.AddHealthChecks();
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        app.UseCors("default");
+        // ==========================================
+        // 8. HTTP REQUEST PIPELINE (Strict Ordering)
+        // ==========================================
 
-        // if (app.Environment.IsDevelopment())
-        // {
-        app.UseSwagger();
-        app.UseSwaggerUI(option =>
-        {
-            option.SwaggerEndpoint("/swagger/v1/swagger.json", "Order API V1");
-            option.RoutePrefix = string.Empty; // Serve Swagger UI at the app's root
-        });
-        //}
+        // 1. Error Handling (Catch errors early)
+        app.UseExceptionHandler();
 
-        //app.UseHttpsRedirection();
+        // 2. Swagger (Serve documentation)
+        app.UseSwaggerWUIWithAuth("Order API");
+
+        // 3. Routing (Figure out which endpoint is being called)
         app.UseRouting();
 
-        // Apply Authentication and Authorization
+        // 4. CORS (Check if the caller is allowed to hit the routed endpoint)
+        app.UseCors("default");
+
+        // 5. Authentication & Logging (Identify the user and start correlation)
         app.UseAuthentication();
+        app.UseCorrelationId();
+
+        // 6. Authorization (Check if the identified user has permissions)
         app.UseAuthorization();
 
+        // 7. Map Endpoints (Execute the logic)
+        app.MapHealthChecks("/health");
         app.MapControllers();
 
-        // Apply Pending Migration
-        app.UseMigiration();
+        // Ensure the database is initialized and seeded before handling requests
+        //await app.InitializeDatabaseAsync();
 
         app.Run();
     }

@@ -9,17 +9,19 @@ namespace OrderApi.Controllers
 {
     [Route("api/order")]
     [ApiController]
+    [Authorize]
     public class OrderController(IMediator mediator) : ControllerBase
     {
         // Frontend only sends the Address now!
         public record CreateOrderRequest(AddressDto ShippingAddress);
 
         /// <summary>
-        /// Retrieves the complete order history for a specific customer.
+        /// Retrieves all orders for the currently logged-in customer.
         /// </summary>
-        [HttpGet("{customerId}")]
-        public async Task<ActionResult<IEnumerable<OrderDto>>> GetCustomerOrders(Guid customerId)
+        [HttpGet("GetCustomerOrders")]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetCustomerOrders()
         {
+            var customerId = User.GetUserId(); // Ensure the user is authenticated and get their ID
             var orders = await mediator.Send(new GetCustomerOrdersQuery(customerId));
 
             if (orders == null || !orders.Any())
@@ -31,9 +33,11 @@ namespace OrderApi.Controllers
         }
 
         /// <summary>
-        /// Creates a new immutable order record.
+        /// Creates a new order for the logged-in customer based on their active cart and provided shipping address.
         /// </summary>
-        [HttpPost]
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("CreateOrder")]
         public async Task<ActionResult<Guid>> CreateOrder([FromBody] CreateOrderRequest request)
         {
             var customerId = User.GetUserId();
