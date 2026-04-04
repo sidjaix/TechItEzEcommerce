@@ -17,6 +17,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${USER_API_CONNECTION_STRING}
+      # Inject the Observability URLs dynamically!
+      - Seq__ServerUrl=http://seq:80
+      - Jaeger__OtlpUrl=http://jaeger:4317
     networks:
       - techitez_network
     healthcheck:
@@ -42,6 +45,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${PRODUCT_API_CONNECTION_STRING}
       - RabbitMq__Host=${RabbitMq_Host}
+      # Inject the Observability URLs dynamically!
+      - Seq__ServerUrl=http://seq:80
+      - Jaeger__OtlpUrl=http://jaeger:4317
     networks:
       - techitez_network
     healthcheck:
@@ -67,6 +73,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${CART_API_CONNECTION_STRING}
       - RabbitMq__Host=${RabbitMq_Host}
+      # Inject the Observability URLs dynamically!
+      - Seq__ServerUrl=http://seq:80
+      - Jaeger__OtlpUrl=http://jaeger:4317
     networks:
       - techitez_network
     healthcheck:
@@ -91,6 +100,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${ORDER_API_CONNECTION_STRING}
+      # Inject the Observability URLs dynamically!
+      - Seq__ServerUrl=http://seq:80
+      - Jaeger__OtlpUrl=http://jaeger:4317
     networks:
       - techitez_network
     healthcheck:
@@ -142,6 +154,29 @@ services:
       - product_api
       - cart_api
       - order_api
+    networks:
+      - techitez_network
+
+  seq:
+    container_name: techitez_seq
+    image: datalust/seq:latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINPASSWORD=Admin@123
+    ports:
+      - '5341:80'
+    networks:
+      - techitez_network
+
+  jaeger:
+    container_name: techitez_jaeger
+    image: jaegertracing/all-in-one:latest
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - '16686:16686'
+      - '4317:4317'
+      - '4318:4318'
     networks:
       - techitez_network
 

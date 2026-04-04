@@ -1,8 +1,12 @@
+using ApiCommon.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.AddStandardSerilog("ApiGateway");
+builder.Services.AddStandardOpenTelemetry(builder.Configuration, "ApiGateway");
 
 // Register YARP
 builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+.LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 var app = builder.Build();
 
@@ -10,7 +14,7 @@ var app = builder.Build();
 //app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.RoutePrefix = "swagger"; // Dashboard accessed at http://localhost:5000/swagger
+    c.RoutePrefix = string.Empty; // Dashboard accessed at http://localhost:5297/
 
     // Add dropdown options mapping to the downstream Swagger JSONs
     c.SwaggerEndpoint("/user-docs/v1/swagger.json", "User API");

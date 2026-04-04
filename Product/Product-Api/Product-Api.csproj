@@ -23,16 +23,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <!-- <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" /> -->
-    <!-- <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" /> -->
-    <!-- <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" /> -->
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Product-Application\Product-Application.csproj" />
     <ProjectReference Include="..\Product-Data\Product-Data.csproj" />
     <ProjectReference Include="..\..\Shared\Api-Common\Api-Common.csproj" />
-    <ProjectReference Include="..\..\Shared\Logging\Logging.csproj" />
   </ItemGroup>
 
 </Project>

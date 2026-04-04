@@ -3,7 +3,6 @@ using MassTransit;
 using OrderApplication.Interfaces;
 using FluentValidation.AspNetCore;
 using OrderApplication.Queries;
-using Logging.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using ApiCommon.Extensions;
@@ -12,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using ApiCommon.Options;
 using OrderData.Persistence.Repositories;
 using ApiCommon.Handlers;
-using Logging.Middlewares;
 using OrderApi.Services;
 
 internal class Program
@@ -22,19 +20,21 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
         var config = builder.Configuration;
         var environment = builder.Environment;
+        var appName = "Order-Api";
 
         // ==========================================
         // 1. CONFIGURATION & LOGGING
         // ==========================================
+        // Comment this line while working on EF Migrations to avoid issues with DB Context Configuration connection string not being available during design time
+        builder.Host.AddStandardSerilog(appName);
+        builder.Services.AddStandardOpenTelemetry(config, appName);
+
         var useAzureAppConfig = config.GetValue<bool>("Azure:UseAzureAppConfig");
         if (useAzureAppConfig)
         {
             var azAppConfigConnectionString = config.GetValue<string>("Azure:AppConfig");
             config.AddAzureAppConfiguration(azAppConfigConnectionString);
         }
-
-        // Comment this line while working on EF Migrations to avoid issues with DB Context Configuration connection string not being available during design time
-        builder.Host.AddLogging("Cart-Api");
 
         // ==========================================
         // 2. CONTROLLERS & JSON FORMATTING
@@ -87,7 +87,7 @@ internal class Program
         // 6. SWAGGER / OPENAPI
         // ==========================================
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwagger("Order API");
+        builder.Services.AddSwagger(appName);
 
         // ==========================================
         // 7. DEPENDENCY INJECTION & MISC SERVICES
@@ -139,7 +139,7 @@ internal class Program
         app.UseExceptionHandler();
 
         // 2. Swagger (Serve documentation)
-        app.UseSwaggerWUIWithAuth("Order API");
+        app.UseSwaggerWUIWithAuth(appName);
 
         // 3. Routing (Figure out which endpoint is being called)
         app.UseRouting();
@@ -147,9 +147,9 @@ internal class Program
         // 4. CORS (Check if the caller is allowed to hit the routed endpoint)
         app.UseCors("default");
 
-        // 5. Authentication & Logging (Identify the user and start correlation)
+        // 5. Authentication & Logging (Identify the user)
         app.UseAuthentication();
-        app.UseCorrelationId();
+        app.UseCustomContextTracking();
 
         // 6. Authorization (Check if the identified user has permissions)
         app.UseAuthorization();

@@ -6,13 +6,12 @@ using CartData.Persistence;
 using CartApplication.Interfaces;
 using CartData.Persistence.Repositories;
 using CartApplication.DTOs;
-using Logging.Extensions;
 using ApiCommon.Extensions;
-using Logging.Middlewares;
 using FluentValidation.AspNetCore;
 using ApiCommon.Options;
 using MassTransit;
 using CartApi.Consumers;
+using ApiCommon.Handlers;
 
 internal class Program
 {
@@ -21,19 +20,21 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
         var config = builder.Configuration;
         var environment = builder.Environment;
+        var appName = "Cart-Api";
 
         // ==========================================
         // 1. CONFIGURATION & LOGGING
         // ==========================================
+        // Comment this line while working on EF Migrations to avoid issues with DB Context Configuration connection string not being available during design time
+        builder.Host.AddStandardSerilog(appName);
+        builder.Services.AddStandardOpenTelemetry(config, appName);
+
         var useAzureAppConfig = config.GetValue<bool>("Azure:UseAzureAppConfig");
         if (useAzureAppConfig)
         {
             var azAppConfigConnectionString = config.GetValue<string>("Azure:AppConfig");
             config.AddAzureAppConfiguration(azAppConfigConnectionString);
         }
-
-        // Comment this line while working on EF Migrations to avoid issues with DB Context Configuration connection string not being available during design time
-        builder.Host.AddLogging("Cart-Api");
 
         // ==========================================
         // 2. CONTROLLERS & JSON FORMATTING
@@ -86,7 +87,7 @@ internal class Program
         // 6. SWAGGER / OPENAPI
         // ==========================================
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwagger("Cart API");
+        builder.Services.AddSwagger(appName);
 
         // ==========================================
         // 7. DEPENDENCY INJECTION & MISC SERVICES
@@ -111,16 +112,6 @@ internal class Program
         });
 
         builder.Services.AddScoped<ICartRepository, CartRepository>();
-        builder.Services.AddScoped<ResponseDto>();
-
-        /*
-        builder.Services.AddScoped<AuthenticationDelegateHandler>();
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddHttpClient<ICartIntegrationService, ProductService>(u =>
-        {
-            u.BaseAddress = new Uri(config["ServiceUrls:ApiGateway"]);
-        }).AddHttpMessageHandler<AuthenticationDelegateHandler>();
-        */
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetCartQuery).Assembly));
         builder.Services.AddFluentValidationAutoValidation();
@@ -139,7 +130,7 @@ internal class Program
         app.UseExceptionHandler();
 
         // 2. Swagger (Serve documentation)
-        app.UseSwaggerWUIWithAuth("Cart API");
+        app.UseSwaggerWUIWithAuth(appName);
 
         // 3. Routing (Figure out which endpoint is being called)
         app.UseRouting();
@@ -147,9 +138,9 @@ internal class Program
         // 4. CORS (Check if the caller is allowed to hit the routed endpoint)
         app.UseCors("default");
 
-        // 5. Authentication & Logging (Identify the user and start correlation)
+        // 5. Authentication & Logging (Identify the user)
         app.UseAuthentication();
-        app.UseCorrelationId();
+        app.UseCustomContextTracking();
 
         // 6. Authorization (Check if the identified user has permissions)
         app.UseAuthorization();

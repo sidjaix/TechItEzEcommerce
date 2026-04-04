@@ -27,7 +27,6 @@
    <ProjectReference Include="..\Cart-Application\Cart-Application.csproj" />
     <ProjectReference Include="..\Cart-Data\Cart-Data.csproj" />
     <ProjectReference Include="..\..\Shared\Api-Common\Api-Common.csproj" />
-    <ProjectReference Include="..\..\Shared\Logging\Logging.csproj" />
   </ItemGroup>
 
 </Project>

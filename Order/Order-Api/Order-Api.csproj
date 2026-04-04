@@ -22,19 +22,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    
-   <!-- 
-   <PackageReference Include="MassTransit" Version="8.2.5" />
-   <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
-   <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" /> 
-   -->
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Logging\Logging.csproj" />
+     <ProjectReference Include="..\Order-Application\Order-Application.csproj" />
     <ProjectReference Include="..\..\Order\Order-Data\Order-Data.csproj" />
     <ProjectReference Include="..\..\Shared\Api-Common\Api-Common.csproj" />
-     <ProjectReference Include="..\Order-Application\Order-Application.csproj" />
   </ItemGroup>
 
 </Project>
