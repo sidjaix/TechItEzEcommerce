@@ -27,7 +27,6 @@ COPY ["UserAccess/User.Infrastructure/User.Infrastructure.csproj", "UserAccess/U
 COPY ["UserAccess/User-Core/User-Core.csproj", "UserAccess/User-Core/"]
 
 # Shared Module Dependencies
-COPY ["Shared/Logging/Logging.csproj", "Shared/Logging/"]
 COPY ["Shared/Api-Common/Api-Common.csproj", "Shared/Api-Common/"]
 
 # Restore dependencies for the UserAccess module projects

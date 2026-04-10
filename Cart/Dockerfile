@@ -26,7 +26,6 @@ COPY ["Cart/Cart-Data/Cart-Data.csproj", "Cart/Cart-Data/"]
 COPY ["Cart/Cart-Core/Cart-Core.csproj", "Cart/Cart-Core/"]
 
 # Shared Module Dependencies
-COPY ["Shared/Logging/Logging.csproj", "Shared/Logging/"]
 COPY ["Shared/Api-Common/Api-Common.csproj", "Shared/Api-Common/"]
 
 # Restore dependencies for the Cart module projects

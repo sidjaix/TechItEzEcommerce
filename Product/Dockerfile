@@ -26,7 +26,6 @@ COPY ["Product/Product-Data/Product-Data.csproj", "Product/Product-Data/"]
 COPY ["Product/Product-Core/Product-Core.csproj", "Product/Product-Core/"]
 
 # Shared Module Dependencies
-COPY ["Shared/Logging/Logging.csproj", "Shared/Logging/"]
 COPY ["Shared/Api-Common/Api-Common.csproj", "Shared/Api-Common/"]
 
 # Restore dependencies for the Product module projects

@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.17.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.22.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.ApplicationInsights" Version="1.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
     <PackageReference Include="MediatR" Version="14.0.0" />
     <!-- <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
@@ -37,6 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\User.Application\User.Application.csproj" />
-    <ProjectReference Include="..\..\Shared\Logging\Logging.csproj" />
+    <ProjectReference Include="..\..\Shared\Api-Common\Api-Common.csproj" />
   </ItemGroup>
 </Project>

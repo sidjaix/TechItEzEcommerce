@@ -26,7 +26,6 @@ COPY ["Order/Order-Data/Order-Data.csproj", "Order/Order-Data/"]
 COPY ["Order/Order-Core/Order-Core.csproj", "Order/Order-Core/"]
 
 # Shared Module Dependencies
-COPY ["Shared/Logging/Logging.csproj", "Shared/Logging/"]
 COPY ["Shared/Api-Common/Api-Common.csproj", "Shared/Api-Common/"]
 
 # Restore dependencies for the Order module projects
