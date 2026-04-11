@@ -230,3 +230,11 @@ navigate to compose file location
 docker-compose build
 docker-compose up -d
 -->
+
+```Run Ollama Commands on docker Container
+docker exec -it <ContainerName> ollama pull <modelName>:<modelTag>
+Examples:
+docker exec -it techitez_ollama ollama llama3:latest
+docker exec -it techitez_ollama ollama all-minilm:latest
+docker exec -it techitez_ollama ollama nomic-embed-text:latest
+```

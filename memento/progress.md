@@ -28,3 +28,10 @@
 - Serilog streams enriched, structured logs to Seq natively.
 - OpenTelemetry tracks W3C Trace Contexts across YARP, HTTP, SQL Server, and RabbitMQ, visualized as waterfalls in Jaeger.
 - .NET 8 Global Exception Handler intercepts errors and returns standardized RFC 7807 ProblemDetails to the client.
+
+## 🚀 Phase 6: AI Transition (RAG & Agentic AI) - In Progress
+
+- Installed `Microsoft.SemanticKernel` and connectors for Ollama and Qdrant into `Api-Common`.
+- Created an extension method `AddSemanticKernelWithOllama()` in `Api-Common` to inject Semantic Kernel into dependency injection, configured to communicate with the local `ollama` Docker container.
+- Configured a Qdrant background worker (`ProductVectorizationWorker`) to iterate over the active catalog, generate text embeddings via local Ollama, and perform vector ingestion automatically at startup.
+- Implemented a `GET /api/products/semantic-search` endpoint orchestrating Qdrant similarity searches mapped cleanly to the `CatalogItemDto` interface, adhering strictly to Clean Architecture separation via `ISemanticSearchService`.

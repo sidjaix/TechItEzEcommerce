@@ -13,148 +13,154 @@ using ProductApplication.Queries;
 using MassTransit;
 using ProductApi.Consumers;
 using ApiCommon.Handlers;
+using ProductApi.Services;
 
 internal class Program
 {
-    private static async Task Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-        var config = builder.Configuration;
-        var environment = builder.Environment;
-        var appName = "Product-Api";
+	private static async Task Main(string[] args)
+	{
+		var builder = WebApplication.CreateBuilder(args);
+		var config = builder.Configuration;
+		var environment = builder.Environment;
+		var appName = "Product-Api";
 
-        // ==========================================
-        // 1. CONFIGURATION
-        // ==========================================
-        // Comment this line while working on EF Migrations to avoid issues with DB Context Configuration connection string not being available during design time
-        builder.Host.AddStandardSerilog(appName);
-        builder.Services.AddStandardOpenTelemetry(config, appName);
+		// ==========================================
+		// 1. CONFIGURATION
+		// ==========================================
+		// Comment this line while working on EF Migrations to avoid issues with DB Context Configuration connection string not being available during design time
+		//builder.Host.AddStandardSerilog(appName);
+		builder.Services.AddStandardOpenTelemetry(config, appName);
 
-        var useAzureAppConfig = config.GetValue<bool>("Azure:UseAzureAppConfig");
-        if (useAzureAppConfig)
-        {
-            var azAppConfigConnectionString = config.GetValue<string>("Azure:AppConfig");
-            config.AddAzureAppConfiguration(azAppConfigConnectionString);
-        }
+		var useAzureAppConfig = config.GetValue<bool>("Azure:UseAzureAppConfig");
+		if (useAzureAppConfig)
+		{
+			var azAppConfigConnectionString = config.GetValue<string>("Azure:AppConfig");
+			config.AddAzureAppConfiguration(azAppConfigConnectionString);
+		}
 
-        // ==========================================
-        // 2. CONTROLLERS & JSON FORMATTING
-        // ==========================================
-        builder.Services.AddControllers(options =>
-        {
-            options.Filters.Add<ValidateModelAttribute>();
-        }).AddNewtonsoftJson(o =>
-        {
-            o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            o.SerializerSettings.Formatting = Formatting.Indented;
-            o.SerializerSettings.ContractResolver = new DefaultContractResolver();
-        });
+		// ==========================================
+		// 2. CONTROLLERS & JSON FORMATTING
+		// ==========================================
+		builder.Services.AddControllers(options =>
+		{
+			options.Filters.Add<ValidateModelAttribute>();
+		}).AddNewtonsoftJson(o =>
+		{
+			o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+			o.SerializerSettings.Formatting = Formatting.Indented;
+			o.SerializerSettings.ContractResolver = new DefaultContractResolver();
+		});
 
-        // ==========================================
-        // 3. CORS POLICY: In production, modify this with the actual domains you want to allow
-        // ==========================================
-        builder.Services.AddCorsPolicy();
+		// ==========================================
+		// 3. CORS POLICY: In production, modify this with the actual domains you want to allow
+		// ==========================================
+		builder.Services.AddCorsPolicy();
 
-        // ==========================================
-        // 4. DATABASE & IDENTITY (Always Registered)
-        // ==========================================
-        builder.Services.AddDbContextPool<ProductDbContext>((serviceProvider, options) =>
-        {
-            var connectionString = config.GetConnectionString("DefaultConnection");
-            options.UseSqlServer(connectionString, sqlOptions =>
-            {
-                sqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 5,
-                    maxRetryDelay: TimeSpan.FromSeconds(30),
-                    errorNumbersToAdd: null
-                );
-                sqlOptions.MigrationsAssembly(typeof(ProductDbContext).Assembly.FullName);
-            });
+		// ==========================================
+		// 4. DATABASE & IDENTITY (Always Registered)
+		// ==========================================
+		builder.Services.AddDbContextPool<ProductDbContext>((serviceProvider, options) =>
+		{
+			var connectionString = config.GetConnectionString("DefaultConnection");
+			options.UseSqlServer(connectionString, sqlOptions =>
+			{
+				sqlOptions.EnableRetryOnFailure(
+					maxRetryCount: 5,
+					maxRetryDelay: TimeSpan.FromSeconds(30),
+					errorNumbersToAdd: null
+				);
+				sqlOptions.MigrationsAssembly(typeof(ProductDbContext).Assembly.FullName);
+			});
 
-            // Keep sensitive data logging restricted to development
-            if (environment.IsDevelopment())
-            {
-                //options.EnableSensitiveDataLogging();
-            }
-        });
+			// Keep sensitive data logging restricted to development
+			if (environment.IsDevelopment())
+			{
+				//options.EnableSensitiveDataLogging();
+			}
+		});
 
-        // ==========================================
-        // 5. AUTHENTICATION & AUTHORIZATION
-        // ==========================================
-        builder.Services.Configure<JwtOptions>(config.GetSection("JWT"));
-        builder.AddAppAuthentication();
+		// ==========================================
+		// 5. AUTHENTICATION & AUTHORIZATION
+		// ==========================================
+		builder.Services.Configure<JwtOptions>(config.GetSection("JWT"));
+		builder.AddAppAuthentication();
 
-        // ==========================================
-        // 6. SWAGGER / OPENAPI
-        // ==========================================
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwagger(appName);
+		// ==========================================
+		// 6. SWAGGER / OPENAPI
+		// ==========================================
+		builder.Services.AddEndpointsApiExplorer();
+		builder.Services.AddSwagger(appName);
 
-        // ==========================================
-        // 7. DEPENDENCY INJECTION & MISC SERVICES
-        // ==========================================
-        builder.Services.AddMassTransit(busConfig =>
-        {
-            // This will create a queue named: product-order-placed-event
-            busConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("product", false));
+		// ==========================================
+		// 7. DEPENDENCY INJECTION & MISC SERVICES
+		// ==========================================
+		builder.Services.AddMassTransit(busConfig =>
+		{
+			// This will create a queue named: product-order-placed-event
+			busConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("product", false));
 
-            // THIS LINE IS REQUIRED TO BIND THE QUEUE
-            busConfig.AddConsumer<OrderPlacedEventConsumer>();
+			// THIS LINE IS REQUIRED TO BIND THE QUEUE
+			busConfig.AddConsumer<OrderPlacedEventConsumer>();
 
-            busConfig.UsingRabbitMq((ctx, cfg) =>
-            {
-                var host = environment.IsDevelopment()
-                ? "amqp://guest:guest@localhost:5672"
-                : builder.Configuration["RabbitMq:Host"];
+			busConfig.UsingRabbitMq((ctx, cfg) =>
+			{
+				var host = environment.IsDevelopment()
+				? "amqp://guest:guest@localhost:5672"
+				: builder.Configuration["RabbitMq:Host"];
 
-                cfg.Host(host);
-                cfg.ConfigureEndpoints(ctx);
-            });
-        });
+				cfg.Host(host);
+				cfg.ConfigureEndpoints(ctx);
+			});
+		});
 
-        // In Program.cs or DependencyInjection.cs
-        builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
-        builder.Services.AddScoped<ITaxonomyRepository, TaxonomyRepository>();
+		builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+		builder.Services.AddScoped<ITaxonomyRepository, TaxonomyRepository>();
 
-        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetActiveCatalogItemsQuery).Assembly));
-        builder.Services.AddFluentValidationAutoValidation();
+		// Register Semantic Search Services (AI Stack)
+		builder.Services.AddSemanticKernelWithOllama(config);
+		builder.Services.AddScoped<ISemanticSearchService, SemanticSearchService>();
 
-        builder.Services.AddProblemDetails();
-        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-        builder.Services.AddHealthChecks();
+		builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetActiveCatalogItemsQuery).Assembly));
+		builder.Services.AddFluentValidationAutoValidation();
 
-        var app = builder.Build();
+		builder.Services.AddProblemDetails();
+		builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+		builder.Services.AddHealthChecks();
 
-        // ==========================================
-        // 8. HTTP REQUEST PIPELINE (Strict Ordering)
-        // ==========================================
+		builder.Services.AddHostedService<ProductVectorizationWorker>();
 
-        // 1. Error Handling (Catch errors early)
-        app.UseExceptionHandler();
+		var app = builder.Build();
 
-        // 2. Swagger (Serve documentation)
-        app.UseSwaggerWUIWithAuth(appName);
+		// ==========================================
+		// 8. HTTP REQUEST PIPELINE (Strict Ordering)
+		// ==========================================
 
-        // 3. Routing (Figure out which endpoint is being called)
-        app.UseRouting();
+		// 1. Error Handling (Catch errors early)
+		app.UseExceptionHandler();
 
-        // 4. CORS (Check if the caller is allowed to hit the routed endpoint)
-        app.UseCors("default");
+		// 2. Swagger (Serve documentation)
+		app.UseSwaggerWUIWithAuth(appName);
 
-        // 5. Authentication & Logging (Identify the user)
-        app.UseAuthentication();
-        app.UseCustomContextTracking();
+		// 3. Routing (Figure out which endpoint is being called)
+		app.UseRouting();
 
-        // 6. Authorization (Check if the identified user has permissions)
-        app.UseAuthorization();
+		// 4. CORS (Check if the caller is allowed to hit the routed endpoint)
+		app.UseCors("default");
 
-        // 7. Map Endpoints (Execute the logic)
-        app.MapHealthChecks("/health");
-        app.MapControllers();
+		// 5. Authentication & Logging (Identify the user)
+		app.UseAuthentication();
+		app.UseCustomContextTracking();
 
-        // Ensure the database is initialized and seeded before handling requests
-        await app.InitializeDatabaseAsync();
+		// 6. Authorization (Check if the identified user has permissions)
+		app.UseAuthorization();
 
-        app.Run();
-    }
+		// 7. Map Endpoints (Execute the logic)
+		app.MapHealthChecks("/health");
+		app.MapControllers();
+
+		// Ensure the database is initialized and seeded before handling requests
+		await app.InitializeDatabaseAsync();
+
+		app.Run();
+	}
 }

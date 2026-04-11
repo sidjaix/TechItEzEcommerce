@@ -23,6 +23,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <!-- <PackageReference Include="Microsoft.Extensions.VectorData.Abstractions" Version="10.1.0" /> -->
   </ItemGroup>
 
   <ItemGroup>

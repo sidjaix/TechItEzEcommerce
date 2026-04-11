@@ -45,9 +45,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${PRODUCT_API_CONNECTION_STRING}
       - RabbitMq__Host=${RabbitMq_Host}
-      # Inject the Observability URLs dynamically!
       - Seq__ServerUrl=http://seq:80
       - Jaeger__OtlpUrl=http://jaeger:4317
+      - Qdrant__Host=qdrant
+      - Ollama__Endpoint=http://ollama:11434
     networks:
       - techitez_network
     healthcheck:
@@ -180,9 +181,32 @@ services:
     networks:
       - techitez_network
 
+  qdrant:
+    container_name: techitez_qdrant
+    image: qdrant/qdrant:latest
+    ports:
+      - '6333:6333'
+      - '6334:6334'
+    volumes:
+      - qdrant-data:/qdrant/storage
+    networks:
+      - techitez_network
+
+  ollama:
+    container_name: techitez_ollama
+    image: ollama/ollama:latest
+    ports:
+      - '11434:11434'
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - techitez_network
+
 networks:
   techitez_network:
     driver: bridge
 
 volumes:
   techitez-sqledge:
+  qdrant-data:
+  ollama-data:

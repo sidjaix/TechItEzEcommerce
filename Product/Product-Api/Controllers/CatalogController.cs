@@ -12,46 +12,50 @@ namespace ProductApi.Controllers;
 [Authorize] // Mandate a valid JWT for the entire controller
 public class CatalogController : ControllerBase
 {
-    private readonly IMediator _mediator;
-    public CatalogController(IMediator mediator) => _mediator = mediator;
+	private readonly IMediator _mediator;
+	public CatalogController(IMediator mediator) => _mediator = mediator;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<CatalogItemDto>>> GetActiveItems()
-        => Ok(await _mediator.Send(new GetActiveCatalogItemsQuery()));
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<CatalogItemDto>>> GetActiveItems()
+		=> Ok(await _mediator.Send(new GetActiveCatalogItemsQuery()));
 
-    [HttpGet("{slug}")]
-    public async Task<ActionResult<CatalogItemDetailDto>> GetBySlug(string slug)
-    {
-        var result = await _mediator.Send(new GetCatalogItemBySlugQuery(slug));
-        return result != null ? Ok(result) : NotFound();
-    }
+	[HttpGet("{slug}")]
+	public async Task<ActionResult<CatalogItemDetailDto>> GetBySlug(string slug)
+	{
+		var result = await _mediator.Send(new GetCatalogItemBySlugQuery(slug));
+		return result != null ? Ok(result) : NotFound();
+	}
 
-    [HttpGet("search")]
-    public async Task<ActionResult<IEnumerable<CatalogItemDto>>> Search([FromQuery] string term)
-        => Ok(await _mediator.Send(new SearchCatalogItemsQuery(term)));
+	[HttpGet("search")]
+	public async Task<ActionResult<IEnumerable<CatalogItemDto>>> Search([FromQuery] string term)
+		=> Ok(await _mediator.Send(new SearchCatalogItemsQuery(term)));
 
-    [HttpPost]
-    public async Task<ActionResult<Guid>> Create(CreateCatalogItemCommand command)
-        => Ok(await _mediator.Send(command));
+	[HttpGet("semantic-search")]
+	public async Task<ActionResult<IEnumerable<CatalogItemDto>>> SemanticSearch([FromQuery] string query)
+		=> Ok(await _mediator.Send(new SemanticSearchQuery(query)));
 
-    [HttpPost("variant")]
-    public async Task<IActionResult> AddVariant(AddVariantCommand command)
-    {
-        var result = await _mediator.Send(command);
-        return result ? Ok() : BadRequest("Could not add variant.");
-    }
+	[HttpPost]
+	public async Task<ActionResult<Guid>> Create(CreateCatalogItemCommand command)
+		=> Ok(await _mediator.Send(command));
 
-    [HttpPost("review")]
-    public async Task<IActionResult> AddReview(AddProductReviewCommand command)
-    {
-        var result = await _mediator.Send(command);
-        return result ? Ok() : BadRequest();
-    }
+	[HttpPost("variant")]
+	public async Task<IActionResult> AddVariant(AddVariantCommand command)
+	{
+		var result = await _mediator.Send(command);
+		return result ? Ok() : BadRequest("Could not add variant.");
+	}
 
-    [HttpPut("semantic-profile")]
-    public async Task<IActionResult> UpdateSemanticProfile(UpdateSemanticProfileCommand command)
-    {
-        var result = await _mediator.Send(command);
-        return result ? Ok() : NotFound();
-    }
+	[HttpPost("review")]
+	public async Task<IActionResult> AddReview(AddProductReviewCommand command)
+	{
+		var result = await _mediator.Send(command);
+		return result ? Ok() : BadRequest();
+	}
+
+	[HttpPut("semantic-profile")]
+	public async Task<IActionResult> UpdateSemanticProfile(UpdateSemanticProfileCommand command)
+	{
+		var result = await _mediator.Send(command);
+		return result ? Ok() : NotFound();
+	}
 }
