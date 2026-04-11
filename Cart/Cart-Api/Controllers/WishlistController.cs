@@ -8,7 +8,7 @@ namespace CartApi.Controllers;
 [Route("api/wishlist")]
 [ApiController]
 [Authorize]
-public class WishlistController(IWishlistRepository wishlistRepository, ResponseDto response) : ControllerBase
+public class WishlistController() : ControllerBase
 {
 
 }
