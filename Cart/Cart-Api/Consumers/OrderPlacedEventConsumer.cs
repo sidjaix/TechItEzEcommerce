@@ -7,13 +7,13 @@ namespace CartApi.Consumers;
 
 public class OrderPlacedEventConsumer : IConsumer<OrderPlacedEvent>
 {
-    private readonly IMediator _mediator;
+	private readonly IMediator _mediator;
 
-    public OrderPlacedEventConsumer(IMediator mediator) => _mediator = mediator;
+	public OrderPlacedEventConsumer(IMediator mediator) => _mediator = mediator;
 
-    public async Task Consume(ConsumeContext<OrderPlacedEvent> context)
-    {
-        // Dispatches the pure Application command
-        await _mediator.Send(new ClearCartCommand(context.Message.CustomerId));
-    }
+	public async Task Consume(ConsumeContext<OrderPlacedEvent> context)
+	{
+		// Dispatches the pure Application command
+		await _mediator.Send(new ClearCartCommand(context.Message.CustomerId));
+	}
 }
