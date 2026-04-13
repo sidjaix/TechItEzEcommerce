@@ -1,6 +1,25 @@
 name: tie-e-commerce
 
 services:
+  api_gateway:
+    container_name: e_commerce_api_gateway
+    image: sidjaix/api-gateway:latest
+    build:
+      context: .
+      dockerfile: ./ApiGateway/Dockerfile
+    ports:
+      - '8080:80' # This is your new master entry point!
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - user_api
+      - product_api
+      - cart_api
+      - order_api
+    networks:
+      - techitez_network
+
   user_api:
     container_name: e_commerce_user_api
     image: sidjaix/user-api:latest
@@ -20,6 +39,7 @@ services:
       # Inject the Observability URLs dynamically!
       - Seq__ServerUrl=http://seq:80
       - Jaeger__OtlpUrl=http://jaeger:4317
+      - Gateway__BaseUrl=http://api_gateway:8080
     networks:
       - techitez_network
     healthcheck:
@@ -49,6 +69,7 @@ services:
       - Jaeger__OtlpUrl=http://jaeger:4317
       - Qdrant__Host=qdrant
       - Ollama__Endpoint=http://ollama:11434
+      - Gateway__BaseUrl=http://api_gateway:8080
     networks:
       - techitez_network
     healthcheck:
@@ -77,6 +98,7 @@ services:
       # Inject the Observability URLs dynamically!
       - Seq__ServerUrl=http://seq:80
       - Jaeger__OtlpUrl=http://jaeger:4317
+      - Gateway__BaseUrl=http://api_gateway:8080
     networks:
       - techitez_network
     healthcheck:
@@ -104,6 +126,36 @@ services:
       # Inject the Observability URLs dynamically!
       - Seq__ServerUrl=http://seq:80
       - Jaeger__OtlpUrl=http://jaeger:4317
+      - Gateway__BaseUrl=http://api_gateway:8080
+    networks:
+      - techitez_network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ai_api:
+    container_name: e_commerce_ai_api
+    image: sidjaix/ai-api:latest
+    build:
+      context: .
+      dockerfile: ./AI/Dockerfile
+    ports:
+      - '5005:80'
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - api_gateway
+      - ollama
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Seq__ServerUrl=http://seq:80
+      - Jaeger__OtlpUrl=http://jaeger:4317
+      - Ollama__Endpoint=http://ollama:11434
+      - Qdrant__Host=qdrant
+      - Gateway__BaseUrl=http://api_gateway:8080
     networks:
       - techitez_network
     healthcheck:
@@ -136,25 +188,6 @@ services:
       - '1433:1433'
     volumes:
       - techitez-sqledge:/var/opt/mssql
-    networks:
-      - techitez_network
-
-  api_gateway:
-    container_name: e_commerce_api_gateway
-    image: sidjaix/api-gateway:latest
-    build:
-      context: .
-      dockerfile: ./ApiGateway/Dockerfile
-    ports:
-      - '8080:80' # This is your new master entry point!
-    env_file:
-      - .env
-    restart: always
-    depends_on:
-      - user_api
-      - product_api
-      - cart_api
-      - order_api
     networks:
       - techitez_network
 
@@ -197,6 +230,8 @@ services:
     image: ollama/ollama:latest
     ports:
       - '11434:11434'
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
     volumes:
       - ollama-data:/root/.ollama
     networks:
