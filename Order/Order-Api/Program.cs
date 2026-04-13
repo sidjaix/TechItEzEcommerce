@@ -115,9 +115,7 @@ internal class Program
 		{
 			// If running in VS natively, hit the exposed localhost port. 
 			// If in Docker, use the internal Docker DNS name.
-			u.BaseAddress = builder.Environment.IsDevelopment()
-				? new Uri("http://localhost:8080")
-				: new Uri(builder.Configuration["ServiceUrls:ApiGateway"]);
+			u.BaseAddress = new Uri(config["Gateway:BaseUrl"] ?? "http://api_gateway:8080");
 
 		}).AddHttpMessageHandler<TokenDelegatingHandler>();
 

@@ -4,7 +4,7 @@ using ProductApplication.Interfaces;
 
 namespace ProductApplication.Queries;
 
-public record SemanticSearchQuery(string Query, int Top = 5) : IRequest<IEnumerable<CatalogItemDto>>;
+public record SemanticSearchQuery(string Query, int Top = 1) : IRequest<IEnumerable<CatalogItemDto>>;
 
 public class SemanticSearchQueryHandler : IRequestHandler<SemanticSearchQuery, IEnumerable<CatalogItemDto>>
 {
