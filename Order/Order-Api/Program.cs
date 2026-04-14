@@ -97,9 +97,7 @@ internal class Program
 			busConfig.SetKebabCaseEndpointNameFormatter();
 			busConfig.UsingRabbitMq((ctx, cfg) =>
 			{
-				var host = environment.IsDevelopment()
-				? "amqp://guest:guest@localhost:5672"
-				: config["RabbitMq:Host"];
+				var host = config["RabbitMq:Host"] ?? "amqp://guest:guest@rabbit_mq:5672";
 
 				cfg.Host(host);
 				cfg.ConfigureEndpoints(ctx);

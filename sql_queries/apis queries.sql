@@ -15,3 +15,10 @@ select *
 from CartApiDb.bsk.CartItems
 
 
+select *
+from OrderApiDb.ord.Orders
+select *
+from OrderApiDb.ord.OrderItems
+where OrderId='93d90c36-b4d3-4946-805c-0dfd5073b1df'
+
+
