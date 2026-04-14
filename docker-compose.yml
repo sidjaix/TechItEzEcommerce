@@ -17,6 +17,7 @@ services:
       - product_api
       - cart_api
       - order_api
+      - ai_api
     networks:
       - techitez_network
 
@@ -33,13 +34,15 @@ services:
     restart: always
     depends_on:
       - sqlserver
+      - seq
+      - jaeger
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${USER_API_CONNECTION_STRING}
       # Inject the Observability URLs dynamically!
-      - Seq__ServerUrl=http://seq:80
-      - Jaeger__OtlpUrl=http://jaeger:4317
-      - Gateway__BaseUrl=http://api_gateway:8080
+      - Seq__ServerUrl=${Seq_ServerUrl}
+      - Jaeger__OtlpUrl=${Jaeger_OtlpUrl}
+      - Gateway__BaseUrl=${Gateway_BaseUrl}
     networks:
       - techitez_network
     healthcheck:
@@ -61,15 +64,20 @@ services:
     restart: always
     depends_on:
       - sqlserver
+      - rabbit_mq
+      - ollama
+      - seq
+      - jaeger
+      - qdrant
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${PRODUCT_API_CONNECTION_STRING}
       - RabbitMq__Host=${RabbitMq_Host}
-      - Seq__ServerUrl=http://seq:80
-      - Jaeger__OtlpUrl=http://jaeger:4317
-      - Qdrant__Host=qdrant
-      - Ollama__Endpoint=http://ollama:11434
-      - Gateway__BaseUrl=http://api_gateway:8080
+      - Seq__ServerUrl=${Seq_ServerUrl}
+      - Jaeger__OtlpUrl=${Jaeger_OtlpUrl}
+      - Qdrant__Host=${Qdrant_Host}
+      - Ollama__Endpoint=${Ollama_Endpoint}
+      - Gateway__BaseUrl=${Gateway_BaseUrl}
     networks:
       - techitez_network
     healthcheck:
@@ -91,14 +99,17 @@ services:
     restart: always
     depends_on:
       - sqlserver
+      - rabbit_mq
+      - seq
+      - jaeger
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${CART_API_CONNECTION_STRING}
       - RabbitMq__Host=${RabbitMq_Host}
       # Inject the Observability URLs dynamically!
-      - Seq__ServerUrl=http://seq:80
-      - Jaeger__OtlpUrl=http://jaeger:4317
-      - Gateway__BaseUrl=http://api_gateway:8080
+      - Seq__ServerUrl=${Seq_ServerUrl}
+      - Jaeger__OtlpUrl=${Jaeger_OtlpUrl}
+      - Gateway__BaseUrl=${Gateway_BaseUrl}
     networks:
       - techitez_network
     healthcheck:
@@ -120,13 +131,15 @@ services:
     restart: always
     depends_on:
       - sqlserver
+      - seq
+      - jaeger
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=${ORDER_API_CONNECTION_STRING}
       # Inject the Observability URLs dynamically!
-      - Seq__ServerUrl=http://seq:80
-      - Jaeger__OtlpUrl=http://jaeger:4317
-      - Gateway__BaseUrl=http://api_gateway:8080
+      - Seq__ServerUrl=${Seq_ServerUrl}
+      - Jaeger__OtlpUrl=${Jaeger_OtlpUrl}
+      - Gateway__BaseUrl=${Gateway_BaseUrl}
     networks:
       - techitez_network
     healthcheck:
@@ -147,15 +160,18 @@ services:
       - .env
     restart: always
     depends_on:
-      - api_gateway
       - ollama
+      - rabbit_mq
+      - seq
+      - jaeger
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - Seq__ServerUrl=http://seq:80
-      - Jaeger__OtlpUrl=http://jaeger:4317
-      - Ollama__Endpoint=http://ollama:11434
-      - Qdrant__Host=qdrant
-      - Gateway__BaseUrl=http://api_gateway:8080
+      - Seq__ServerUrl=${Seq_ServerUrl}
+      - Jaeger__OtlpUrl=${Jaeger_OtlpUrl}
+      - Ollama__Endpoint=${Ollama_Endpoint}
+      - Qdrant__Host=${Qdrant_Host}
+      - Gateway__BaseUrl=${Gateway_BaseUrl}
+      - RabbitMq__Host=${RabbitMq_Host}
     networks:
       - techitez_network
     healthcheck:
