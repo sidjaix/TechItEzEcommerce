@@ -51,17 +51,21 @@
   - `TechItEzEcommerce.sln` updated with the `AI` solution folder and `AI.Api` project.
 - **Agent function-calling verified** — the agent successfully executes `CartPlugin.add_item_to_cart` autonomously in response to natural-language shopping prompts.
 
-## 🚀 Phase 7: Autonomous Event-Driven Agents via RabbitMQ — In Progress
-
-### ✅ Completed
+## ✅ Phase 7: Autonomous Event-Driven Agents via RabbitMQ — Complete
 
 - **`ProductPlugin`** (`Shared/Api-Common/Plugins/ProductPlugin.cs`):
   - `search_products` KernelFunction: `GET /api/catalog/semantic-search?query=...` via YARP. Returns curated JSON (Name, Slug, StartingPrice, Category, Brand, Summary).
   - `get_product_details` KernelFunction: `GET /api/catalog/{slug}` via YARP. Returns curated JSON with full Variants list (VariantId, Price, StockQuantity, Attributes).
   - Registered in `AddSemanticKernelWithOllama()` alongside `CartPlugin` — no `AI.Api` changes needed.
 - **Tool-chaining System Prompt**: `ChatController.SystemPrompt` updated with mandatory 4-step add-to-cart protocol. Agent explicitly forbidden from asking users for GUIDs.
+- **MassTransit AI Consumer** (`AI/AI.Api/Consumers/OrderPlacedEventConsumer.cs`):
+  - `OrderPlacedEventConsumer` implements `IConsumer<OrderPlacedEvent>` — fully autonomous background actor; no HTTP request context required.
+  - On receiving `OrderPlacedEvent` from RabbitMQ, invokes `IChatCompletionService` (Ollama) via Semantic Kernel to generate a personalised "Thank you for your purchase" email body with 2–3 complementary tech-product category recommendations.
+  - Prompt is built from event metadata (`OrderId`, `CustomerId`, `Items`, `Timestamp`) — no additional gateway round-trip required.
+  - Structured result logged to Serilog / Seq (`OrderId`, `CustomerId`, `EmailBody`).
+  - Registered in `AI/AI.Api/Program.cs` via `busConfig.AddConsumer<OrderPlacedEventConsumer>()` using `KebabCaseEndpointNameFormatter("ai", false)`, producing isolated queue `ai-order-placed-event`.
+  - `IChatCompletionService` and `Kernel` are injected directly from the DI container — no `IHttpContextAccessor` needed in the consumer path.
 
-### 🔲 Remaining
+## 🚀 Phase 8: AI Observability — In Progress
 
-- `OrderPlugin` — wrap order placement endpoint as a KernelFunction for autonomous checkout.
-- Event-driven agent triggers — subscribe to RabbitMQ domain events and autonomously react (e.g., low-stock notification, order-confirmation follow-up) without a human prompt.
+- Next focus: structured observability and tracing for all AI/agent operations inside `AI.Api`.

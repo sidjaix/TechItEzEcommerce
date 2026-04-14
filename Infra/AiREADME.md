@@ -269,3 +269,45 @@ flowchart LR
 ```
 
 The agent now resolves `VariantId` and `UnitPrice` autonomously through two product catalog hops before invoking the cart — the user is never asked for a technical identifier.
+
+All 6 changes are implemented and verified — `dotnet build` exits with **Build succeeded, 0 errors, 0 warnings**.
+
+---
+
+### What Was Built
+
+### New File: [`AI/AI.Api/Consumers/OrderPlacedEventConsumer.cs`](AI/AI.Api/Consumers/OrderPlacedEventConsumer.cs)
+
+A fully autonomous MassTransit v8 consumer that:
+
+- Implements `IConsumer<OrderPlacedEvent>` (MassTransit v8 contract, no deprecated `IConsumer` overloads).
+- Injects `IChatCompletionService`, `Kernel`, and `ILogger<T>` — no `IHttpContextAccessor` or JWT context needed (background actor).
+- Builds a structured prompt from the `OrderPlacedEvent` payload (`OrderId`, `CustomerId`, `Timestamp`, `Items[]`) instructing Ollama to produce a 4-part personalized thank-you email with complementary tech product category recommendations.
+- Logs the complete generated email body using **Serilog structured logging** (`LogInformation` with `{OrderId}`, `{CustomerId}`, `{EmailBody}` properties — routed to Seq).
+- Handles `IChatCompletionService` failures gracefully with `LogError` — the bus message is not re-queued on AI failures.
+
+---
+
+### Modified Files
+
+| File                                                                                  | Change                                                                                                                                            |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`AI/AI.Api/AI.Api.csproj`](AI/AI.Api/AI.Api.csproj:12)                               | Added `MassTransit.RabbitMQ` v8.2.5 `<PackageReference>`                                                                                          |
+| [`AI/AI.Api/Program.cs`](AI/AI.Api/Program.cs:1)                                      | Added `using MassTransit` + `AddMassTransit` block (section 7) with `KebabCaseEndpointNameFormatter("ai", false)` → queue `ai-order-placed-event` |
+| [`AI/AI.Api/appsettings.json`](AI/AI.Api/appsettings.json:22)                         | Added `"RabbitMq": { "Host": "amqp://guest:guest@rabbit_mq:5672" }`                                                                               |
+| [`AI/AI.Api/appsettings.Development.json`](AI/AI.Api/appsettings.Development.json:22) | Added `"RabbitMq": { "Host": "amqp://guest:guest@localhost:5672" }`                                                                               |
+| [`docker-compose.yml`](docker-compose.yml:148)                                        | Added `rabbit_mq` to `depends_on` and `RabbitMq__Host=${RabbitMq_Host}` to `environment` of the `ai_api` service                                  |
+
+---
+
+### Queue Isolation
+
+The `KebabCaseEndpointNameFormatter("ai", false)` produces the exclusive queue name **`ai-order-placed-event`**. This is completely isolated from `cart-order-placed-event` and `product-order-placed-event` — each service gets its own copy of every `OrderPlacedEvent` with no competing consumers.
+
+### Architecture Compliance
+
+- **MassTransit v8.2.5** — `AddMassTransit`, `UsingRabbitMq`, `ConfigureEndpoints(ctx)` — no deprecated v7 APIs.
+- **Clean Architecture** — Consumer lives in the `AI.Api` (API layer). No MassTransit references in Application or Domain layers.
+- **Serilog structured logging** — all properties are named contextual keys, not interpolated strings.
+- **No sensitive data logged** — no PII, no raw JWT tokens.
+- **W3C Trace Context** — MassTransit OpenTelemetry instrumentation (via the existing `AddStandardOpenTelemetry`) automatically propagates trace context through the RabbitMQ message headers.
