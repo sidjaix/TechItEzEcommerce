@@ -1,6 +1,9 @@
+using AiApi.Consumers;
+using ApiCommon.Contracts;
 using ApiCommon.Extensions;
 using ApiCommon.Handlers;
 using ApiCommon.Options;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -49,7 +52,28 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSemanticKernelWithOllama(config);
 
 // ==========================================
-// 7. INFRASTRUCTURE
+// 7. MESSAGE BUS (MassTransit / RabbitMQ)
+// ==========================================
+builder.Services.AddMassTransit(busConfig =>
+{
+	// Produces queue name: ai-order-placed-event
+	// Isolated from cart-order-placed-event and product-order-placed-event
+	busConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("ai", false));
+
+	busConfig.AddConsumer<OrderPlacedEventConsumer>();
+
+	busConfig.UsingRabbitMq((ctx, cfg) =>
+	{
+		Console.WriteLine(config["RabbitMq:Host"]);
+		var host = config["RabbitMq:Host"] ?? "amqp://guest:guest@rabbit_mq:5672";
+
+		cfg.Host(host);
+		cfg.ConfigureEndpoints(ctx);
+	});
+});
+
+// ==========================================
+// 8. INFRASTRUCTURE
 // ==========================================
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
