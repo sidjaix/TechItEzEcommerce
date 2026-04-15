@@ -101,7 +101,7 @@ public sealed class ChatController : ControllerBase
 		{
 			FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(),
 			// Try setting a slightly higher temperature to encourage natural language generation
-			Temperature = (float)0.7
+			Temperature = 0.7f
 		};
 #pragma warning restore SKEXP0070
 

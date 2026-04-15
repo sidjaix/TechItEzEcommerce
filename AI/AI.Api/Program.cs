@@ -64,7 +64,6 @@ builder.Services.AddMassTransit(busConfig =>
 
 	busConfig.UsingRabbitMq((ctx, cfg) =>
 	{
-		Console.WriteLine(config["RabbitMq:Host"]);
 		var host = config["RabbitMq:Host"] ?? "amqp://guest:guest@rabbit_mq:5672";
 
 		cfg.Host(host);

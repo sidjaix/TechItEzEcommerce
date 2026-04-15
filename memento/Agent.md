@@ -67,7 +67,7 @@ You MUST strictly adhere to these specific versions and technologies. Do not sug
 
 The system runs on a Docker bridge network named `techitez_network`.
 
-- `api_gateway`: Port 8080 (YARP routing)
+- `api_gateway`: Port 80 (YARP routing)
 - `user_api`: Port 5001 (Identity & JWT)
 - `product_api`: Port 5002 (Catalog & Inventory)
 - `cart_api`: Port 5003 (Basket management)

@@ -113,7 +113,7 @@ internal class Program
 		{
 			// If running in VS natively, hit the exposed localhost port. 
 			// If in Docker, use the internal Docker DNS name.
-			u.BaseAddress = new Uri(config["Gateway:BaseUrl"] ?? "http://api_gateway:8080");
+			u.BaseAddress = new Uri(config["Gateway:BaseUrl"] ?? "http://api_gateway:80");
 
 		}).AddHttpMessageHandler<TokenDelegatingHandler>();
 

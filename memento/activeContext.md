@@ -42,7 +42,7 @@ The immediate active focus is **Phase 8: AI Observability** — adding structure
 - `IChatCompletionService` and `Kernel` are constructor-injected into the consumer from the standard DI container — the same Ollama/SK setup used by `ChatController` is reused at zero extra cost.
 - Consumer has no dependency on `IHttpContextAccessor` — it is a pure background actor and never touches the HTTP pipeline.
 - All plugins (`CartPlugin`, `ProductPlugin`) live in `Shared/Api-Common/Plugins/` — reusable across any agent host, no circular project references.
-- Agent HTTP calls route through YARP (`http://api_gateway:8080`) — gateway auth and rate-limiting policies apply identically to an AI agent and a human user.
+- Agent HTTP calls route through YARP (`http://api_gateway:80`) — gateway auth and rate-limiting policies apply identically to an AI agent and a human user.
 - Bearer JWT is forwarded via `TokenDelegatingHandler`; the agent never manages user identity explicitly.
 - `FunctionChoiceBehavior.Auto()` is set in `ChatController` — no additional configuration needed for auto-invocation of plugins.
-- Configuration key `Gateway:BaseUrl` must be present in `appsettings.json` of any service calling `AddSemanticKernelWithOllama`. Docker default: `http://api_gateway:8080`.
+- Configuration key `Gateway:BaseUrl` must be present in `appsettings.json` of any service calling `AddSemanticKernelWithOllama`. Docker default: `http://api_gateway:80`.

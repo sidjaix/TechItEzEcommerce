@@ -107,7 +107,7 @@ services.AddTransient<TokenDelegatingHandler>();
 // 6. Named "GatewayClient" HttpClient — base address from Gateway:BaseUrl config, JWT auto-forwarded
 services.AddHttpClient("GatewayClient", client =>
 {
-    client.BaseAddress = new Uri(configuration["Gateway:BaseUrl"] ?? "http://api_gateway:8080");
+    client.BaseAddress = new Uri(configuration["Gateway:BaseUrl"] ?? "http://api_gateway:80");
 })
 .AddHttpMessageHandler<TokenDelegatingHandler>();
 
@@ -148,12 +148,12 @@ Any service host calling `AddSemanticKernelWithOllama()` must have this key in `
 ```json
 {
   "Gateway": {
-    "BaseUrl": "http://api_gateway:8080"
+    "BaseUrl": "http://api_gateway:80"
   }
 }
 ```
 
-The Docker-internal default `http://api_gateway:8080` is already hardcoded as the fallback, so no configuration change is strictly required in the existing Docker Compose setup.
+The Docker-internal default `http://api_gateway:80` is already hardcoded as the fallback, so no configuration change is strictly required in the existing Docker Compose setup.
 
 ---
 

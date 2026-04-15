@@ -40,16 +40,15 @@ public static class AiExtensions
 
 		// 2. Add Chat Completion and build the Kernel
 		var kernelBuilder = services.AddKernel();
-		kernelBuilder.AddOllamaChatCompletion(
-			modelId: "qwen2.5",
-			endpoint: ollamaEndpoint
-		);
+		// kernelBuilder.AddOllamaChatCompletion(
+		// 	modelId: "qwen2.5",
+		// 	endpoint: ollamaEndpoint
+		// );
 		kernelBuilder.AddOllamaChatCompletion(
 			modelId: "qwen2.5",
 			// We pull the configured HttpClient from the ServiceProvider
 			httpClient: services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>().CreateClient("OllamaClient")
 		);
-
 
 		// 3. Modern Qdrant Registration (Use gRPC port 6334)
 		services.AddQdrantVectorStore(
@@ -77,7 +76,7 @@ public static class AiExtensions
 		//    to a real browser user. The base address is read from configuration key "Gateway:BaseUrl".
 		services.AddHttpClient("GatewayClient", client =>
 		{
-			client.BaseAddress = new Uri(configuration["Gateway:BaseUrl"] ?? "http://api_gateway:8080");
+			client.BaseAddress = new Uri(configuration["Gateway:BaseUrl"] ?? "http://api_gateway:80");
 		})
 		.AddHttpMessageHandler<TokenDelegatingHandler>();
 
