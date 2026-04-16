@@ -25,11 +25,18 @@ public static class AiExtensions
 
 		// CONFIGURE TIMEOUT: Register a named HttpClient for Ollama
 		// We increase this to 5 minutes to allow for multi-step tool chaining (Search -> Cart)
-		services.AddHttpClient("OllamaClient", client =>
+		// services.AddHttpClient("OllamaClient", client =>
+		// {
+		// 	client.BaseAddress = ollamaEndpoint;
+		// 	client.Timeout = TimeSpan.FromMinutes(5);
+		// });
+
+		// Create a dedicated HTTP Client just for Ollama with a long timeout
+		var ollamaHttpClient = new HttpClient
 		{
-			client.BaseAddress = ollamaEndpoint;
-			client.Timeout = TimeSpan.FromMinutes(5);
-		});
+			BaseAddress = ollamaEndpoint,
+			Timeout = TimeSpan.FromMinutes(5) // Gives the LLM 5 minutes to generate a response
+		};
 
 #pragma warning disable SKEXP0070
 		// 1. Register Ollama embedding generator (nomic-embed-text for vector search)
@@ -47,7 +54,7 @@ public static class AiExtensions
 		kernelBuilder.AddOllamaChatCompletion(
 			modelId: "qwen2.5",
 			// We pull the configured HttpClient from the ServiceProvider
-			httpClient: services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>().CreateClient("OllamaClient")
+			httpClient: ollamaHttpClient
 		);
 
 		// 3. Modern Qdrant Registration (Use gRPC port 6334)
