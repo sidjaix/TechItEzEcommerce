@@ -102,6 +102,10 @@ internal class Program
 			// THIS LINE IS REQUIRED TO BIND THE QUEUE
 			busConfig.AddConsumer<OrderPlacedEventConsumer>();
 
+			busConfig.AddConsumer<CatalogItemSemanticProfileUpdatedConsumer>()
+				.Endpoint(e => e.Name = new KebabCaseEndpointNameFormatter("product-ai", false)
+				.Consumer<CatalogItemSemanticProfileUpdatedConsumer>());
+
 			busConfig.UsingRabbitMq((ctx, cfg) =>
 			{
 				var host = config["RabbitMq:Host"] ?? "amqp://guest:guest@rabbit_mq:5672";
@@ -113,6 +117,7 @@ internal class Program
 
 		builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
 		builder.Services.AddScoped<ITaxonomyRepository, TaxonomyRepository>();
+		builder.Services.AddScoped<ICatalogItemSemanticProfileUpdateEventPublisher, CatalogItemSemanticProfileUpdateEventPublisher>();
 
 		// Register Semantic Search Services (AI Stack)
 		builder.Services.AddSemanticKernelWithOllama(config);
